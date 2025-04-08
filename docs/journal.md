@@ -87,3 +87,53 @@ Used to track what was attempted, what worked, and what didn’t.
     - Need to resolve the persistent Babel `.plugins is not a valid Plugin property` error to allow the app to build correctly with NativeWind and path aliases enabled.
     - Investigate potential conflicts between Expo SDK 52, NativeWind v4, and Babel configuration.
     - Once build is successful, proceed with Phase 1 Step 2 (Navigation Test).
+
+---
+
+[2025-04-08] Cline (AI Assistant)
+- **Action:** Attempted to resolve build errors by downgrading NativeWind.
+- **Details:**
+    - Based on research suggesting NativeWind v4 incompatibility with Expo SDK 52, downgraded `nativewind` to `2.0.11`.
+    - Adjusted `babel.config.js` to remove `react-native-reanimated/plugin` temporarily.
+    - Adjusted `tailwindcss` to `3.3.2` and `postcss` to `8.4.22` for compatibility with NativeWind v2.
+    - Created `tailwind.config.js` (required by NativeWind v2).
+    - Cleared caches and reinstalled dependencies.
+- **Issues:**
+    - Resolved the Babel `.plugins is not a valid Plugin property` error.
+    - Encountered a new runtime error: `Unable to convert string to floating point value: "large"`.
+    - Analysis suggested the error originated in `react-native-screens` during transitions, likely due to NativeWind v2 style transformation issues with RN 0.75.x.
+    - Explicitly defined numerical `fontSize` values in `tailwind.config.js` as a potential fix. (Failed)
+- **Decisions:**
+    - Followed external guide suggesting NativeWind v2 downgrade.
+    - Attempted to fix the subsequent runtime error by adjusting Tailwind config.
+- **Follow-up:**
+    - The NativeWind v2 downgrade introduced a different, equally blocking runtime error.
+
+---
+
+[2025-04-08] Cline (AI Assistant)
+- **Action:** Attempted to resolve build errors by upgrading back to NativeWind v4 with specific configuration.
+- **Details:**
+    - Uninstalled NativeWind v2.
+    - Installed NativeWind v4 (`4.0.1`) and compatible PostCSS (`8.4.31`).
+    - Updated `babel.config.js` for NativeWind v4 (`['nativewind/babel', { mode: 'compileOnly' }]`), keeping `module-resolver` and `react-native-reanimated/plugin`.
+    - Updated `tailwind.config.js` content structure for v4.
+    - Removed incorrect `nativewind.config.ts`.
+    - Created `postcss.config.js`.
+    - Cleared caches and reinstalled dependencies.
+- **Issues:**
+    - The original Babel error `.plugins is not a valid Plugin property` returned immediately upon starting the Metro bundler.
+- **Decisions:**
+    - Reverted to NativeWind v4 as the v2 downgrade caused different runtime errors.
+    - Applied recommended v4 configuration.
+- **Conclusion:**
+    - The project is currently stuck in a loop:
+        - NativeWind v2 + Expo SDK 52 causes runtime errors (`Unable to convert string...`).
+        - NativeWind v4 + Expo SDK 52 causes Babel build errors (`.plugins is not valid...`).
+    - This indicates a fundamental incompatibility or complex configuration issue between Expo SDK 52, React Native 0.75.x, NativeWind (v2 or v4), and potentially Babel/Metro.
+- **Follow-up:**
+    - Commit current state for external review.
+    - Further investigation needed, potentially involving:
+        - Trying Expo SDK 51.
+        - Testing without NativeWind temporarily.
+        - Seeking community support or checking for newer patches/versions.
