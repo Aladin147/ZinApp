@@ -3,15 +3,15 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
 import { RootStackParamList } from '@types';
 
-// Import screens (placeholder imports - screens will be created later)
-// We'll need to implement these screen components separately
-const LandingScreen = () => <></>;
-const ServiceSelectScreen = () => <></>;
-const StylistListScreen = () => <></>;
-const BarberProfileScreen = () => <></>;
-const BookingScreen = () => <></>;
-const LiveTrackScreen = () => <></>;
-const Bsse7aScreen = () => <></>;
+// Import actual screens
+import LandingScreen from '@screens/LandingScreen';
+import ServiceSelectScreen from '@screens/ServiceSelectScreen';
+import StylistListScreen from '@screens/StylistListScreen';
+import BarberProfileScreen from '@screens/BarberProfileScreen';
+import BookingScreen from '@screens/BookingScreen';
+import LiveTrackScreen from '@screens/LiveTrackScreen';
+import Bsse7aScreen from '@screens/Bsse7aScreen';
+
 
 // Create the stack navigator
 const Stack = createStackNavigator<RootStackParamList>();

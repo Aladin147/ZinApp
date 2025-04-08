@@ -35,3 +35,55 @@ Used to track what was attempted, what worked, and what didn’t.
     - Address npm vulnerabilities (run `npm audit` for details).
     - Begin implementing components and screens as per `TODO.md`.
     - Resolve TypeScript errors reported after initial file creation (likely resolved by `npm install`, but needs verification).
+
+---
+
+[2025-04-08] Cline (AI Assistant)
+- **Action:** Project cleanup and first component creation.
+- **Details:**
+    - Documented deferred NPM vulnerabilities in `docs/KNOWN_ISSUES.md`.
+    - Created `global.css` for NativeWind base styles.
+    - Updated `docs/TODO.md` to mark ratings mock file as complete.
+    - Created initial structure for `BookingCard` component in `components/specific/BookingCard.tsx`.
+    - Updated `docs/TODO.md` to mark `BookingCard` as created.
+- **Issues:**
+    - Encountered TS errors in `BookingCard.tsx` after creation (related to React import style and prop typing); addressed these with `replace_in_file`. Other TS errors (paths, JSX, NativeWind `styled`) might be IDE/type-checking delays.
+- **Decisions:**
+    - Deferred fixing NPM vulnerabilities.
+    - Proceeded with creating the first component from the TODO list.
+- **Follow-up:**
+    - Continue implementing tasks from `docs/TODO.md`.
+    - Integrate `BookingCard` into relevant screens once they are built.
+    - Monitor TS errors to see if they resolve or require further action (e.g., checking `tsconfig.json`'s `jsx` setting if errors persist).
+
+---
+
+[2025-04-08] Cline (AI Assistant)
+- **Action:** Project setup troubleshooting and SDK upgrade.
+- **Details:**
+    - Created `docs/TECHNICAL_ROADMAP.md` and committed.
+    - Created placeholder screen files (`LandingScreen`, `ServiceSelectScreen`, etc.) in `screens/`.
+    - Updated `navigation/AppNavigator.tsx` to use new screen components.
+    - Attempted to run `npm run dev` for navigation testing.
+- **Issues:**
+    - Encountered Metro error: `ENOENT: no such file or directory, scandir 'src/assets'`.
+        - Attempted fix by creating `metro.config.js`. (Failed)
+        - Attempted fix by adjusting `assetBundlePatterns` in `app.json`. (Failed)
+    - Identified Expo SDK mismatch (Project SDK 50 vs. Expo Go SDK 52).
+    - Upgraded project dependencies to Expo SDK 51 (`package.json`, `npm install`). (Still incompatible with Expo Go)
+    - Upgraded project dependencies to Expo SDK 52 (`package.json`, `npm install`).
+    - Encountered Metro error: `Unable to resolve asset "./assets/images/icon.png"`.
+        - Fixed by creating placeholder asset files using `touch`.
+    - Encountered Metro/Babel error: `.plugins is not a valid Plugin property`.
+        - Attempted fix by changing `babel.config.js` to use `require('babel-plugin-module-resolver')`. (Failed)
+        - Attempted fix by simplifying `babel.config.js` (removing module-resolver). (Failed)
+        - Attempted fix by simplifying `babel.config.js` further (removing nativewind/babel). (Allowed bundler to start but broke aliases/styling).
+        - Reverted `babel.config.js` to restore nativewind plugin.
+- **Decisions:**
+    - Upgraded project to Expo SDK 52 to match Expo Go requirement.
+    - Used placeholder files for missing assets.
+    - Temporarily simplified `babel.config.js` for debugging, then reverted.
+- **Follow-up:**
+    - Need to resolve the persistent Babel `.plugins is not a valid Plugin property` error to allow the app to build correctly with NativeWind and path aliases enabled.
+    - Investigate potential conflicts between Expo SDK 52, NativeWind v4, and Babel configuration.
+    - Once build is successful, proceed with Phase 1 Step 2 (Navigation Test).
