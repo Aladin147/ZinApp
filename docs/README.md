@@ -30,13 +30,13 @@ Stylists, on the other hand, can:
 ---
 
 ## 🛠️ Tech Stack
-| Layer         | Tech Used                    |
-|---------------|------------------------------|
-| Mobile        | React Native via Expo        |
-| Styling       | NativeWind (Tailwind for RN) |
-| Animation     | Reanimated 2, Lottie         |
-| Mock Backend  | JSON Server (localhost)      |
-| Storage       | Static JSON & image assets   |
+| Layer         | Tech Used                               |
+|---------------|-----------------------------------------|
+| Mobile        | React Native via Expo                   |
+| Styling       | twrnc (Tailwind classes at runtime)     |
+| Animation     | Reanimated 2, Lottie                    |
+| Mock Backend  | JSON Server (localhost)                 |
+| Storage       | Static JSON & image assets              |
 
 ---
 
@@ -94,4 +94,3 @@ Built with love by [Aladin @ BlackWoodsCreative]
 ---
 
 For pitch decks, visual systems, and architecture docs, see `/docs/` or the [project canvas].
-

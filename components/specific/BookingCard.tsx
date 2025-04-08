@@ -1,14 +1,15 @@
-import * as React from 'react'; // Use namespace import
+import React from 'react'; // Use standard import
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import { styled } from 'nativewind';
-import { Booking, Stylist, Service } from '@types'; // Assuming we'll pass related data
-import { colors, spacing, typography } from '@constants';
+// import { styled } from 'nativewind'; // Remove NativeWind import
+import { Booking, Stylist, Service } from '../../types'; // Correct relative path
+import { colors, spacing, typography } from '../../constants'; // Correct relative path
+import tw from '../../twrnc'; // Correct relative path
 
-// Apply NativeWind styling to React Native components
-const StyledView = styled(View);
-const StyledText = styled(Text);
-const StyledImage = styled(Image);
-const StyledTouchableOpacity = styled(TouchableOpacity);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
+// const StyledImage = styled(Image);
+// const StyledTouchableOpacity = styled(TouchableOpacity);
 
 interface BookingCardProps {
   booking: Booking;
@@ -28,44 +29,65 @@ const BookingCard: React.FC<BookingCardProps> = ({
   stylist,
   service,
   onPress,
-}: BookingCardProps) => { // Add explicit type annotation here
+}: BookingCardProps) => {
   // Placeholder content - needs actual data mapping and styling
   const bookingDate = new Date(booking.datetime).toLocaleDateString();
   const bookingTime = new Date(booking.datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+  // Define shadow style separately for clarity
+  const shadowStyle = {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // for Android
+  };
+
   return (
-    <StyledTouchableOpacity
-      className="bg-white p-4 rounded-lg shadow-md mb-4 border border-gray-100"
+    // Use standard TouchableOpacity with twrnc style + shadow
+    <TouchableOpacity
+      style={[
+        tw`bg-white p-4 rounded-lg mb-4 border border-gray-100`,
+        shadowStyle, // Apply shadow
+      ]}
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <StyledView className="flex-row items-center mb-2">
+      {/* Use standard View with twrnc style */}
+      <View style={tw`flex-row items-center mb-2`}>
         {stylist?.profile_picture && (
-          <StyledImage
+          // Use standard Image with twrnc style
+          <Image
             source={{ uri: stylist.profile_picture }} // Placeholder - needs actual image handling
-            className="w-10 h-10 rounded-full mr-3"
+            style={tw`w-10 h-10 rounded-full mr-3`}
           />
         )}
-        <StyledView className="flex-1">
-          <StyledText className="text-base font-semibold text-textMain">
+        {/* Use standard View with twrnc style */}
+        <View style={tw`flex-1`}>
+          {/* Use standard Text with twrnc style + inline color */}
+          <Text style={[tw`text-base font-semibold`, { color: colors.textMain }]}>
             {stylist?.name || `Stylist ID: ${booking.stylist_id}`}
-          </StyledText>
-          <StyledText className="text-sm text-textMuted">
+          </Text>
+          {/* Use standard Text with twrnc style + inline color */}
+          <Text style={[tw`text-sm`, { color: colors.textMuted }]}>
             {service?.name || `Service ID: ${booking.service_id}`}
-          </StyledText>
-        </StyledView>
-        <StyledText className="text-xs font-medium text-primary">
+          </Text>
+        </View>
+        {/* Use standard Text with twrnc style + inline color */}
+        <Text style={[tw`text-xs font-medium`, { color: colors.primary }]}>
           {booking.status.toUpperCase()}
-        </StyledText>
-      </StyledView>
+        </Text>
+      </View>
 
-      <StyledView className="border-t border-gray-200 pt-2">
-        <StyledText className="text-sm text-textMuted">
+      {/* Use standard View with twrnc style */}
+      <View style={tw`border-t border-gray-200 pt-2`}>
+        {/* Use standard Text with twrnc style + inline color */}
+        <Text style={[tw`text-sm`, { color: colors.textMuted }]}>
           Date: {bookingDate} at {bookingTime}
-        </StyledText>
+        </Text>
         {/* Add more details like price, rebook button etc. later */}
-      </StyledView>
-    </StyledTouchableOpacity>
+      </View>
+    </TouchableOpacity>
   );
 };
 

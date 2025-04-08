@@ -3,9 +3,8 @@ module.exports = function (api) {
   return {
     presets: ['babel-preset-expo'],
     plugins: [
-      // NativeWind v4 uses a different plugin configuration
-      ['nativewind/babel', { mode: 'compileOnly' }],
-      // Add module resolver for path aliases
+      // NativeWind plugin removed
+      // Keep module resolver for path aliases
       [
         'module-resolver',
         {

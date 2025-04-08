@@ -1,12 +1,14 @@
-import * as React from 'react';
+import React from 'react'; // Use standard import
 import { View, Text, Button } from 'react-native';
-import { styled } from 'nativewind';
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
 
 type ServiceSelectScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -19,17 +21,20 @@ type Props = {
 
 const ServiceSelectScreen: React.FC<Props> = ({ navigation }) => {
   return (
-    <StyledView className="flex-1 items-center justify-center bg-white p-4">
-      <StyledText className="text-xl font-semibold mb-6 text-textMain">
+    // Use standard View with twrnc style
+    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
+      {/* Use standard Text with twrnc style */}
+      <Text style={[tw`text-xl font-semibold mb-6`, { color: colors.textMain }]}>
         What do you need today? (ServiceSelectScreen)
-      </StyledText>
+      </Text>
       {/* Placeholder for ServiceIconBtn components */}
+      {/* Standard Button, color prop is fine */}
       <Button
         title="Select Haircut (Navigate)" // Placeholder action
         onPress={() => navigation.navigate('StylistListScreen', { serviceId: 1 })} // Pass example serviceId
         color={colors.primary}
       />
-    </StyledView>
+    </View> // Correct closing tag
   );
 };
 

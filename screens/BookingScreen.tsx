@@ -1,14 +1,16 @@
-import * as React from 'react';
-import { View, Text, Button } from 'react-native';
-import { styled } from 'nativewind';
+import React from 'react'; // Use standard import
+import { View, Text, Button, ScrollView } from 'react-native'; // Added ScrollView
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
-import { useAuth } from '@state/AuthContext'; // Import useAuth hook
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import { useAuth } from '../state/AuthContext'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
 
 type BookingScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -25,37 +27,38 @@ const BookingScreen: React.FC<Props> = ({ navigation, route }) => {
   const { stylistId, serviceId } = route.params;
   const { isVerified } = useAuth(); // Get verification status
 
+  // Use ScrollView in case content overflows
   return (
-    <StyledView className="flex-1 items-center justify-center bg-white p-4">
-      <StyledText className="text-xl font-semibold mb-4 text-textMain">
+    <ScrollView contentContainerStyle={tw`flex-grow items-center justify-center bg-white p-4`}>
+      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
         Confirm Booking (BookingScreen)
-      </StyledText>
-      <StyledText className="mb-2 text-textMuted">Stylist ID: {stylistId}</StyledText>
-      <StyledText className="mb-6 text-textMuted">Service ID: {serviceId}</StyledText>
+      </Text>
+      <Text style={[tw`mb-2`, { color: colors.textMuted }]}>Stylist ID: {stylistId}</Text>
+      <Text style={[tw`mb-6`, { color: colors.textMuted }]}>Service ID: {serviceId}</Text>
 
       {/* Placeholder for Date/Time Picker */}
-      <StyledText className="mb-4 text-textMain">Date/Time Picker Placeholder</StyledText>
+      <Text style={[tw`mb-4`, { color: colors.textMain }]}>Date/Time Picker Placeholder</Text>
 
       {/* Conditional Payment Info */}
-      <StyledView className="mb-6 p-3 border border-gray-200 rounded w-full items-center">
-        <StyledText className="text-base font-medium mb-2 text-textMain">Payment</StyledText>
+      <View style={tw`mb-6 p-3 border border-gray-200 rounded w-full items-center`}>
+        <Text style={[tw`text-base font-medium mb-2`, { color: colors.textMain }]}>Payment</Text>
         {isVerified ? (
-          <StyledText className="text-sm text-green-600">
+          <Text style={[tw`text-sm`, { color: colors.success }]}> {/* Assuming green-600 maps to success */}
             Verified User: Pay now or select 'Pay Later' (Toggle Placeholder)
-          </StyledText>
+          </Text>
         ) : (
-          <StyledText className="text-sm text-red-600">
+          <Text style={[tw`text-sm`, { color: colors.error }]}> {/* Assuming red-600 maps to error */}
             Guest User: Add card to continue (Input Placeholder)
-          </StyledText>
+          </Text>
         )}
-      </StyledView>
+      </View>
 
       <Button
         title="Confirm Booking"
         onPress={() => navigation.navigate('LiveTrackScreen', { bookingId: 101 })} // Example bookingId
         color={colors.primary}
       />
-    </StyledView>
+    </ScrollView>
   );
 };
 

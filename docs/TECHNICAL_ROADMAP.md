@@ -74,5 +74,6 @@ This document outlines the planned sequence for building the ZinApp demo, ensuri
 
 **Ongoing Tasks:**
 
+*   **Styling:** Use `twrnc` for applying Tailwind classes at runtime. Ensure visual consistency with `DESIGN_TOKENS.md`.
 *   **Documentation:** Update `journal.md`, `TODO.md`, `KNOWN_ISSUES.md`, and `COMPONENT_MAP.md` *as each step is completed*.
 *   **Commits:** Make frequent, logical commits to Git.

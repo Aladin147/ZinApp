@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React from 'react'; // Use standard import
 import { View, Text, Button, FlatList } from 'react-native';
-import { styled } from 'nativewind';
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
 
 type StylistListScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -33,26 +35,32 @@ const StylistListScreen: React.FC<Props> = ({ navigation, route }) => {
   ];
 
   return (
-    <StyledView className="flex-1 bg-white p-4">
-      <StyledText className="text-xl font-semibold mb-4 text-textMain">
+    // Use standard View with twrnc style
+    <View style={tw`flex-1 bg-white p-4`}>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
         Available Stylists {serviceId ? `for Service ${serviceId}` : ''} (StylistListScreen)
-      </StyledText>
+      </Text>
       {/* Placeholder for BarberCard components */}
+      {/* Standard FlatList */}
       <FlatList
         data={mockStylists}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <StyledView className="mb-2 p-3 border border-gray-200 rounded">
-            <StyledText>{item.name}</StyledText>
-            <Button 
-              title="View Profile" 
+          // Use standard View with twrnc style
+          <View style={tw`mb-2 p-3 border border-gray-200 rounded`}>
+            {/* Use standard Text */}
+            <Text>{item.name}</Text>
+            {/* Standard Button */}
+            <Button
+              title="View Profile"
               onPress={() => navigation.navigate('BarberProfileScreen', { stylistId: item.id })}
               color={colors.primary}
             />
-          </StyledView>
+          </View>
         )}
       />
-    </StyledView>
+    </View> // Correct closing tag
   );
 };
 

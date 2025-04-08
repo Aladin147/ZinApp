@@ -137,3 +137,45 @@ Used to track what was attempted, what worked, and what didn’t.
         - Trying Expo SDK 51.
         - Testing without NativeWind temporarily.
         - Seeking community support or checking for newer patches/versions.
+
+---
+
+[2025-04-08] Cline (AI Assistant)
+- **Action:** Planning migration from NativeWind to `twrnc`.
+- **Details:**
+    - Due to persistent build/runtime errors related to NativeWind (v2 & v4) compatibility with Expo SDK 52, a strategic decision was made to migrate the styling layer.
+    - The chosen alternative is `twrnc` (tailwind-react-native-classnames), a lightweight library that applies Tailwind classes at runtime without build-time dependencies (Babel/PostCSS).
+    - Developed a detailed migration plan focusing on removing NativeWind, installing `twrnc`, setting up configuration, refactoring components, and verifying visual/functional consistency.
+- **Decisions:**
+    - Adopt `twrnc` as the primary styling solution to unblock development and resolve build issues.
+    - Prioritize maintaining visual fidelity and animations during the migration.
+- **Follow-up:**
+    - Execute the `twrnc` migration plan step-by-step.
+    - Update relevant project documentation (Roadmap, README) post-migration.
+
+---
+
+[2025-04-09] Cline (AI Assistant)
+- **Action:** Executed `twrnc` migration setup and initial testing.
+- **Details:**
+    - Uninstalled `nativewind`, `tailwindcss`, `postcss`.
+    - Deleted `tailwind.config.js`, `postcss.config.js`.
+    - Removed `nativewind/babel` plugin from `babel.config.js`.
+    - Installed `twrnc` (v4.6.1).
+    - Attempted various setups for a `twrnc.ts` utility file (using `create()`, direct import, require), all resulting in runtime errors (`_twrnc.default is not a function` or circular dependencies).
+    - Removed `twrnc.ts` utility file.
+    - Modified `App.tsx` and `LandingScreen.tsx` to import `tw` directly from `'twrnc'`.
+    - Corrected path alias issues in `LandingScreen.tsx` temporarily using relative paths.
+    - Performed aggressive manual cache clearing (`.expo`, `.metro-cache`, `node_modules`, `package-lock.json`, VS Code restart, `npm install`).
+- **Issues:**
+    - Despite code correctly using `import tw from 'twrnc';` and aggressive cache clearing, the Metro bundler *still* throws the error `Unable to resolve module ../twrnc from ...\screens\LandingScreen.tsx`, referencing a non-existent relative path from a previous state.
+- **Conclusion:**
+    - The persistence of the incorrect module resolution error after extensive cache clearing strongly suggests a deep, unresolvable issue with Metro's caching mechanism or a fundamental incompatibility between `twrnc` and the Expo 52/RN 0.75.3 environment that prevents the module from being correctly resolved or loaded.
+- **Decision:**
+    - Pause `twrnc` migration attempt.
+    - Document the current state and persistent error thoroughly.
+    - Push the current (non-working) state to GitHub for external review and potential alternative solutions.
+- **Follow-up:**
+    - Add issue to `KNOWN_ISSUES.md`.
+    - Commit and push current state.
+    - Await feedback/alternative approaches.

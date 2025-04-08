@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React from 'react'; // Use standard import
 import { View, Text, Button } from 'react-native';
-import { styled } from 'nativewind';
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
 
 type Bsse7aScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -25,21 +27,24 @@ const Bsse7aScreen: React.FC<Props> = ({ navigation, route }) => {
 
   // Placeholder - Add confetti, avatar, summary, tip buttons, rating stars later
   return (
-    <StyledView className="flex-1 items-center justify-center bg-white p-4">
-      <StyledText className="text-2xl font-bold mb-4 text-textMain">
+    // Use standard View with twrnc style
+    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`text-2xl font-bold mb-4`, { color: colors.textMain }]}>
         Bse7a! (Bsse7aScreen)
-      </StyledText>
-      <StyledText className="mb-4 text-textMuted">Booking {bookingId} Complete</StyledText>
-      <StyledText className="mb-2 text-textMuted">Tip Placeholder</StyledText>
-      <StyledText className="mb-6 text-textMuted">Rating Placeholder</StyledText>
+      </Text>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>Booking {bookingId} Complete</Text>
+      <Text style={[tw`mb-2`, { color: colors.textMuted }]}>Tip Placeholder</Text>
+      <Text style={[tw`mb-6`, { color: colors.textMuted }]}>Rating Placeholder</Text>
 
-      {/* Placeholder navigation button */}
+      {/* Standard Button */}
       <Button
         title="Done (Back to Service Select)"
         onPress={() => navigation.navigate('ServiceSelectScreen')} // Or pop to top/reset stack
         color={colors.primary}
       />
-    </StyledView>
+    </View> // Correct closing tag
   );
 };
 

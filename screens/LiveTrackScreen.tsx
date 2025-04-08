@@ -1,13 +1,15 @@
-import * as React from 'react';
+import React from 'react'; // Use standard import
 import { View, Text, Button } from 'react-native';
-import { styled } from 'nativewind';
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
 
 type LiveTrackScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -28,21 +30,24 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
 
   // Placeholder - Add map view, ETA, avatar animation later
   return (
-    <StyledView className="flex-1 items-center justify-center bg-white p-4">
-      <StyledText className="text-xl font-semibold mb-4 text-textMain">
+    // Use standard View with twrnc style
+    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
         Tracking Booking {bookingId} (LiveTrackScreen)
-      </StyledText>
-      <StyledText className="mb-4 text-textMuted">Map Placeholder</StyledText>
-      <StyledText className="mb-4 text-textMuted">ETA: 15 mins (Simulated)</StyledText>
-      <StyledText className="mb-6 text-textMuted">Stylist Avatar Placeholder</StyledText>
-      
-      {/* Placeholder navigation button */}
+      </Text>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>Map Placeholder</Text>
+      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>ETA: 15 mins (Simulated)</Text>
+      <Text style={[tw`mb-6`, { color: colors.textMuted }]}>Stylist Avatar Placeholder</Text>
+
+      {/* Standard Button */}
       <Button
         title="Simulate Arrival"
         onPress={() => navigation.navigate('Bsse7aScreen', { bookingId: bookingId })}
         color={colors.primary}
       />
-    </StyledView>
+    </View> // Correct closing tag
   );
 };
 

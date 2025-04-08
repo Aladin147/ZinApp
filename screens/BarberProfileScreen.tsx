@@ -1,14 +1,16 @@
-import * as React from 'react';
+import React from 'react'; // Use standard import
 import { View, Text, Button, ScrollView } from 'react-native';
-import { styled } from 'nativewind';
+// import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors, spacing } from '@constants';
+import { RootStackParamList } from '../types'; // Use relative path for now
+import { colors, spacing } from '../constants'; // Use relative path for now
+import tw from '../twrnc'; // Import twrnc
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
-const StyledScrollView = styled(ScrollView);
+// Remove styled components
+// const StyledView = styled(View);
+// const StyledText = styled(Text);
+// const StyledScrollView = styled(ScrollView);
 
 type BarberProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,23 +34,28 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
   const mockStylist = { id: stylistId, name: 'Mock Stylist Name', bio: 'Bio...' };
 
   return (
-    <StyledScrollView className="flex-1 bg-white p-4">
-      <StyledText className="text-xl font-semibold mb-4 text-textMain">
+    // Use standard ScrollView with twrnc style
+    <ScrollView style={tw`flex-1 bg-white p-4`}>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
         {mockStylist.name} (BarberProfileScreen)
-      </StyledText>
-      <StyledText className="mb-4 text-textMuted">{mockStylist.bio}</StyledText>
+      </Text>
+      {/* Use standard Text with twrnc style + inline color */}
+      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>{mockStylist.bio}</Text>
       {isQrSource && (
-        <StyledText className="text-sm text-blue-500 mb-4">
+        // Use standard Text with twrnc style + inline color
+        <Text style={[tw`text-sm mb-4`, { color: colors.info }]}> {/* Assuming blue-500 maps to info */}
           (Came from QR Scan)
-        </StyledText>
+        </Text>
       )}
       {/* Placeholder for AvatarBadge, Gallery, Service List */}
+      {/* Standard Button */}
       <Button
         title="Book This Stylist"
         onPress={() => navigation.navigate('BookingScreen', { stylistId: stylistId, serviceId: 1 })} // Example serviceId
         color={colors.primary}
       />
-    </StyledScrollView>
+    </ScrollView> // Correct closing tag
   );
 };
 
