@@ -1,0 +1,50 @@
+
+// ZinApp Project Structure – Expo + NativeWind + Mock Server
+
+/zinapp
+├── App.tsx
+├── /assets
+│   ├── fonts/
+│   ├── icons/
+│   └── images/
+├── /components
+│   ├── ServiceIconBtn.tsx
+│   ├── BarberCard.tsx
+│   ├── AvatarBadge.tsx
+│   ├── RatingStars.tsx
+│   ├── MapTracker.tsx
+│   └── index.ts
+├── /constants
+│   ├── colors.ts
+│   ├── animations.ts
+│   ├── flags.ts
+│   └── mockRoutes.ts
+├── /mock-api
+│   └── db.json
+├── /screens
+│   ├── HomeLanding.tsx
+│   ├── ServiceSelect.tsx
+│   ├── StylistList.tsx
+│   ├── BarberProfile.tsx
+│   ├── BookingConfirm.tsx
+│   ├── LiveTrack.tsx
+│   └── Bsse7aScreen.tsx
+├── /theme
+│   ├── tailwind.config.ts
+│   └── themeProvider.tsx
+├── /hooks
+│   ├── useBooking.ts
+│   ├── useAnimationPreset.ts
+│   └── useMockLocation.ts
+├── /utils
+│   ├── formatTime.ts
+│   ├── distanceCalc.ts
+│   └── ratingsHelper.ts
+├── /docs
+│   ├── README.md
+│   ├── ANIMATION_INTERACTION_SYSTEM.md
+│   ├── MOCK_API_SCHEMA.md
+│   └── ... (all other md docs)
+├── .gitignore
+├── package.json
+└── tsconfig.json

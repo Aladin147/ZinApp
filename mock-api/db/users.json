@@ -1,0 +1,29 @@
+[
+  {
+    "id": 10,
+    "name": "Yassine",
+    "is_verified": true,
+    "trust_score": 87,
+    "payment_methods": ["card", "cash"],
+    "favorite_stylists": [1],
+    "qr_discovery": true
+  },
+  {
+    "id": 11,
+    "name": "Fatima",
+    "is_verified": true,
+    "trust_score": 92,
+    "payment_methods": ["card", "cash"],
+    "favorite_stylists": [3],
+    "qr_discovery": false
+  },
+  {
+    "id": 12,
+    "name": "Omar",
+    "is_verified": false,
+    "trust_score": 45,
+    "payment_methods": ["card"],
+    "favorite_stylists": [],
+    "qr_discovery": false
+  }
+]
