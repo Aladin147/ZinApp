@@ -68,8 +68,5 @@ export type RootStackParamList = {
   BookingScreen: { stylistId: number; serviceId: number };
   LiveTrackScreen: { bookingId: number };
   Bsse7aScreen: { bookingId: number };
-  LogoShowcaseScreen: undefined;
-  AvatarShowcaseScreen: undefined;
-  QRScannerShowcaseScreen: undefined;
-  TypographyShowcaseScreen: undefined;
+
 };

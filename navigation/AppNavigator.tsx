@@ -11,10 +11,7 @@ import BarberProfileScreen from '../screens/BarberProfileScreen';
 import BookingScreen from '../screens/BookingScreen';
 import LiveTrackScreen from '../screens/LiveTrackScreen';
 import Bsse7aScreen from '../screens/Bsse7aScreen';
-import LogoShowcaseScreen from '../screens/LogoShowcaseScreen';
-import AvatarShowcaseScreen from '../screens/AvatarShowcaseScreen';
-import QRScannerShowcaseScreen from '../screens/QRScannerShowcaseScreen';
-import TypographyShowcaseScreen from '../screens/TypographyShowcaseScreen';
+
 
 
 // Create the stack navigator
@@ -69,22 +66,7 @@ const AppNavigator = () => {
           name="Bsse7aScreen"
           component={Bsse7aScreen}
         />
-        <Stack.Screen
-          name="LogoShowcaseScreen"
-          component={LogoShowcaseScreen}
-        />
-        <Stack.Screen
-          name="AvatarShowcaseScreen"
-          component={AvatarShowcaseScreen}
-        />
-        <Stack.Screen
-          name="QRScannerShowcaseScreen"
-          component={QRScannerShowcaseScreen}
-        />
-        <Stack.Screen
-          name="TypographyShowcaseScreen"
-          component={TypographyShowcaseScreen}
-        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

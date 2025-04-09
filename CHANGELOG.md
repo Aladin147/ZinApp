@@ -9,11 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Logo component with support for normal, inverted, and standalone variants
-- LogoShowcaseScreen to demonstrate all logo variants
 - Avatar component with support for different sizes and verification badge
-- AvatarShowcaseScreen to demonstrate avatar variants
-- QRScannerShowcaseScreen placeholder for future QR code scanning functionality
+- Typography system with comprehensive variants and documentation
+- TypographyShowcaseScreen to demonstrate all typography variants
 - RatingStars component with support for different sizes and animations
 - MapTracker component with route visualization and ETA display
 - BookingCard component with support for different booking statuses
@@ -33,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated LiveTrackScreen to use the MapTracker component
 - Updated LandingScreen to use the Logo component
 - Updated LandingScreen with navigation to LogoShowcaseScreen and AvatarShowcaseScreen
-- Updated navigation to include the LogoShowcaseScreen, AvatarShowcaseScreen, and TypographyShowcaseScreen
+- Updated navigation to include the TypographyShowcaseScreen
 - Improved documentation to reflect recent changes
 - Updated DESIGN_TOKENS.md with detailed typography and spacing documentation
 - Updated App.tsx to use the Typography component consistently
