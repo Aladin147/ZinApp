@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
-import { colors, spacing } from '@constants';
+import { colors, spacing } from '../../constants';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface ImmersiveScreenProps {

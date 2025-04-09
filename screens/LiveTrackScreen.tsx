@@ -1,19 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  TouchableOpacity, 
-  Platform, 
-  Animated, 
-  Image,
-  Dimensions
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Image
 } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
 import { colors, spacing } from '../constants';
-import MapTracker from '../components/specific/MapTracker';
-import { Typography, Card, Button, Avatar } from '../components';
+import { Typography, Card, Button } from '../components';
 import { FontAwesome } from '@expo/vector-icons';
 import ErrorBoundary from '../components/common/ErrorBoundary';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -32,7 +29,7 @@ type Props = {
   route: LiveTrackScreenRouteProp;
 };
 
-const { width, height } = Dimensions.get('window');
+// Screen component
 
 const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
   const bookingId = route.params?.bookingId;
@@ -47,28 +44,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
   const [etaText, setEtaText] = useState('15 min');
   const [showDetails, setShowDetails] = useState(false);
 
-  // Mock stylist and user locations
-  const stylistLocation = {
-    latitude: 33.5899,
-    longitude: -7.6039,
-  };
-
-  const userLocation = {
-    latitude: 33.5921,
-    longitude: -7.6089,
-  };
-
-  // Mock waypoints for the route
-  const waypoints = [
-    {
-      latitude: 33.5910,
-      longitude: -7.6060,
-    },
-    {
-      latitude: 33.5915,
-      longitude: -7.6075,
-    },
-  ];
+  // Note: In a real app, we would use actual location data
 
   // Mock stylist data
   const stylist = {
@@ -129,7 +105,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
     const timer = setTimeout(() => {
       setEta(prevEta => {
         const newEta = prevEta - 1;
-        
+
         // Update ETA text
         if (newEta <= 0) {
           setEtaText('Arrived!');
@@ -138,7 +114,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
         } else {
           setEtaText(`${newEta} mins`);
         }
-        
+
         return newEta;
       });
     }, 60000); // Update every minute
@@ -186,22 +162,21 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
               colors={['rgba(244, 128, 93, 0.2)', 'rgba(244, 128, 93, 0.1)', 'rgba(255, 255, 255, 0)']}
               style={styles.mapGradient}
             />
-            <Image 
-              source={require('../assets/images/map-placeholder.png')} 
-              style={styles.mapImage}
-              resizeMode="cover"
+            {/* Use a colored background instead of an image */}
+            <View
+              style={[styles.mapImage, { backgroundColor: '#E8E8E8' }]}
             />
-            
+
             {/* Stylist marker */}
-            <Animated.View 
+            <Animated.View
               style={[
-                styles.stylistMarker, 
+                styles.stylistMarker,
                 { transform: [{ scale: pulseAnim }] }
               ]}
             >
               <View style={styles.stylistMarkerInner}>
-                <Image 
-                  source={{ uri: stylist.avatar }} 
+                <Image
+                  source={{ uri: stylist.avatar }}
                   style={styles.stylistAvatar}
                 />
                 {stylist.verified && (
@@ -211,19 +186,19 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                 )}
               </View>
             </Animated.View>
-            
+
             {/* User marker */}
             <View style={styles.userMarker}>
               <View style={styles.userMarkerInner} />
             </View>
-            
+
             {/* Route line */}
             <View style={styles.routeLine} />
           </View>
         </View>
 
         {/* Action Buttons */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.actionButtons,
             {
@@ -261,7 +236,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
         </Animated.View>
 
         {/* ETA Card */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.etaCardContainer,
             {
@@ -271,7 +246,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
           ]}
         >
           <Card style={styles.etaCard} variant="bubble" withShadow>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.etaCardContent}
               onPress={toggleDetails}
               activeOpacity={0.9}
@@ -281,19 +256,19 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                   <Typography variant="subheading" style={styles.etaTitle}>
                     {eta <= 0 ? 'Your stylist has arrived!' : 'Your stylist is on the way'}
                   </Typography>
-                  <FontAwesome 
-                    name={showDetails ? "chevron-down" : "chevron-up"} 
-                    size={16} 
-                    color={colors.textMuted} 
+                  <FontAwesome
+                    name={showDetails ? "chevron-down" : "chevron-up"}
+                    size={16}
+                    color={colors.textMuted}
                   />
                 </View>
-                
+
                 <View style={styles.etaTimeContainer}>
                   <View style={styles.etaTimeIconContainer}>
                     <FontAwesome name="clock-o" size={20} color={colors.primary} />
                   </View>
-                  <Typography 
-                    variant="heading" 
+                  <Typography
+                    variant="heading"
                     color={eta <= 0 ? colors.success : colors.primary}
                     style={styles.etaTime}
                   >
@@ -301,7 +276,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                   </Typography>
                 </View>
               </View>
-              
+
               <View style={styles.stylistInfo}>
                 <Image source={{ uri: stylist.avatar }} style={styles.stylistCardAvatar} />
                 <View style={styles.stylistDetails}>
@@ -317,12 +292,12 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                 </View>
               </View>
             </TouchableOpacity>
-            
+
             {/* Expanded details */}
             {showDetails && (
               <View style={styles.expandedDetails}>
                 <View style={styles.divider} />
-                
+
                 <View style={styles.bookingDetails}>
                   <View style={styles.bookingDetailItem}>
                     <FontAwesome name="scissors" size={14} color={colors.textMuted} />
@@ -333,14 +308,14 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                       ${booking.price}
                     </Typography>
                   </View>
-                  
+
                   <View style={styles.bookingDetailItem}>
                     <FontAwesome name="calendar" size={14} color={colors.textMuted} />
                     <Typography variant="body" style={styles.bookingDetailText}>
                       {booking.date}, {booking.time}
                     </Typography>
                   </View>
-                  
+
                   <View style={styles.bookingDetailItem}>
                     <FontAwesome name="map-marker" size={14} color={colors.textMuted} />
                     <Typography variant="body" style={styles.bookingDetailText}>
@@ -348,14 +323,14 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                     </Typography>
                   </View>
                 </View>
-                
+
                 <View style={styles.divider} />
-                
+
                 <View style={styles.trackingUpdates}>
                   <Typography variant="bodyMedium" style={styles.trackingTitle}>
                     Tracking Updates
                   </Typography>
-                  
+
                   <View style={styles.updateItem}>
                     <View style={[styles.updateDot, { backgroundColor: colors.success }]} />
                     <View style={styles.updateContent}>
@@ -367,7 +342,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                       </Typography>
                     </View>
                   </View>
-                  
+
                   <View style={styles.updateItem}>
                     <View style={[styles.updateDot, { backgroundColor: colors.primary }]} />
                     <View style={styles.updateContent}>
@@ -379,7 +354,7 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
                       </Typography>
                     </View>
                   </View>
-                  
+
                   {eta <= 5 && (
                     <View style={styles.updateItem}>
                       <View style={[styles.updateDot, { backgroundColor: colors.info }]} />
@@ -409,9 +384,9 @@ const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
           onPress={simulateArrival}
           style={styles.demoButton}
         />
-        
+
         {/* Back Button */}
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.backButton}
           onPress={() => navigation.goBack()}
           activeOpacity={0.7}
