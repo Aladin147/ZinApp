@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Animated
 } from 'react-native';
-import { colors, spacing } from '@constants';
+import { colors, spacing } from '../../constants';
 
 interface CardProps extends ViewProps {
   style?: ViewStyle;

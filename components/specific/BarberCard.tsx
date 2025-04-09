@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import Card from '../common/Card';
 import Typography from '../common/Typography';
-import { colors } from '@constants';
+import { colors } from '../../constants';
 import tw from 'twrnc';
 
 interface BarberCardProps {
@@ -33,21 +33,21 @@ const BarberCard: React.FC<BarberCardProps> = ({
 
   // Placeholder image for development
   const placeholderImage = 'https://via.placeholder.com/100';
-  const imageSource = profile_picture 
-    ? { uri: profile_picture.startsWith('http') ? profile_picture : placeholderImage } 
+  const imageSource = profile_picture
+    ? { uri: profile_picture.startsWith('http') ? profile_picture : placeholderImage }
     : { uri: placeholderImage };
 
   return (
-    <Card 
-      variant="default" 
+    <Card
+      variant="default"
       onPress={handlePress}
       style={tw`mb-4`}
     >
       <View style={tw`flex-row items-center`}>
         <View style={tw`mr-4`}>
-          <Image 
-            source={imageSource} 
-            style={styles.profileImage} 
+          <Image
+            source={imageSource}
+            style={styles.profileImage}
             resizeMode="cover"
           />
           {verified && (
@@ -58,12 +58,12 @@ const BarberCard: React.FC<BarberCardProps> = ({
             </View>
           )}
         </View>
-        
+
         <View style={tw`flex-1`}>
           <Typography variant="subheading" weight="bold">
             {name}
           </Typography>
-          
+
           <View style={tw`flex-row items-center mt-1`}>
             <View style={tw`flex-row items-center mr-4`}>
               <Typography variant="caption" color={colors.primary} style={tw`mr-1`}>
@@ -73,14 +73,14 @@ const BarberCard: React.FC<BarberCardProps> = ({
                 {rating.toFixed(1)}
               </Typography>
             </View>
-            
+
             <Typography variant="caption">
               {distance_km.toFixed(1)} km away
             </Typography>
           </View>
         </View>
-        
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.bookButton}
           onPress={handlePress}
         >

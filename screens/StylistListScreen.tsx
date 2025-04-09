@@ -2,15 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, FlatList, ActivityIndicator } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types';
-import { colors } from '@constants';
+import { RootStackParamList } from '../types';
+import { colors } from '../constants';
 import tw from 'twrnc';
 
 // Import our custom components
-import Screen from '@components/layout/Screen';
-import Header from '@components/layout/Header';
-import Typography from '@components/common/Typography';
-import BarberCard from '@components/specific/BarberCard';
+import { Screen, Header, Typography, BarberCard } from '../components';
 
 type StylistListScreenNavigationProp = StackNavigationProp<
   RootStackParamList,

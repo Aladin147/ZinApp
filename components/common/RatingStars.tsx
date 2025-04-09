@@ -17,8 +17,9 @@ interface RatingStarsProps {
 
   /**
    * Size of each star
+   * Can be a predefined size ('small', 'medium', 'large') or a specific number
    */
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | number;
 
   /**
    * Whether to animate the stars when they appear
@@ -66,6 +67,10 @@ const RatingStars: React.FC<RatingStarsProps> = ({
 
   // Get star size based on the size prop
   const getStarSize = () => {
+    if (typeof size === 'number') {
+      return size;
+    }
+
     switch (size) {
       case 'small':
         return 16;
@@ -80,6 +85,11 @@ const RatingStars: React.FC<RatingStarsProps> = ({
 
   // Get spacing between stars based on the size prop
   const getStarSpacing = () => {
+    if (typeof size === 'number') {
+      // For numeric sizes, scale the spacing proportionally
+      return Math.max(2, Math.floor(size / 5));
+    }
+
     switch (size) {
       case 'small':
         return 2;
