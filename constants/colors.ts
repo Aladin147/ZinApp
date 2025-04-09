@@ -1,64 +1,73 @@
 /**
- * Color constants from DESIGN_TOKENS.md and zinapp_visual_guidelines.md
+ * Color System for ZinApp
  *
- * Based on the specifications in the design documentation:
- * - Primary color: Coral Orange (#F4805D)
- * - Warm Sand (#F8F3ED)
- * - Cool Blue Slate (#8CBACD)
- * - Dark Slate (#3C3C3C)
+ * This file defines the color palette for ZinApp, including primary, secondary, and accent colors,
+ * as well as utility colors for different states and grayscale values.
+ *
+ * The color system is based on the specifications in the design documentation (DESIGN_TOKENS.md).
+ *
+ * @see docs/DESIGN_TOKENS.md for the complete color specifications
  */
 export const colors = {
-  // Primary colors
-  primary: '#F4805D', // Coral Orange - CTA buttons, icons
-  accent: '#8CBACD',  // Cool Blue Slate - QR trust theme
-  warmSand: '#F8F3ED', // Warm Sand - Background
-  darkSlate: '#3C3C3C', // Dark Slate - Text
+  // Brand colors
+  primary: '#FF6A33',    // Coral Orange - CTA buttons, icons
+  secondary: '#F8F0E3',  // Secondary buttons, cards
+  accent: '#8CBACD',     // Cool Blue Slate - Stylist-related elements
+  warmSand: '#F5E8D3',   // Warm backgrounds, cards
+  darkSlate: '#2B2B2B',  // Dark backgrounds, headers
 
   // Backgrounds
-  bgLight: '#FFFFFF', // Backgrounds (light)
-  bgDark: '#1C1C1E',  // Backgrounds (dark)
-  bgWarm: '#F8F3ED', // Warm Sand background
+  bgLight: '#FFFFFF',    // Backgrounds (light)
+  bgDark: '#1C1C1E',     // Backgrounds (dark)
 
   // Text
-  textMain: '#3C3C3C',  // Headlines (Dark Slate)
-  textMuted: '#7A7A7A', // Secondary text
+  textPrimary: '#2B2B2B', // Headlines, primary text
+  textMuted: '#7A7A7A',   // Secondary text, captions
 
-  // Utility colors
-  success: '#34D399',
-  error: '#EF4444',
-  warning: '#F59E0B',
-  info: '#3B82F6',
+  // Status/Utility colors
+  success: '#4CAF50',    // Success states, completed
+  error: '#F44336',      // Error states, destructive
+  warning: '#FFC107',    // Warning states, alerts
+  info: '#2196F3',       // Information, notifications
 
   // Grayscale
-  gray50: '#F9FAFB',
-  gray100: '#F3F4F6',
-  gray200: '#E5E7EB',
-  gray300: '#D1D5DB',
-  gray400: '#9CA3AF',
-  gray500: '#6B7280',
-  gray600: '#4B5563',
-  gray700: '#374151',
-  gray800: '#1F2937',
-  gray900: '#111827',
+  gray100: '#F5F5F5',    // Lightest gray
+  gray200: '#EEEEEE',    // Light gray
+  gray300: '#E0E0E0',    // Medium light gray
+  gray400: '#BDBDBD',    // Medium gray
+  gray500: '#9E9E9E',    // Medium dark gray
+  gray600: '#757575',    // Dark gray
+  gray700: '#616161',    // Darker gray
+  gray800: '#424242',    // Very dark gray
+  gray900: '#212121',    // Almost black
 };
 
-// Named aliases for common use cases
+/**
+ * Theme Colors for ZinApp
+ *
+ * These are named aliases for common use cases throughout the app.
+ * Using these semantic color names makes it easier to maintain consistency
+ * and update the theme in the future.
+ */
 export const themeColors = {
   // Button states
   buttonPrimary: colors.primary,
-  buttonSecondary: colors.accent,
+  buttonSecondary: colors.secondary,
+  buttonAccent: colors.accent,
   buttonDisabled: colors.gray300,
-  buttonPressed: '#E06A4A', // Darker variant of primary
+  buttonPressed: '#E05A23', // Darker variant of primary
 
   // Backgrounds
   background: colors.bgLight,
   backgroundWarm: colors.warmSand,
   cardBg: colors.bgLight,
+  cardBgWarm: colors.warmSand,
 
   // Text variants
-  text: colors.textMain,
+  text: colors.textPrimary,
   textSecondary: colors.textMuted,
   textLight: colors.bgLight,
+  textOnPrimary: colors.bgLight,
 
   // Status
   statusSuccess: colors.success,
@@ -73,6 +82,8 @@ export const themeColors = {
   border: colors.gray200,
   divider: colors.gray100,
   shadow: 'rgba(0, 0, 0, 0.1)',
+  shadowDark: 'rgba(0, 0, 0, 0.2)',
+  overlay: 'rgba(0, 0, 0, 0.5)',
 };
 
 export default colors;

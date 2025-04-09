@@ -5,14 +5,16 @@ Update regularly and mark complete with `✅`.
 
 ## High Priority
 
-- [ ] Implement remaining core UI components:
+- [x] Implement remaining core UI components:
   - [x] RatingStars component
   - [x] MapTracker component
   - [x] BookingCard component
-  - [ ] QRScanner component
-- [ ] Fix typography with correct font family (Uber Move / Inter / Satoshi)
+  - [x] Avatar component
+- [x] Implement typography system with Inter font (as fallback for Uber Move)
 - [ ] Add visual indicator for DEMO MODE
+- [x] Create spacing utility functions for consistent spacing
 - [ ] Ensure consistent application of design tokens across all components
+- [ ] Create color showcase screen
 
 ## Medium Priority
 
@@ -23,7 +25,6 @@ Update regularly and mark complete with `✅`.
   - [x] LiveTrackScreen
   - [ ] Bsse7aScreen
 - [ ] Add logic for guest/verified state switching
-- [ ] Setup QR routing stub handler
 
 ## Low Priority
 
@@ -31,6 +32,7 @@ Update regularly and mark complete with `✅`.
 - [ ] Add localization support for home screen greeting
 - [ ] Investigate API connectivity issues
 - [ ] Implement proper error handling for network requests
+- [ ] Implement QR scanner functionality (deferred)
 
 ## Completed
 
@@ -45,3 +47,9 @@ Update regularly and mark complete with `✅`.
 - [x] Update key screens with new components (LandingScreen, ServiceSelectScreen, StylistListScreen)
 - [x] Create Logo component with support for different variants
 - [x] Create LogoShowcaseScreen to demonstrate logo variants
+- [x] Create Avatar component with support for different sizes and verification badge
+- [x] Create AvatarShowcaseScreen to demonstrate avatar variants
+- [x] Update DESIGN_TOKENS.md with comprehensive design system documentation
+- [x] Create TypographyShowcaseScreen to demonstrate all typography variants
+- [x] Enhance spacing system with component-specific values
+- [x] Refine color system with semantic naming and consistent palette

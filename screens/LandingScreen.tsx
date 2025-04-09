@@ -68,6 +68,33 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
           iconName="image"
           iconPosition="left"
           onPress={() => navigation.navigate('LogoShowcaseScreen')}
+          style={tw`mb-2`}
+        />
+
+        <Button
+          title="View Avatar Showcase"
+          variant="text"
+          iconName="user-circle"
+          iconPosition="left"
+          onPress={() => navigation.navigate('AvatarShowcaseScreen')}
+          style={tw`mb-2`}
+        />
+
+        <Button
+          title="View QR Scanner Showcase"
+          variant="text"
+          iconName="qrcode"
+          iconPosition="left"
+          onPress={() => navigation.navigate('QRScannerShowcaseScreen')}
+          style={tw`mb-2`}
+        />
+
+        <Button
+          title="View Typography Showcase"
+          variant="text"
+          iconName="text-size"
+          iconPosition="left"
+          onPress={() => navigation.navigate('TypographyShowcaseScreen')}
         />
       </View>
     </Screen>

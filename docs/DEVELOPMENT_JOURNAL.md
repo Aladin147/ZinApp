@@ -52,7 +52,7 @@ const Logo: React.FC<LogoProps> = ({
   // Calculate height based on aspect ratio if not provided
   const getHeight = () => {
     if (height) return height;
-    
+
     // Default aspect ratios for each variant
     switch (variant) {
       case 'normal':
@@ -64,7 +64,7 @@ const Logo: React.FC<LogoProps> = ({
         return width * 0.35;
     }
   };
-  
+
   // Get the appropriate logo component based on variant
   const LogoComponent = (): React.FC<SvgProps> => {
     switch (variant) {
@@ -78,10 +78,10 @@ const Logo: React.FC<LogoProps> = ({
         return NormalLogo;
     }
   };
-  
+
   const SelectedLogo = LogoComponent();
   const calculatedHeight = getHeight();
-  
+
   return (
     <View style={[styles.container, style]}>
       <SelectedLogo width={width} height={calculatedHeight} />
@@ -110,7 +110,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
   const animatedValues = React.useRef(
     Array(maxRating).fill(0).map(() => new Animated.Value(0))
   ).current;
-  
+
   // Animate stars when component mounts
   useEffect(() => {
     if (animated) {
@@ -123,40 +123,40 @@ const RatingStars: React.FC<RatingStarsProps> = ({
           useNativeDriver: true,
         });
       });
-      
+
       Animated.stagger(50, animations).start();
     } else {
       // If not animated, set all values to 1 immediately
       animatedValues.forEach(value => value.setValue(1));
     }
   }, [animated, animatedValues]);
-  
+
   // Render a single star
   const renderStar = (index: number) => {
     const isFilled = index < Math.floor(rating);
     const isHalfFilled = !isFilled && index < Math.ceil(rating) && rating % 1 !== 0;
-    
+
     // Determine which icon to use based on the rating
     const iconName = isFilled ? 'star' : (isHalfFilled ? 'star-half-o' : 'star-o');
-    
+
     return (
-      <Animated.View 
-        key={`star-${index}`} 
+      <Animated.View
+        key={`star-${index}`}
         style={[styles.starContainer, animatedStyle]}
       >
-        <Icon 
-          name={iconName} 
-          size={starSize} 
+        <Icon
+          name={iconName}
+          size={starSize}
           color={isFilled || isHalfFilled ? activeColor : inactiveColor}
           style={styles.starIcon}
         />
       </Animated.View>
     );
   };
-  
+
   return (
     <View style={[
-      styles.container, 
+      styles.container,
       { gap: getStarSpacing() },
       style
     ]}>
@@ -183,20 +183,20 @@ const MapTracker: React.FC<MapTrackerProps> = ({
 }) => {
   // Reference to the map view
   const mapRef = useRef<MapView>(null);
-  
+
   // Animation value for the pulsing effect on the user marker
   const pulseAnim = useRef(new Animated.Value(0.5)).current;
-  
+
   // State to track if the stylist has arrived
   const [hasArrived, setHasArrived] = useState(false);
-  
+
   // Calculate the route coordinates including waypoints
   const routeCoordinates = [
     stylistLocation,
     ...waypoints,
     userLocation,
   ];
-  
+
   // Start the pulsing animation for the user marker
   useEffect(() => {
     Animated.loop(
@@ -214,7 +214,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
       ])
     ).start();
   }, [pulseAnim]);
-  
+
   // Check if the stylist has arrived (when ETA reaches 0)
   useEffect(() => {
     if (eta <= 0 && !hasArrived) {
@@ -224,7 +224,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
       }
     }
   }, [eta, hasArrived, onArrival]);
-  
+
   // Fit the map to show both markers when the component mounts
   useEffect(() => {
     if (mapRef.current) {
@@ -234,7 +234,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
       });
     }
   }, [routeCoordinates]);
-  
+
   return (
     <View style={styles.container}>
       {/* Map View */}
@@ -270,7 +270,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
             )}
           </View>
         </Marker>
-        
+
         {/* User Marker (Destination) */}
         <Marker coordinate={userLocation} title="Your Location">
           <Animated.View
@@ -284,7 +284,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
             <View style={styles.userMarkerInner} />
           </Animated.View>
         </Marker>
-        
+
         {/* Route Line */}
         <Polyline
           coordinates={routeCoordinates}
@@ -293,7 +293,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
           lineDashPattern={[1, 0]}
         />
       </MapView>
-      
+
       {/* ETA Card */}
       <Card
         variant="elevated"
@@ -308,7 +308,7 @@ const MapTracker: React.FC<MapTrackerProps> = ({
             <Icon name="clock-o" size={20} color={colors.primary} />
           </View>
         </View>
-        
+
         <View style={styles.stylistInfo}>
           <Image
             source={avatarSource}
@@ -347,19 +347,19 @@ const BookingCard: React.FC<BookingCardProps> = ({
     month: 'short',
     day: 'numeric'
   });
-  
-  const bookingTime = new Date(booking.datetime).toLocaleTimeString('en-US', { 
-    hour: '2-digit', 
+
+  const bookingTime = new Date(booking.datetime).toLocaleTimeString('en-US', {
+    hour: '2-digit',
     minute: '2-digit',
-    hour12: true 
+    hour12: true
   });
 
   // Determine if booking is completed
   const isCompleted = booking.status === 'completed';
-  
+
   // Determine if booking is active (en_route or arrived)
   const isActive = booking.status === 'en_route' || booking.status === 'arrived';
-  
+
   // Get status color based on booking status
   const getStatusColor = () => {
     switch (booking.status) {
@@ -376,7 +376,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
         return colors.textMuted;
     }
   };
-  
+
   return (
     <Card
       variant="warm"
@@ -401,12 +401,12 @@ const BookingCard: React.FC<BookingCardProps> = ({
               </View>
             )}
           </View>
-          
+
           <View style={styles.stylistInfo}>
             <Typography variant="sectionHeader">
               {stylist?.name || `Stylist #${booking.stylist_id}`}
             </Typography>
-            
+
             {stylist?.rating && (
               <View style={styles.ratingContainer}>
                 <RatingStars rating={stylist.rating} size="small" />
@@ -417,37 +417,37 @@ const BookingCard: React.FC<BookingCardProps> = ({
             )}
           </View>
         </View>
-        
+
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor() }]}>
           <Typography variant="caption" color="white">
             {getStatusText()}
           </Typography>
         </View>
       </View>
-      
+
       {/* Service details */}
       <View style={styles.serviceContainer}>
         <View style={styles.serviceInfo}>
           <Typography variant="body">
             {service?.name || `Service #${booking.service_id}`}
           </Typography>
-          
+
           <Typography variant="caption" color={colors.textMuted}>
             {bookingDate} at {bookingTime}
           </Typography>
         </View>
-        
+
         {service?.price && (
           <Typography variant="bodyMedium">
             {service.price} MAD
           </Typography>
         )}
       </View>
-      
+
       {/* Footer with action buttons for completed bookings */}
       {isCompleted && (
         <View style={styles.footer}>
-          <Button 
+          <Button
             title="Rebook"
             variant="primary"
             size="small"
@@ -455,9 +455,9 @@ const BookingCard: React.FC<BookingCardProps> = ({
             iconPosition="left"
             onPress={handleRebook}
           />
-          
+
           {!booking.rating_given && (
-            <Button 
+            <Button
               title="Rate"
               variant="outline"
               size="small"
@@ -469,7 +469,7 @@ const BookingCard: React.FC<BookingCardProps> = ({
           )}
         </View>
       )}
-      
+
       {/* Active booking indicator */}
       {isActive && (
         <View style={styles.activeIndicator}>
@@ -504,10 +504,95 @@ const BookingCard: React.FC<BookingCardProps> = ({
 
 **Solution**: We used React Native's Animated API with useNativeDriver: true for better performance, and implemented staggered animations to reduce the load on the JavaScript thread.
 
-## Next Steps
+## July 16, 2023 - Avatar Component Implementation
 
-1. **QRScanner Component**: Implement the QRScanner component using the Expo Camera or Barcode Scanner API.
-2. **Update Remaining Screens**: Complete the BarberProfileScreen, BookingScreen, and Bsse7aScreen.
-3. **Animation System**: Implement a consistent animation system using Reanimated 2.
-4. **Typography Improvements**: Fix font family to use Uber Move with fallbacks to Inter/Satoshi.
-5. **Demo Mode Indicator**: Add a visual indicator for demo mode.
+Today we implemented the Avatar component to display user profile images with verification badges. This component is a key part of the UI enhancement plan, providing a consistent way to display user avatars throughout the app.
+
+### Avatar Component Implementation
+
+The Avatar component was designed to be flexible and reusable, with support for different sizes, verification badges, and custom styling:
+
+```typescript
+const Avatar: React.FC<AvatarProps> = ({
+  source,
+  size = 'medium',
+  verified = false,
+  style,
+  imageStyle,
+  backgroundColor = colors.gray200,
+  borderColor,
+}) => {
+  // Get size dimensions based on size prop
+  const getDimensions = () => {
+    switch (size) {
+      case 'small':
+        return {
+          container: 40,
+          badge: 16,
+          badgeText: 10,
+        };
+      case 'medium':
+        return {
+          container: 60,
+          badge: 20,
+          badgeText: 12,
+        };
+      case 'large':
+        return {
+          container: 100,
+          badge: 24,
+          badgeText: 14,
+        };
+      default:
+        return {
+          container: 60,
+          badge: 20,
+          badgeText: 12,
+        };
+    }
+  };
+
+  const dimensions = getDimensions();
+
+  return (
+    <View style={[styles.container, containerStyle, style]}>
+      <Image
+        source={source}
+        style={[styles.image, imageDimensions, imageStyle]}
+        resizeMode="cover"
+      />
+
+      {verified && (
+        <View style={[styles.verifiedBadge, badgeStyle]}>
+          <Typography
+            variant="caption"
+            color="white"
+            align="center"
+            style={{ fontSize: dimensions.badgeText }}
+          >
+            ✓
+          </Typography>
+        </View>
+      )}
+    </View>
+  );
+};
+```
+
+We also created an AvatarShowcaseScreen to demonstrate the different variants and sizes of the Avatar component. This screen serves as both a demonstration and a reference for developers.
+
+### Key Features
+
+1. **Size Variants**: The Avatar component supports three sizes - small (40px), medium (60px), and large (100px).
+2. **Verification Badge**: A blue verification badge can be displayed for verified users, following the design specification that Cool Blue Slate should be used for stylist-related elements.
+3. **Custom Styling**: The component supports custom background and border colors, allowing for flexible usage in different contexts.
+4. **Consistent Design**: The component follows the design specifications with circular avatars and proper styling for the verification badge.
+
+### Next Steps
+
+1. **Replace Image Instances**: Replace all image instances for avatars with the Avatar component throughout the app.
+2. **QRScanner Component**: Implement the QRScanner component using the Expo Camera or Barcode Scanner API.
+3. **Update Remaining Screens**: Complete the BarberProfileScreen, BookingScreen, and Bsse7aScreen.
+4. **Animation System**: Implement a consistent animation system using Reanimated 2.
+5. **Typography Improvements**: Fix font family to use Uber Move with fallbacks to Inter/Satoshi.
+6. **Demo Mode Indicator**: Add a visual indicator for demo mode.

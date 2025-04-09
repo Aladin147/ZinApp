@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { AuthProvider } from '@state/AuthContext';
 import AppNavigator from '@navigation/AppNavigator';
-import tw from 'twrnc';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { colors } from './constants';
+import { Typography } from './components';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -25,21 +25,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bgLight,
   },
-  title: {
-    fontFamily: 'Inter-Bold',
-    fontSize: 24,
-    lineHeight: 32,
-    textAlign: 'center',
-    marginVertical: 20,
-    color: colors.textMain,
-  },
-  subtitle: {
-    fontFamily: 'Inter',
-    fontSize: 14,
-    lineHeight: 20,
-    textAlign: 'center',
-    marginBottom: 20,
-    color: colors.textMuted,
+  sanityContainer: {
+    flex: 1,
+    backgroundColor: colors.bgLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
   },
   debugButton: {
     position: 'absolute',
@@ -50,22 +41,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     zIndex: 999,
   },
-  debugText: {
-    fontFamily: 'Inter',
-    fontSize: 12,
-    color: colors.textMain,
-  },
   backButton: {
     marginTop: 20,
     backgroundColor: colors.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 12,
-  },
-  backButtonText: {
-    fontFamily: 'Inter-Medium',
-    fontSize: 16,
-    color: 'white',
+    alignItems: 'center',
   },
 });
 
@@ -114,19 +96,26 @@ export default function App() {
   if (useSanityTest) {
     return (
       <View
-        style={[tw`flex-1 bg-white items-center justify-center`, styles.container]}
+        style={styles.sanityContainer}
         onLayout={onLayoutRootView}
       >
-        <Text style={styles.title}>ZinApp is alive ✅</Text>
-        <Text style={styles.subtitle}>Fonts loaded successfully</Text>
-        <View style={styles.backButton}>
-          <Text
-            style={styles.backButtonText}
-            onPress={() => setUseSanityTest(false)}
-          >
+        <Typography variant="screenTitle" align="center" style={{ marginBottom: 8 }}>
+          ZinApp is alive ✅
+        </Typography>
+
+        <Typography variant="body" align="center" color={colors.textMuted} style={{ marginBottom: 20 }}>
+          Fonts loaded successfully
+        </Typography>
+
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => setUseSanityTest(false)}
+        >
+          <Typography variant="button" color={colors.bgLight}>
             Back to App
-          </Text>
-        </View>
+          </Typography>
+        </TouchableOpacity>
+
         <StatusBar style="auto" />
       </View>
     );
@@ -140,14 +129,14 @@ export default function App() {
           <AppNavigator />
           <StatusBar style="auto" />
           {/* Debug button to toggle sanity test */}
-          <View style={styles.debugButton}>
-            <Text
-              style={styles.debugText}
-              onPress={() => setUseSanityTest(true)}
-            >
+          <TouchableOpacity
+            style={styles.debugButton}
+            onPress={() => setUseSanityTest(true)}
+          >
+            <Typography variant="caption" color={colors.textPrimary}>
               Debug
-            </Text>
-          </View>
+            </Typography>
+          </TouchableOpacity>
         </AuthProvider>
       </View>
     </SafeAreaProvider>

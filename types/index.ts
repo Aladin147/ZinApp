@@ -69,4 +69,7 @@ export type RootStackParamList = {
   LiveTrackScreen: { bookingId: number };
   Bsse7aScreen: { bookingId: number };
   LogoShowcaseScreen: undefined;
+  AvatarShowcaseScreen: undefined;
+  QRScannerShowcaseScreen: undefined;
+  TypographyShowcaseScreen: undefined;
 };

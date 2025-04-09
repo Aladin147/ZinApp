@@ -1,25 +1,75 @@
 import React from 'react';
-import { Text, TextProps, TextStyle, StyleSheet } from 'react-native';
+import { Text, TextProps, TextStyle } from 'react-native';
 import { colors, typography } from '@constants';
-import tw from 'twrnc';
 
+/**
+ * Typography component variants based on the ZinApp design system
+ */
+type TypographyVariant =
+  | 'screenTitle'   // 24px Bold - Main screen titles
+  | 'heading'       // 20px Bold - Large headings
+  | 'sectionHeader' // 18px Bold - Section headers
+  | 'subheading'    // 16px Bold - Subheadings
+  | 'body'          // 14px Regular - Standard text
+  | 'bodyMedium'    // 14px Medium - Emphasized body text
+  | 'bodyBold'      // 14px Bold - Important body text
+  | 'button'        // 16px Medium - Button text
+  | 'caption'       // 12px Regular - Labels, taglines
+  | 'captionMedium'; // 12px Medium - Emphasized small text
+
+/**
+ * Props for the Typography component
+ */
 interface TypographyProps extends TextProps {
-  variant?: 'screenTitle' | 'sectionHeader' | 'body' | 'bodyMedium' | 'button' | 'caption' | 'captionMedium';
+  /**
+   * Typography variant based on the design system
+   * @default 'body'
+   */
+  variant?: TypographyVariant;
+
+  /**
+   * Text color
+   * @default colors.textPrimary for most variants, colors.textMuted for captions
+   */
   color?: string;
+
+  /**
+   * Text alignment
+   * @default 'left'
+   */
   align?: 'left' | 'center' | 'right';
+
+  /**
+   * Additional styles to apply to the text
+   */
   style?: TextStyle;
+
+  /**
+   * Text content
+   */
   children: React.ReactNode;
 }
 
 /**
  * Typography component following ZinApp design system
  *
- * Based on the specifications in the design documentation:
- * - Font Family: Uber Move (fallback: Inter / Satoshi)
- * - Screen Title: 24px, Bold, 32px line height
- * - Section Header: 18px, Bold, 26px line height
- * - Paragraph / Body: 14px, Regular, 20px line height
- * - Button Text: 16px, Medium, 20px line height
+ * This component provides consistent text styling throughout the app based on the
+ * typography system defined in the design documentation. It supports various text
+ * variants like screenTitle, heading, body, etc., each with specific font properties.
+ *
+ * @example
+ * // Basic usage
+ * <Typography>Default body text</Typography>
+ *
+ * @example
+ * // Using a specific variant
+ * <Typography variant="screenTitle">Screen Title</Typography>
+ *
+ * @example
+ * // With custom color and alignment
+ * <Typography variant="caption" color={colors.primary} align="center">
+ *   Centered caption with custom color
+ * </Typography>
  */
 const Typography: React.FC<TypographyProps> = ({
   variant = 'body',
@@ -37,7 +87,8 @@ const Typography: React.FC<TypographyProps> = ({
     fontFamily: variantStyle.fontFamily,
     fontSize: variantStyle.fontSize,
     lineHeight: variantStyle.lineHeight,
-    color: color || colors.textMain,
+    letterSpacing: variantStyle.letterSpacing,
+    color: color || colors.textPrimary,
   };
 
   // Add text alignment
@@ -45,7 +96,7 @@ const Typography: React.FC<TypographyProps> = ({
     textAlign: align as 'left' | 'center' | 'right',
   };
 
-  // Special case for caption variant - use textMuted color if no color specified
+  // Special case for caption variants - use textMuted color if no color specified
   if ((variant === 'caption' || variant === 'captionMedium') && !color) {
     baseStyle.color = colors.textMuted;
   }

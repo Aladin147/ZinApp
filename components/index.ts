@@ -4,6 +4,7 @@ export { default as Card } from './common/Card';
 export { default as Typography } from './common/Typography';
 export { default as Logo } from './common/Logo';
 export { default as RatingStars } from './common/RatingStars';
+export { default as Avatar } from './common/Avatar';
 
 // Layout components
 export { default as Screen } from './layout/Screen';

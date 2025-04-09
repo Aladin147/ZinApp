@@ -45,6 +45,26 @@ This document tracks solutions and approaches that were attempted but did not re
 3. **Timeout Adjustments:**
    - Adjusting timeouts doesn't help if the fundamental connection issue remains unresolved.
 
+## QR Scanner Component Issues
+
+### 1. Expo Camera Integration (2025-04-13)
+
+**What was tried:**
+- Installed expo-camera and expo-barcode-scanner packages
+- Created a QRScanner component that used the Camera component from expo-camera
+- Added camera permissions to app.json
+- Implemented proper permission handling and UI for the scanner
+
+**Why it didn't work:**
+- Encountered "Cannot find native module 'ExponentCamera'" error when trying to use the Camera component
+- The error persisted despite reinstalling packages and trying different versions
+- Attempted to use BarCodeScanner directly instead of Camera, but still encountered issues
+
+**Error observed:**
+```
+Uncaught Error: Cannot find native module 'ExponentCamera'
+```
+
 ## Potential Alternative Approaches
 
 1. **Direct Hardcoding:**
@@ -58,3 +78,8 @@ This document tracks solutions and approaches that were attempted but did not re
 
 4. **Offline-First Approach:**
    - Design the app to work primarily with local data and only sync with the API when available.
+
+5. **QR Scanner Alternatives:**
+   - Try using Expo's managed workflow with prebuild step for QR scanning
+   - Consider using a different QR scanning library
+   - Implement QR scanning when the app is more stable and core functionality is complete
