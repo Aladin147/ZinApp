@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
 import { colors, spacing, themeColors } from '../constants';
@@ -38,11 +38,9 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
           end={{ x: 1, y: 1 }}
         >
           <View style={styles.heroContent}>
-            <Image 
-              source={require('../assets/images/logo-white.png')} 
-              style={styles.logo}
-              resizeMode="contain"
-            />
+            <View style={[styles.logo, { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 40 }]}>
+              <FontAwesome name="scissors" size={32} color="white" />
+            </View>
             <Typography variant="screenTitle" color={colors.bgLight} style={styles.heroTitle}>
               ZinApp
             </Typography>
@@ -133,6 +131,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     marginBottom: spacing.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   heroTitle: {
     marginBottom: spacing.xxs,
