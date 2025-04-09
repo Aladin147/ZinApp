@@ -1,14 +1,15 @@
 import React from 'react';
-import { 
-  TouchableOpacity, 
-  Text, 
-  StyleSheet, 
+import {
+  TouchableOpacity,
+  StyleSheet,
   ActivityIndicator,
   TouchableOpacityProps,
   ViewStyle,
-  TextStyle
+  TextStyle,
+  Animated
 } from 'react-native';
-import { colors } from '@constants';
+import { colors, typography } from '@constants';
+import Typography from './Typography';
 import tw from 'twrnc';
 
 interface ButtonProps extends TouchableOpacityProps {
@@ -23,6 +24,12 @@ interface ButtonProps extends TouchableOpacityProps {
 
 /**
  * Button component following ZinApp design system
+ *
+ * Based on the specifications in the design documentation:
+ * - Primary color: Coral Orange (#F4805D)
+ * - Border radius: 12px
+ * - Height: 48px (standard), 56px (hero)
+ * - Animation: Slight bounce on tap
  */
 const Button: React.FC<ButtonProps> = ({
   title,
@@ -34,104 +41,149 @@ const Button: React.FC<ButtonProps> = ({
   textStyle,
   ...props
 }) => {
+  // Animation value for the bounce effect
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+
+  // Handle press animation
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.95,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 6
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,
+      useNativeDriver: true,
+      speed: 20,
+      bounciness: 6
+    }).start();
+  };
+
   // Determine button styles based on variant
   const getButtonStyle = () => {
     switch (variant) {
       case 'primary':
         return [
-          tw`bg-[#FF6A33] items-center justify-center rounded-xl`,
+          styles.button,
+          styles.primaryButton,
           styles.shadow
         ];
       case 'secondary':
-        return tw`bg-[#8CBACD] items-center justify-center rounded-xl`;
+        return [
+          styles.button,
+          styles.secondaryButton
+        ];
       case 'outline':
-        return tw`border border-[#FF6A33] bg-transparent items-center justify-center rounded-xl`;
+        return [
+          styles.button,
+          styles.outlineButton
+        ];
       default:
-        return tw`bg-[#FF6A33] items-center justify-center rounded-xl`;
+        return [
+          styles.button,
+          styles.primaryButton,
+          styles.shadow
+        ];
     }
   };
 
-  // Determine text styles based on variant
-  const getTextStyle = () => {
+  // Determine height based on size
+  const getHeightStyle = () => {
+    switch (size) {
+      case 'small':
+        return { height: 40 };
+      case 'medium':
+        return { height: 48 }; // Standard height from design specs
+      case 'large':
+        return { height: 56 }; // Hero height from design specs
+      default:
+        return { height: 48 };
+    }
+  };
+
+  // Determine text color based on variant
+  const getTextColor = () => {
     switch (variant) {
       case 'primary':
       case 'secondary':
-        return tw`text-white font-medium`;
+        return 'white';
       case 'outline':
-        return [tw`font-medium`, { color: colors.primary }];
+        return colors.primary;
       default:
-        return tw`text-white font-medium`;
-    }
-  };
-
-  // Determine padding based on size
-  const getPaddingStyle = () => {
-    switch (size) {
-      case 'small':
-        return tw`py-2 px-4`;
-      case 'medium':
-        return tw`py-3 px-6`;
-      case 'large':
-        return tw`py-4 px-8`;
-      default:
-        return tw`py-3 px-6`;
-    }
-  };
-
-  // Determine text size based on button size
-  const getTextSizeStyle = () => {
-    switch (size) {
-      case 'small':
-        return tw`text-sm`;
-      case 'medium':
-        return tw`text-base`;
-      case 'large':
-        return tw`text-lg`;
-      default:
-        return tw`text-base`;
+        return 'white';
     }
   };
 
   // Combine all styles
   const buttonStyles = [
     getButtonStyle(),
-    getPaddingStyle(),
-    disabled && tw`opacity-50`,
+    getHeightStyle(),
+    disabled && styles.disabledButton,
+    { transform: [{ scale: scaleAnim }] },
     style,
   ];
 
-  const textStyles = [
-    getTextStyle(),
-    getTextSizeStyle(),
-    textStyle,
-  ];
-
   return (
-    <TouchableOpacity
-      style={buttonStyles}
-      disabled={disabled || loading}
-      activeOpacity={0.7}
-      {...props}
-    >
-      {loading ? (
-        <ActivityIndicator 
-          size="small" 
-          color={variant === 'outline' ? colors.primary : 'white'} 
-        />
-      ) : (
-        <Text style={textStyles}>{title}</Text>
-      )}
-    </TouchableOpacity>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+      <TouchableOpacity
+        style={buttonStyles}
+        disabled={disabled || loading}
+        activeOpacity={0.7}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        {...props}
+      >
+        {loading ? (
+          <ActivityIndicator
+            size="small"
+            color={variant === 'outline' ? colors.primary : 'white'}
+          />
+        ) : (
+          <Typography
+            variant="button"
+            color={getTextColor()}
+            align="center"
+            style={textStyle}
+          >
+            {title}
+          </Typography>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
+  button: {
+    borderRadius: 12, // 12px border-radius from design specs
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  primaryButton: {
+    backgroundColor: colors.primary, // Coral Orange from design specs
+  },
+  secondaryButton: {
+    backgroundColor: colors.accent, // Cool Blue Slate from design specs
+  },
+  outlineButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: colors.primary,
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
   shadow: {
-    shadowColor: '#000',
+    shadowColor: colors.primary,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 2,
+    elevation: 3,
   },
 });
 

@@ -17,6 +17,24 @@
     "assetBundlePatterns": [
       "assets/**/*"
     ],
+    "fonts": [
+      {
+        "asset": "./assets/fonts/Inter-Regular.ttf",
+        "family": "Inter"
+      },
+      {
+        "asset": "./assets/fonts/Inter-Medium.ttf",
+        "family": "Inter-Medium"
+      },
+      {
+        "asset": "./assets/fonts/Inter-SemiBold.ttf",
+        "family": "Inter-SemiBold"
+      },
+      {
+        "asset": "./assets/fonts/Inter-Bold.ttf",
+        "family": "Inter-Bold"
+      }
+    ],
     "ios": {
       "supportsTablet": true
     },

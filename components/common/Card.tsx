@@ -1,13 +1,12 @@
 import React from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  ViewProps, 
+import {
+  View,
+  StyleSheet,
+  ViewProps,
   ViewStyle,
   TouchableOpacity
 } from 'react-native';
 import { colors } from '@constants';
-import tw from 'twrnc';
 
 interface CardProps extends ViewProps {
   style?: ViewStyle;
@@ -19,6 +18,11 @@ interface CardProps extends ViewProps {
 
 /**
  * Card component following ZinApp design system
+ *
+ * Based on the specifications in the design documentation:
+ * - 16px border-radius on containers
+ * - 8px inner padding, 16px outer margin
+ * - Elevation-free (no shadows) to mimic flat material
  */
 const Card: React.FC<CardProps> = ({
   style,
@@ -32,13 +36,13 @@ const Card: React.FC<CardProps> = ({
   const getCardStyle = () => {
     switch (variant) {
       case 'default':
-        return [tw`bg-white rounded-2xl`, styles.shadow];
+        return [styles.card];
       case 'flat':
-        return tw`bg-white rounded-2xl`;
+        return [styles.card, styles.flatCard];
       case 'elevated':
-        return [tw`bg-white rounded-2xl`, styles.elevatedShadow];
+        return [styles.card, styles.elevatedCard];
       default:
-        return [tw`bg-white rounded-2xl`, styles.shadow];
+        return [styles.card];
     }
   };
 
@@ -46,15 +50,15 @@ const Card: React.FC<CardProps> = ({
   const getPaddingStyle = () => {
     switch (padding) {
       case 'none':
-        return tw`p-0`;
+        return { padding: 0 };
       case 'small':
-        return tw`p-2`;
+        return { padding: 8 }; // 8px inner padding from design specs
       case 'medium':
-        return tw`p-4`;
+        return { padding: 16 };
       case 'large':
-        return tw`p-6`;
+        return { padding: 24 };
       default:
-        return tw`p-4`;
+        return { padding: 16 };
     }
   };
 
@@ -87,19 +91,21 @@ const Card: React.FC<CardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  shadow: {
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 16, // 16px border-radius from design specs
+    marginBottom: 16, // 16px outer margin from design specs
+  },
+  flatCard: {
+    // No shadow for flat cards as per design specs
+  },
+  elevatedCard: {
+    // Light shadow for elevated cards
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-  },
-  elevatedShadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
   },
 });
 

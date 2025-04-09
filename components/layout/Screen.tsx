@@ -1,16 +1,15 @@
 import React from 'react';
-import { 
-  View, 
-  SafeAreaView, 
-  StatusBar, 
-  StyleSheet, 
+import {
+  View,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
   ViewStyle,
   ScrollView,
   KeyboardAvoidingView,
   Platform
 } from 'react-native';
 import { colors } from '@constants';
-import tw from 'twrnc';
 
 interface ScreenProps {
   children: React.ReactNode;
@@ -20,10 +19,16 @@ interface ScreenProps {
   keyboardAvoiding?: boolean;
   backgroundColor?: string;
   statusBarStyle?: 'light-content' | 'dark-content';
+  contentPadding?: number;
 }
 
 /**
  * Screen component for consistent layouts
+ *
+ * Based on the specifications in the design documentation:
+ * - 4pt spacing grid
+ * - 16px margin baseline
+ * - 24px header padding for vertical scroll sections
  */
 const Screen: React.FC<ScreenProps> = ({
   children,
@@ -33,10 +38,11 @@ const Screen: React.FC<ScreenProps> = ({
   keyboardAvoiding = false,
   backgroundColor = colors.bgLight,
   statusBarStyle = 'dark-content',
+  contentPadding = 16, // Default to 16px margin baseline from design specs
 }) => {
   // Base container styles
   const containerStyle = [
-    tw`flex-1`,
+    styles.container,
     { backgroundColor },
     style,
   ];
@@ -44,29 +50,35 @@ const Screen: React.FC<ScreenProps> = ({
   // Content to render
   const content = (
     <>
-      <StatusBar 
-        barStyle={statusBarStyle} 
-        backgroundColor="transparent" 
-        translucent 
+      <StatusBar
+        barStyle={statusBarStyle}
+        backgroundColor="transparent"
+        translucent
       />
       {scrollable ? (
-        <ScrollView 
-          style={tw`flex-1`}
-          contentContainerStyle={tw`grow`}
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={{
+            flexGrow: 1,
+            padding: contentPadding,
+            paddingTop: scrollable ? 24 : contentPadding, // 24px header padding for scroll sections
+          }}
           showsVerticalScrollIndicator={false}
         >
           {children}
         </ScrollView>
       ) : (
-        children
+        <View style={{ flex: 1, padding: contentPadding }}>
+          {children}
+        </View>
       )}
     </>
   );
 
   // Wrap in KeyboardAvoidingView if needed
   const wrappedContent = keyboardAvoiding ? (
-    <KeyboardAvoidingView 
-      style={tw`flex-1`} 
+    <KeyboardAvoidingView
+      style={styles.flexOne}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       {content}
@@ -79,7 +91,7 @@ const Screen: React.FC<ScreenProps> = ({
   if (safeArea) {
     return (
       <SafeAreaView style={containerStyle}>
-        <View style={[tw`flex-1 pt-6`, styles.statusBarPadding]}>
+        <View style={[styles.flexOne, styles.statusBarPadding]}>
           {wrappedContent}
         </View>
       </SafeAreaView>
@@ -94,6 +106,15 @@ const Screen: React.FC<ScreenProps> = ({
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  flexOne: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
   statusBarPadding: {
     paddingTop: StatusBar.currentHeight || 0,
   },

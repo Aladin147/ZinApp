@@ -1,14 +1,13 @@
 import React from 'react';
-import { 
-  View, 
-  TouchableOpacity, 
-  StyleSheet, 
-  ViewStyle 
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  ViewStyle
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Typography from '../common/Typography';
 import { colors } from '@constants';
-import tw from 'twrnc';
 
 interface HeaderProps {
   title: string;
@@ -21,6 +20,10 @@ interface HeaderProps {
 
 /**
  * Header component for screen headers
+ *
+ * Based on the specifications in the design documentation:
+ * - 24px header padding for vertical scroll sections
+ * - Screen Title: 24px, Bold, 32px line height
  */
 const Header: React.FC<HeaderProps> = ({
   title,
@@ -41,12 +44,12 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <View style={[tw`flex-row items-center justify-between py-4 px-4`, style]}>
-      <View style={tw`w-10`}>
+    <View style={[styles.header, style]}>
+      <View style={styles.leftContainer}>
         {showBackButton && (
           <TouchableOpacity
             onPress={handleBackPress}
-            style={tw`p-2 -ml-2`}
+            style={styles.backButton}
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           >
             {/* Back arrow icon - simplified for now */}
@@ -56,12 +59,11 @@ const Header: React.FC<HeaderProps> = ({
       </View>
 
       <View style={[
-        tw`flex-1`,
-        titleAlign === 'center' ? tw`items-center` : tw`items-start ml-2`
+        styles.titleContainer,
+        titleAlign === 'center' ? styles.titleCenter : styles.titleLeft
       ]}>
-        <Typography 
-          variant="subheading" 
-          weight="bold"
+        <Typography
+          variant="screenTitle"
           align={titleAlign}
           numberOfLines={1}
         >
@@ -69,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({
         </Typography>
       </View>
 
-      <View style={tw`w-10 items-end`}>
+      <View style={styles.rightContainer}>
         {rightComponent}
       </View>
     </View>
@@ -77,6 +79,34 @@ const Header: React.FC<HeaderProps> = ({
 };
 
 const styles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  leftContainer: {
+    width: 40,
+    alignItems: 'flex-start',
+  },
+  rightContainer: {
+    width: 40,
+    alignItems: 'flex-end',
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  titleCenter: {
+    alignItems: 'center',
+  },
+  titleLeft: {
+    alignItems: 'flex-start',
+    marginLeft: 8,
+  },
+  backButton: {
+    padding: 8,
+  },
   backArrow: {
     width: 16,
     height: 16,

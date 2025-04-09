@@ -1,15 +1,26 @@
-// Color constants from DESIGN_TOKENS.md
+/**
+ * Color constants from DESIGN_TOKENS.md and zinapp_visual_guidelines.md
+ *
+ * Based on the specifications in the design documentation:
+ * - Primary color: Coral Orange (#F4805D)
+ * - Warm Sand (#F8F3ED)
+ * - Cool Blue Slate (#8CBACD)
+ * - Dark Slate (#3C3C3C)
+ */
 export const colors = {
   // Primary colors
-  primary: '#FF6A33', // CTA buttons, icons
-  accent: '#8CBACD',  // QR trust theme
+  primary: '#F4805D', // Coral Orange - CTA buttons, icons
+  accent: '#8CBACD',  // Cool Blue Slate - QR trust theme
+  warmSand: '#F8F3ED', // Warm Sand - Background
+  darkSlate: '#3C3C3C', // Dark Slate - Text
 
   // Backgrounds
   bgLight: '#FFFFFF', // Backgrounds (light)
   bgDark: '#1C1C1E',  // Backgrounds (dark)
-  
+  bgWarm: '#F8F3ED', // Warm Sand background
+
   // Text
-  textMain: '#2B2B2B',  // Headlines
+  textMain: '#3C3C3C',  // Headlines (Dark Slate)
   textMuted: '#7A7A7A', // Secondary text
 
   // Utility colors
@@ -17,7 +28,7 @@ export const colors = {
   error: '#EF4444',
   warning: '#F59E0B',
   info: '#3B82F6',
-  
+
   // Grayscale
   gray50: '#F9FAFB',
   gray100: '#F3F4F6',
@@ -35,26 +46,33 @@ export const colors = {
 export const themeColors = {
   // Button states
   buttonPrimary: colors.primary,
+  buttonSecondary: colors.accent,
   buttonDisabled: colors.gray300,
-  buttonPressed: '#E55929', // Darker variant of primary
+  buttonPressed: '#E06A4A', // Darker variant of primary
 
   // Backgrounds
   background: colors.bgLight,
-  cardBg: colors.gray50,
-  
+  backgroundWarm: colors.warmSand,
+  cardBg: colors.bgLight,
+
   // Text variants
   text: colors.textMain,
   textSecondary: colors.textMuted,
   textLight: colors.bgLight,
-  
+
   // Status
   statusSuccess: colors.success,
   statusError: colors.error,
   statusWarning: colors.warning,
   statusInfo: colors.info,
-  
+
   // Trust related
   trustHighlight: colors.accent,
+
+  // UI Elements
+  border: colors.gray200,
+  divider: colors.gray100,
+  shadow: 'rgba(0, 0, 0, 0.1)',
 };
 
 export default colors;
