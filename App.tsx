@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { AuthProvider } from '@state/AuthContext'; // Use alias
-import AppNavigator from '@navigation/AppNavigator'; // Use alias
+import { AuthProvider } from './state/AuthContext';
+import AppNavigator from './navigation/AppNavigator';
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { colors } from '@constants'; // Use alias
-import { Typography } from '@components'; // Use alias
-import tw from 'twrnc'; // Add missing import
+import { colors } from './constants';
+import { Typography } from './components';
+import tw from 'twrnc';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -16,9 +16,10 @@ SplashScreen.preventAutoHideAsync();
 /**
  * Root component of the ZinApp application.
  *
- * TEMPORARY SANITY TEST:
- * This version includes a simple render test to verify that the basic styling and
- * rendering pipeline is working correctly. Once confirmed, we'll restore the full navigation.
+ * Features:
+ * - Font loading with splash screen
+ * - Navigation setup with AppNavigator
+ * - Debug mode for testing
  */
 // Define styles for the app
 const styles = StyleSheet.create({

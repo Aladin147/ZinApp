@@ -4,15 +4,16 @@
  * This file defines the color palette for ZinApp, including primary, secondary, and accent colors,
  * as well as utility colors for different states and grayscale values.
  *
- * The color system is based on the specifications in the design documentation and audit requirements.
+ * The color system follows our playful, immersive design language with warm, inviting colors
+ * and clear visual hierarchy.
  *
  * @see docs/DESIGN_TOKENS.md for the complete color specifications
  */
 export const colors = {
-  // Brand colors - Audit-specified color palette with updated values
+  // Brand colors - Playful, immersive design language
   primary: '#F4805D',    // Coral - Primary CTA, buttons, highlights, icons
-  secondary: '#FEF1D8',  // Background, card backdrops (updated value)
-  cream: '#FFFAF2',      // Panel sections, forms (updated value)
+  secondary: '#FEF1D8',  // Background, card backdrops
+  cream: '#FFFAF2',      // Panel sections, forms
   stylistBlue: '#8CBACD', // Cool Blue for stylist-related components only
   warmSand: '#F8F3ED',   // Warm backgrounds, cards
   textSlate: '#3C3C3C',  // Body text, titles, icons
@@ -50,7 +51,7 @@ export const colors = {
  * Using these semantic color names makes it easier to maintain consistency
  * and update the theme in the future.
  *
- * Updated to match audit requirements.
+ * Updated to match our playful, immersive design language.
  */
 export const themeColors = {
   // Button states
