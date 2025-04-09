@@ -13,7 +13,9 @@ This system is non-optional — every UI element must behave consistently and el
 ### ✅ Tap
 - All buttons must animate with a slight scale-in (95%) and bounce out
 - Active states show soft shadow (NativeWind `shadow-md` + `bg-opacity`)
-- CTA buttons use `bg-primary` with icon + label
+- CTA buttons use `bg-primary` (#F4805D) with icon + label
+- Button height: 48px (standard) / 56px (hero)
+- Button radius: 12px
 
 ### ✋ Long-Press
 - Used for service cards (preview)
@@ -37,14 +39,14 @@ This system is non-optional — every UI element must behave consistently and el
 ---
 
 ## 🎞️ Animation Tokens
-| Token          | Duration | Use                                    |
-|----------------|----------|-----------------------------------------|
-| `ease-fast`    | 200ms    | Quick tap actions                       |
-| `ease-mid`     | 400ms    | Standard screen transition              |
-| `ease-slow`    | 600ms    | Deliberate, trust-building animations   |
-| `spring-bounce`| -        | Elastic modal & image transitions       |
-| `fade-in`      | 300ms    | Cards, profile blocks                   |
-| `slide-up`     | 350ms    | Bottom sheets, Bsse7a screen            |
+| Token              | Duration  | Use                                    |
+|--------------------|----------|-----------------------------------------|
+| `screenTransition` | 200-300ms | Slide + Fade screen transitions        |
+| `buttonTap`        | 100ms     | Scale down to 0.95 briefly             |
+| `confetti`         | 1000ms    | Booking confirmation animation         |
+| `mapPulse`         | 1500ms    | Pulsing animation for map avatars      |
+| `fadeIn`           | 400ms     | Appear transitions for cards           |
+| `slideUp`          | 500ms     | Bottom sheets, Bsse7a screen           |
 
 ---
 
@@ -63,10 +65,10 @@ This system is non-optional — every UI element must behave consistently and el
 ---
 
 ## 🌗 Visual Feedback & Shadows
-- All tappable elements must include a hover/touch shadow (`shadow-md`, `rounded-xl`)
-- Elevated cards (e.g. `BarberCard`) should include:
-  - `shadow-lg` on hover
-  - Subtle `translate-y-1` effect on press
+- Cards should be flat design with no shadows (per visual guidelines)
+- Cards should have 16px border radius
+- Buttons should have 12px border radius
+- Tappable elements should have visual feedback (color change or scale)
 - Modal dialogs use background blur and scale pop-in
 
 ---

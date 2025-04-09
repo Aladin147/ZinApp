@@ -8,21 +8,22 @@ Centralizes all colors, typography sizes, spacing units, and motion rules to cre
 
 ## 🎨 Color Palette
 
-| Token         | Value       | Purpose                    |
-|---------------|-------------|----------------------------|
-| `primary`     | `#FF6A33`   | CTA buttons, icons         |
-| `secondary`   | `#F8F0E3`   | Secondary buttons, cards   |
-| `accent`      | `#8CBACD`   | Stylist-related elements   |
-| `success`     | `#4CAF50`   | Success states, completed  |
-| `info`        | `#2196F3`   | Information, notifications |
-| `warning`     | `#FFC107`   | Warning states, alerts     |
-| `error`       | `#F44336`   | Error states, destructive  |
-| `bgLight`     | `#FFFFFF`   | Backgrounds (light)        |
-| `bgDark`      | `#1C1C1E`   | Backgrounds (dark)         |
-| `darkSlate`   | `#2B2B2B`   | Dark backgrounds, headers  |
-| `warmSand`    | `#F5E8D3`   | Warm backgrounds, cards    |
-| `textPrimary` | `#2B2B2B`   | Headlines, primary text    |
-| `textMuted`   | `#7A7A7A`   | Secondary text, captions   |
+| Token         | Value       | Purpose                                 |
+|---------------|-------------|----------------------------------------|
+| `primary`     | `#F4805D`   | Primary CTA, buttons, highlights, icons |
+| `secondary`   | `#F8F3ED`   | Background, card backdrops              |
+| `cream`       | `#FCFBF9`   | Panel sections, forms                   |
+| `textSlate`   | `#3C3C3C`   | Body text, titles, icons                |
+| `stylistBlue` | `#8CBACD`   | Avatar outlines, stylist-specific chips |
+| `success`     | `#4CAF50`   | Success states, completed               |
+| `info`        | `#2196F3`   | Information, notifications              |
+| `warning`     | `#FFC107`   | Warning states, alerts                  |
+| `error`       | `#F44336`   | Error states, destructive               |
+| `bgLight`     | `#FCFBF9`   | Light backgrounds                       |
+| `bgDark`      | `#1C1C1E`   | Dark backgrounds                        |
+| `warmSand`    | `#F8F3ED`   | Warm backgrounds, cards                 |
+| `textPrimary` | `#3C3C3C`   | Headlines, primary text                 |
+| `textMuted`   | `#7A7A7A`   | Secondary text, captions                |
 | `gray100`     | `#F5F5F5`   | Lightest gray              |
 | `gray200`     | `#EEEEEE`   | Light gray                 |
 | `gray300`     | `#E0E0E0`   | Medium light gray          |
@@ -39,27 +40,27 @@ Centralizes all colors, typography sizes, spacing units, and motion rules to cre
 
 | Token           | Size (px) | Weight    | Line Height | Letter Spacing | Use                       |
 |-----------------|-----------|-----------|-------------|----------------|---------------------------|
-| `screenTitle`   | `24px`    | bold      | `32px`      | `-0.5px`       | Main screen titles        |
+| `screenTitle`   | `24px`    | bold      | `32px`      | `-0.5px`       | Screen headers            |
 | `heading`       | `20px`    | bold      | `28px`      | `-0.5px`       | Large headings            |
-| `sectionHeader` | `18px`    | bold      | `26px`      | `-0.25px`      | Section headers           |
+| `sectionHeader` | `18px`    | bold      | `24px`      | `-0.25px`      | Card titles, small blocks |
 | `subheading`    | `16px`    | bold      | `24px`      | `0px`          | Subheadings               |
-| `body`          | `14px`    | regular   | `20px`      | `0px`          | Standard text             |
+| `body`          | `14px`    | regular   | `20px`      | `0px`          | Descriptive text, labels  |
 | `bodyMedium`    | `14px`    | medium    | `20px`      | `0px`          | Emphasized body text      |
 | `bodyBold`      | `14px`    | bold      | `20px`      | `0px`          | Important body text       |
-| `button`        | `16px`    | medium    | `20px`      | `0px`          | Button text               |
+| `button`        | `16px`    | medium    | `20px`      | `0px`          | Button labels             |
 | `caption`       | `12px`    | regular   | `16px`      | `0px`          | Labels, taglines          |
 | `captionMedium` | `12px`    | medium    | `16px`      | `0px`          | Emphasized small text     |
 
 ### Font Family
 
-Primary font: **Inter** (as a fallback for Uber Move)
+Primary font: **Uber Move** (fallback: Inter/Satoshi/SF Pro)
 
 ```typescript
 fontFamily: {
-  primary: 'Inter',
-  primaryMedium: 'Inter-Medium',
-  primarySemiBold: 'Inter-SemiBold',
-  primaryBold: 'Inter-Bold',
+  primary: 'UberMove', // Fallback: 'Inter'
+  primaryMedium: 'UberMove-Medium', // Fallback: 'Inter-Medium'
+  primarySemiBold: 'UberMove-SemiBold', // Fallback: 'Inter-SemiBold'
+  primaryBold: 'UberMove-Bold', // Fallback: 'Inter-Bold'
   mono: 'monospace',
 }
 ```
@@ -113,9 +114,9 @@ Based on a 4pt grid system (multiples of 4).
 
 | Component | Spacing                                                         |
 |-----------|----------------------------------------------------------------|
-| Cards     | `16px` padding, `8px` inner padding, `8px` border radius        |
-| Buttons   | `16px` horizontal padding, `12px` vertical padding, `8px` radius |
-| Inputs    | `12px` padding, `8px` border radius, `8px` gap between elements |
+| Cards     | `16px` padding, `16px` border radius                            |
+| Buttons   | `16px` horizontal padding, `48px` height (standard), `56px` height (hero), `12px` radius |
+| Inputs    | `12px` padding, `12px` border radius, `8px` gap between elements |
 | Headers   | `16px` padding, `56px` height                                   |
 | Sections  | `24px` bottom margin                                            |
 | Screens   | `16px` horizontal padding                                       |
@@ -136,11 +137,12 @@ Based on a 4pt grid system (multiples of 4).
 
 | Token         | Value    | Description                        |
 |---------------|----------|------------------------------------|
-| `easeInOut`   | 300ms    | Default screen transitions         |
-| `bounce`      | 600ms    | On-tap animations                  |
+| `screenTransition` | 200-300ms | Slide + Fade screen transitions    |
+| `buttonTap`   | 100ms    | Scale down to 0.95 briefly         |
+| `confetti`    | 1000ms   | Booking confirmation animation     |
+| `mapPulse`    | 1500ms   | Pulsing animation for map avatars  |
 | `fadeIn`      | 400ms    | Appear transitions for cards       |
 | `slideUp`     | 500ms    | Bottom sheet animations            |
-| `pulse`       | 1500ms   | Attention-grabbing animations      |
 
 ---
 

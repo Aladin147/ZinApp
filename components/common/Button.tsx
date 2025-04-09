@@ -9,7 +9,7 @@ import {
   Animated,
   View
 } from 'react-native';
-import { colors, typography, spacing } from '@constants';
+import { colors, typography, spacing } from '../../constants';
 import Typography from './Typography';
 import tw from 'twrnc';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -221,11 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary, // Coral Orange from design specs
   },
   secondaryButton: {
-    backgroundColor: colors.accent, // Cool Blue Slate from design specs
+    backgroundColor: colors.stylistBlue, // Cool Blue Slate from design specs
   },
   outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
+    backgroundColor: 'white',
+    borderWidth: 2, // 2px border per design specs
     borderColor: colors.primary,
   },
   textButton: {
@@ -236,11 +236,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   shadow: {
-    shadowColor: colors.primary,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    // No shadow per flat design specs
   },
   fullWidth: {
     width: '100%',

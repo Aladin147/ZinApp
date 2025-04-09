@@ -10,18 +10,19 @@
  */
 export const colors = {
   // Brand colors
-  primary: '#FF6A33',    // Coral Orange - CTA buttons, icons
-  secondary: '#F8F0E3',  // Secondary buttons, cards
-  accent: '#8CBACD',     // Cool Blue Slate - Stylist-related elements
-  warmSand: '#F5E8D3',   // Warm backgrounds, cards
-  darkSlate: '#2B2B2B',  // Dark backgrounds, headers
+  primary: '#F4805D',    // Coral Orange - Primary CTA, buttons, highlights, icons
+  secondary: '#F8F3ED',  // Background, card backdrops
+  cream: '#FCFBF9',      // Panel sections, forms
+  stylistBlue: '#8CBACD', // Avatar outlines, stylist-specific chips
+  warmSand: '#F8F3ED',   // Warm backgrounds, cards
+  textSlate: '#3C3C3C',  // Body text, titles, icons
 
   // Backgrounds
-  bgLight: '#FFFFFF',    // Backgrounds (light)
-  bgDark: '#1C1C1E',     // Backgrounds (dark)
+  bgLight: '#FCFBF9',    // Light backgrounds
+  bgDark: '#1C1C1E',     // Dark backgrounds
 
   // Text
-  textPrimary: '#2B2B2B', // Headlines, primary text
+  textPrimary: '#3C3C3C', // Headlines, primary text
   textMuted: '#7A7A7A',   // Secondary text, captions
 
   // Status/Utility colors
@@ -53,9 +54,9 @@ export const themeColors = {
   // Button states
   buttonPrimary: colors.primary,
   buttonSecondary: colors.secondary,
-  buttonAccent: colors.accent,
+  buttonAccent: colors.stylistBlue,
   buttonDisabled: colors.gray300,
-  buttonPressed: '#E05A23', // Darker variant of primary
+  buttonPressed: '#E06E4B', // Darker variant of primary
 
   // Backgrounds
   background: colors.bgLight,
@@ -76,7 +77,7 @@ export const themeColors = {
   statusInfo: colors.info,
 
   // Trust related
-  trustHighlight: colors.accent,
+  trustHighlight: colors.stylistBlue,
 
   // UI Elements
   border: colors.gray200,
@@ -84,6 +85,12 @@ export const themeColors = {
   shadow: 'rgba(0, 0, 0, 0.1)',
   shadowDark: 'rgba(0, 0, 0, 0.2)',
   overlay: 'rgba(0, 0, 0, 0.5)',
+
+  // Component specific
+  cardBackground: colors.cream,
+  screenBackground: colors.secondary,
+  buttonText: colors.bgLight,
+  stylistAccent: colors.stylistBlue,
 };
 
 export default colors;

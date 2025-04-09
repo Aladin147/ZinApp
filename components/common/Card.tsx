@@ -24,7 +24,7 @@ interface CardProps extends ViewProps {
  *
  * Based on the specifications in the design documentation:
  * - 16px border-radius on containers
- * - 8px inner padding, 16px outer margin
+ * - 16px inner padding, 16px outer margin
  * - Elevation-free (no shadows) to mimic flat material
  */
 const Card: React.FC<CardProps> = ({
@@ -81,9 +81,9 @@ const Card: React.FC<CardProps> = ({
       case 'none':
         return { padding: 0 };
       case 'small':
-        return { padding: 8 }; // 8px inner padding from design specs
+        return { padding: 8 };
       case 'medium':
-        return { padding: 16 };
+        return { padding: 16 }; // 16px inner padding from design specs
       case 'large':
         return { padding: 24 };
       default:
@@ -138,7 +138,7 @@ const Card: React.FC<CardProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.bgLight,
+    backgroundColor: colors.cream, // Cream background from design specs
     borderRadius: 16, // 16px border-radius from design specs
     marginBottom: spacing.md, // 16px outer margin from design specs
   },
@@ -146,12 +146,8 @@ const styles = StyleSheet.create({
     // No shadow for flat cards as per design specs
   },
   elevatedCard: {
-    // Light shadow for elevated cards
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    // No shadow for elevated cards as per flat design specs
+    // Only use this variant for backward compatibility
   },
   warmCard: {
     backgroundColor: colors.warmSand, // Warm Sand background from design specs
