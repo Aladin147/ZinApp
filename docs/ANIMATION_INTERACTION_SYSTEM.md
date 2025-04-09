@@ -38,15 +38,17 @@ This system is non-optional — every UI element must behave consistently and el
 
 ---
 
-## 🎞️ Animation Tokens
+## 🎞️ Animation Tokens (Playful & Glovo-like)
 | Token              | Duration  | Use                                    |
 |--------------------|----------|-----------------------------------------|
-| `screenTransition` | 200-300ms | Slide + Fade screen transitions        |
-| `buttonTap`        | 100ms     | Scale down to 0.95 briefly             |
-| `confetti`         | 1000ms    | Booking confirmation animation         |
+| `screenTransition` | 300ms     | Slide + Fade screen transitions with bounce |
+| `buttonTap`        | 100ms     | Scale down to 0.92 with extra bounce   |
+| `confetti`         | 1200ms    | Booking confirmation animation         |
 | `mapPulse`         | 1500ms    | Pulsing animation for map avatars      |
 | `fadeIn`           | 400ms     | Appear transitions for cards           |
 | `slideUp`          | 500ms     | Bottom sheets, Bsse7a screen           |
+| `bounce`           | 800ms     | Playful bounce for attention elements  |
+| `wiggle`           | 600ms     | Subtle wiggle for interactive elements |
 
 ---
 
@@ -64,12 +66,13 @@ This system is non-optional — every UI element must behave consistently and el
 
 ---
 
-## 🌗 Visual Feedback & Shadows
-- Cards should be flat design with no shadows (per visual guidelines)
-- Cards should have 16px border radius
-- Buttons should have 12px border radius
-- Tappable elements should have visual feedback (color change or scale)
-- Modal dialogs use background blur and scale pop-in
+## 🌗 Visual Feedback & Shadows (Glovo-inspired)
+- Cards should have subtle shadows for depth and playfulness (like Glovo)
+- Cards should have 24px border radius for a more playful, bubbly look
+- Buttons should have 24px border radius (fully rounded like Glovo)
+- Tappable elements should have exaggerated visual feedback (scale + color change)
+- Modal dialogs use background blur and bouncy scale pop-in
+- Use playful micro-interactions on important elements (wiggle, pulse, etc.)
 
 ---
 

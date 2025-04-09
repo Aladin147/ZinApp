@@ -23,9 +23,9 @@ interface CardProps extends ViewProps {
  * Card component following ZinApp design system
  *
  * Based on the specifications in the design documentation:
- * - 16px border-radius on containers
+ * - 24px border-radius on containers for a more playful, Glovo-like look
  * - 16px inner padding, 16px outer margin
- * - Elevation-free (no shadows) to mimic flat material
+ * - Subtle shadows for depth and playfulness like Glovo
  */
 const Card: React.FC<CardProps> = ({
   style,
@@ -44,7 +44,7 @@ const Card: React.FC<CardProps> = ({
     if (animated) {
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 300, // Match the fade-in animation token from design
+        duration: 400, // Slightly longer animation for more playfulness
         useNativeDriver: true,
       }).start();
     } else {
@@ -139,8 +139,14 @@ const Card: React.FC<CardProps> = ({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.cream, // Cream background from design specs
-    borderRadius: 16, // 16px border-radius from design specs
+    borderRadius: 24, // More rounded corners for a playful look
     marginBottom: spacing.md, // 16px outer margin from design specs
+    // Add a subtle shadow for depth
+    shadowColor: 'rgba(0,0,0,0.05)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 2,
   },
   flatCard: {
     // No shadow for flat cards as per design specs

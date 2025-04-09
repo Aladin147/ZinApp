@@ -51,7 +51,7 @@ interface AvatarProps {
  * Avatar component for displaying user profile images
  *
  * Based on the specifications in the design documentation:
- * - Circular design with 20px border radius for profile avatars
+ * - Fully circular design with 48px size for profile avatars (Glovo-like)
  * - Blue verification badge for verified stylists
  * - Different sizes (small, medium, large)
  */
@@ -62,28 +62,28 @@ const Avatar: React.FC<AvatarProps> = ({
   style,
   imageStyle,
   backgroundColor = colors.gray200,
-  borderColor,
+  borderColor = verified ? colors.stylistBlue : undefined,
 }) => {
   // Get size dimensions based on size prop
   const getDimensions = () => {
     switch (size) {
       case 'small':
         return {
-          container: 40,
-          badge: 16,
-          badgeText: 10,
+          container: 32,
+          badge: 14,
+          badgeText: 8,
         };
       case 'medium':
         return {
-          container: 60,
-          badge: 20,
-          badgeText: 12,
+          container: 48, // 48px size from design specs
+          badge: 18,
+          badgeText: 10,
         };
       case 'large':
         return {
-          container: 100,
-          badge: 24,
-          badgeText: 14,
+          container: 80,
+          badge: 22,
+          badgeText: 12,
         };
       default:
         return {
@@ -96,11 +96,11 @@ const Avatar: React.FC<AvatarProps> = ({
 
   const dimensions = getDimensions();
 
-  // Create container style with dimensions
+  // Create container style with dimensions - fully circular like Glovo
   const containerStyle = {
     width: dimensions.container,
     height: dimensions.container,
-    borderRadius: dimensions.container / 2,
+    borderRadius: dimensions.container / 2, // Fully circular like Glovo
     backgroundColor,
     ...(borderColor && { borderWidth: 2, borderColor }),
   };
@@ -151,11 +151,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 0,
-    backgroundColor: colors.accent, // Cool Blue Slate for stylist identity
+    backgroundColor: colors.accent1, // Glovo-like yellow accent for verification
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    // Add a subtle shadow for more depth and playfulness
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
   },
 });
 

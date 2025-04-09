@@ -9,13 +9,15 @@
  * @see docs/DESIGN_TOKENS.md for the complete color specifications
  */
 export const colors = {
-  // Brand colors
-  primary: '#F4805D',    // Coral Orange - Primary CTA, buttons, highlights, icons
+  // Brand colors - More vibrant and playful like Glovo
+  primary: '#FF5E5B',    // Vibrant coral red - Primary CTA, buttons, highlights, icons
   secondary: '#F8F3ED',  // Background, card backdrops
   cream: '#FCFBF9',      // Panel sections, forms
-  stylistBlue: '#8CBACD', // Avatar outlines, stylist-specific chips
+  stylistBlue: '#00C1B2', // Teal blue for stylist elements - more vibrant like Glovo
   warmSand: '#F8F3ED',   // Warm backgrounds, cards
   textSlate: '#3C3C3C',  // Body text, titles, icons
+  accent1: '#FFBD00',    // Glovo-like yellow accent
+  accent2: '#7B68EE',    // Playful purple accent
 
   // Backgrounds
   bgLight: '#FCFBF9',    // Light backgrounds

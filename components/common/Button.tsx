@@ -55,10 +55,10 @@ const Button: React.FC<ButtonProps> = ({
   // Handle press animation
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.95,
+      toValue: 0.92,
       useNativeDriver: true,
-      speed: 20,
-      bounciness: 6
+      speed: 25,
+      bounciness: 10
     }).start();
   };
 
@@ -66,8 +66,8 @@ const Button: React.FC<ButtonProps> = ({
     Animated.spring(scaleAnim, {
       toValue: 1,
       useNativeDriver: true,
-      speed: 20,
-      bounciness: 6
+      speed: 25,
+      bounciness: 10
     }).start();
   };
 
@@ -212,7 +212,7 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 12, // 12px border-radius from design specs
+    borderRadius: 24, // More rounded, bubbly buttons
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,

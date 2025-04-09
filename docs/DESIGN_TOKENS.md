@@ -6,15 +6,17 @@ Centralizes all colors, typography sizes, spacing units, and motion rules to cre
 
 ---
 
-## 🎨 Color Palette
+## 🎨 Color Palette (Glovo-inspired)
 
 | Token         | Value       | Purpose                                 |
 |---------------|-------------|----------------------------------------|
-| `primary`     | `#F4805D`   | Primary CTA, buttons, highlights, icons |
+| `primary`     | `#FF5E5B`   | Primary CTA, buttons, highlights, icons |
 | `secondary`   | `#F8F3ED`   | Background, card backdrops              |
 | `cream`       | `#FCFBF9`   | Panel sections, forms                   |
 | `textSlate`   | `#3C3C3C`   | Body text, titles, icons                |
-| `stylistBlue` | `#8CBACD`   | Avatar outlines, stylist-specific chips |
+| `stylistBlue` | `#00C1B2`   | Avatar outlines, stylist-specific chips |
+| `accent1`     | `#FFBD00`   | Glovo-like yellow accent               |
+| `accent2`     | `#7B68EE`   | Playful purple accent                   |
 | `success`     | `#4CAF50`   | Success states, completed               |
 | `info`        | `#2196F3`   | Information, notifications              |
 | `warning`     | `#FFC107`   | Warning states, alerts                  |
@@ -36,20 +38,20 @@ Centralizes all colors, typography sizes, spacing units, and motion rules to cre
 
 ---
 
-## 🔠 Typography
+## 🔠 Typography (Playful & Friendly)
 
 | Token           | Size (px) | Weight    | Line Height | Letter Spacing | Use                       |
 |-----------------|-----------|-----------|-------------|----------------|---------------------------|
-| `screenTitle`   | `24px`    | bold      | `32px`      | `-0.5px`       | Screen headers            |
-| `heading`       | `20px`    | bold      | `28px`      | `-0.5px`       | Large headings            |
+| `screenTitle`   | `28px`    | bold      | `36px`      | `-0.5px`       | Screen headers            |
+| `heading`       | `22px`    | bold      | `30px`      | `-0.5px`       | Large headings            |
 | `sectionHeader` | `18px`    | bold      | `24px`      | `-0.25px`      | Card titles, small blocks |
 | `subheading`    | `16px`    | bold      | `24px`      | `0px`          | Subheadings               |
-| `body`          | `14px`    | regular   | `20px`      | `0px`          | Descriptive text, labels  |
-| `bodyMedium`    | `14px`    | medium    | `20px`      | `0px`          | Emphasized body text      |
-| `bodyBold`      | `14px`    | bold      | `20px`      | `0px`          | Important body text       |
+| `body`          | `15px`    | regular   | `22px`      | `0px`          | Descriptive text, labels  |
+| `bodyMedium`    | `15px`    | medium    | `22px`      | `0px`          | Emphasized body text      |
+| `bodyBold`      | `15px`    | bold      | `22px`      | `0px`          | Important body text       |
 | `button`        | `16px`    | medium    | `20px`      | `0px`          | Button labels             |
-| `caption`       | `12px`    | regular   | `16px`      | `0px`          | Labels, taglines          |
-| `captionMedium` | `12px`    | medium    | `16px`      | `0px`          | Emphasized small text     |
+| `caption`       | `13px`    | regular   | `18px`      | `0px`          | Labels, taglines          |
+| `captionMedium` | `13px`    | medium    | `18px`      | `0px`          | Emphasized small text     |
 
 ### Font Family
 
@@ -114,8 +116,8 @@ Based on a 4pt grid system (multiples of 4).
 
 | Component | Spacing                                                         |
 |-----------|----------------------------------------------------------------|
-| Cards     | `16px` padding, `16px` border radius                            |
-| Buttons   | `16px` horizontal padding, `48px` height (standard), `56px` height (hero), `12px` radius |
+| Cards     | `16px` padding, `24px` border radius (Glovo-like rounded corners) |
+| Buttons   | `16px` horizontal padding, `48px` height (standard), `56px` height (hero), `24px` radius (fully rounded) |
 | Inputs    | `12px` padding, `12px` border radius, `8px` gap between elements |
 | Headers   | `16px` padding, `56px` height                                   |
 | Sections  | `24px` bottom margin                                            |

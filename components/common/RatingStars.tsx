@@ -57,7 +57,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
   size = 'medium',
   animated = true,
   style,
-  activeColor = colors.primary,
+  activeColor = '#FFB800', // Gold color for stars per design specs
   inactiveColor = colors.gray300,
 }) => {
   // Animation values for each star
@@ -108,7 +108,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
       const animations = animatedValues.map((value, index) => {
         return Animated.timing(value, {
           toValue: 1,
-          duration: 300,
+          duration: 400, // Match fadeIn animation token
           delay: index * 100, // Stagger the animations
           easing: Easing.out(Easing.back(1.5)),
           useNativeDriver: true,
@@ -141,7 +141,7 @@ const RatingStars: React.FC<RatingStarsProps> = ({
         {
           rotate: animatedValues[index].interpolate({
             inputRange: [0, 1],
-            outputRange: ['0deg', '0deg'], // No rotation in this version
+            outputRange: ['45deg', '0deg'], // Add a slight rotation for more visual interest
           })
         }
       ],
