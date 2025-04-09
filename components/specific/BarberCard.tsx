@@ -4,6 +4,7 @@ import Card from '../common/Card';
 import Typography from '../common/Typography';
 import { colors } from '../../constants';
 import tw from 'twrnc';
+import { MotiView } from 'moti';
 
 interface BarberCardProps {
   id: number;
@@ -45,17 +46,28 @@ const BarberCard: React.FC<BarberCardProps> = ({
     >
       <View style={tw`flex-row items-center`}>
         <View style={tw`mr-4`}>
-          <Image
-            source={imageSource}
-            style={styles.profileImage}
-            resizeMode="cover"
-          />
+          <MotiView
+            from={{ scale: 0.9, opacity: 0.5 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'timing', duration: 500 }}
+          >
+            <Image
+              source={imageSource}
+              style={styles.profileImage}
+              resizeMode="cover"
+            />
+          </MotiView>
           {verified && (
-            <View style={styles.verifiedBadge}>
+            <MotiView
+              from={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', damping: 15, delay: 300 }}
+              style={styles.verifiedBadge}
+            >
               <Typography variant="caption" color="white" align="center" style={tw`text-xs`}>
                 ✓
               </Typography>
-            </View>
+            </MotiView>
           )}
         </View>
 
@@ -80,14 +92,20 @@ const BarberCard: React.FC<BarberCardProps> = ({
           </View>
         </View>
 
-        <TouchableOpacity
-          style={styles.bookButton}
-          onPress={handlePress}
+        <MotiView
+          from={{ translateX: 20, opacity: 0 }}
+          animate={{ translateX: 0, opacity: 1 }}
+          transition={{ type: 'spring', damping: 15, delay: 200 }}
         >
-          <Typography variant="caption" color="white" weight="medium">
-            Book
-          </Typography>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.bookButton}
+            onPress={handlePress}
+          >
+            <Typography variant="caption" color="white" weight="medium">
+              Book
+            </Typography>
+          </TouchableOpacity>
+        </MotiView>
       </View>
     </Card>
   );
@@ -95,29 +113,41 @@ const BarberCard: React.FC<BarberCardProps> = ({
 
 const styles = StyleSheet.create({
   profileImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 70,
+    height: 70,
+    borderRadius: 35, // Fully rounded like Glovo
     backgroundColor: colors.gray200,
+    borderWidth: 2,
+    borderColor: colors.stylistBlue,
   },
   verifiedBadge: {
     position: 'absolute',
     bottom: 0,
     right: 0,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: colors.accent,
+    width: 24,
+    height: 24,
+    borderRadius: 12, // Fully rounded like Glovo
+    backgroundColor: colors.accent1, // Glovo-like yellow accent
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'white',
+    shadowColor: 'rgba(0,0,0,0.2)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
   },
   bookButton: {
     backgroundColor: colors.primary,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20, // More rounded like Glovo
+    shadowColor: 'rgba(0,0,0,0.1)',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 2,
   },
 });
 
