@@ -179,3 +179,52 @@ Used to track what was attempted, what worked, and what didn’t.
     - Add issue to `KNOWN_ISSUES.md`.
     - Commit and push current state.
     - Await feedback/alternative approaches.
+
+---
+
+[2025-04-09] Cline (AI Assistant)
+- **Action:** Planning codebase cleanup and restoration based on diagnostic report.
+- **Details:**
+    - Received diagnostic report identifying legacy NativeWind dependencies/configs, cache issues, and gitignore gaps as likely causes for persistent build failures.
+    - Formulated a detailed execution plan following the report's instructions:
+        1. Pre-documentation (this entry).
+        2. Uninstall NativeWind/Tailwind/PostCSS.
+        3. Delete legacy config files.
+        4. Purge caches (`node_modules`, `.expo`, `.cache`, `package-lock.json`, npm cache).
+        5. Update `.gitignore`.
+        6. Reinstall dependencies.
+        7. Perform base render test using static `App.tsx`.
+        8. Fix typing and verify assets.
+        9. Restore `App.tsx` and test navigation.
+        10. Post-documentation and commit.
+- **Decision:** Proceed with the systematic cleanup and restoration plan.
+- **Follow-up:** Execute the plan step-by-step, starting with Phase 1.
+
+---
+
+[2025-04-09] Cline (AI Assistant)
+- **Action:** Investigating persistent `"large"` string conversion error after `twrnc` migration and cleanup.
+- **Details:**
+    - Despite successful cleanup (removing NativeWind, configs, caches) and passing a base render test with `twrnc`, the runtime error `Unable to convert string to floating point value: "large"` returned when restoring the full `App.tsx` with navigation.
+    - Conducted an audit to find the source of the `"large"` string:
+        - Searched all `.tsx` files for literal `"large"` string: Not found.
+        - Audited `constants/spacing.ts`, `constants/typography.ts`, `constants/animations.ts`: No string `"large"` values found. `iconSize.large` is `32`.
+        - Audited `navigation/AppNavigator.tsx`: No hardcoded `"large"` strings found in basic opacity transition.
+    - Reviewed dependencies (`react-native-screens@~3.31.1`, `@react-navigation/stack@^6.3.29`) and found reports of similar errors often linked to `react-native-reanimated`.
+- **Hypothesis:** The error likely stems from an interaction between `react-native-screens` and `react-native-reanimated` during screen transitions, potentially triggered by default styles or version incompatibilities in the Expo 52 / RN 0.75.3 environment.
+- **Decision:** Proceed with testing this hypothesis by temporarily disabling the `react-native-reanimated` Babel plugin.
+- **Follow-up:**
+    1. Modify `babel.config.js` to comment out the reanimated plugin.
+    2. Clear cache and test build/runtime again: Error persisted.
+    3. Restore reanimated plugin in `babel.config.js`.
+    4. Update `react-native-screens` to `~4.4.0` (recommended for Expo 52).
+    5. Clear cache and test build/runtime again: `"large"` error resolved! App renders `LandingScreen`.
+- **New Issue:** A new runtime error appeared: `Error fetching user with ID 10: TypeError:...`. This indicates a problem in data fetching logic (`AuthContext` or `api.ts`).
+- **Decision:** Document the progress and the new error. Proceed to investigate the TypeError.
+- **Follow-up:**
+    1. Update `KNOWN_ISSUES.md`.
+    2. Add enhanced logging to `apiService.getUserById` around the `fetch` call.
+    3. Reload app: Console logs confirm `TypeError` is caught within the `try...catch` block in `getUserById`, likely during `fetch` or `response.text()`.
+    4. Investigate and fix the TypeError in user data fetching.
+    5. Address path alias TS errors.
+    6. Final testing and documentation.

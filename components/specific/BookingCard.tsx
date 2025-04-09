@@ -1,9 +1,9 @@
 import React from 'react'; // Use standard import
 import { View, Text, Image, TouchableOpacity } from 'react-native';
 // import { styled } from 'nativewind'; // Remove NativeWind import
-import { Booking, Stylist, Service } from '../../types'; // Correct relative path
-import { colors, spacing, typography } from '../../constants'; // Correct relative path
-import tw from '../../twrnc'; // Correct relative path
+import { Booking, Stylist, Service } from '@types'; // Use path alias
+import { colors, spacing, typography } from '@constants'; // Use path alias
+import tw from 'twrnc'; // Import directly from library
 
 // Remove styled components
 // const StyledView = styled(View);

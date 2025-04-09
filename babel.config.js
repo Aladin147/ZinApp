@@ -25,7 +25,7 @@ module.exports = function (api) {
           }
         }
       ],
-      'react-native-reanimated/plugin' // Keep reanimated plugin
+      'react-native-reanimated/plugin' // Restore reanimated plugin
     ],
   };
 };

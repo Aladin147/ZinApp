@@ -3,6 +3,7 @@
 node_modules/
 .expo/
 .expo-shared/
+.cache/
 dist/
 build/
 coverage/
@@ -11,4 +12,3 @@ coverage/
 .vscode/
 .idea/
 *.DS_Store
-    

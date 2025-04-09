@@ -134,12 +134,34 @@ class ApiService {
    * Get user by ID
    */
   async getUserById(id: number): Promise<User | null> {
+    const url = `${API_BASE_URL}${API_ENDPOINTS.USERS}/${id}`;
+    console.log(`[getUserById] Attempting to fetch: ${url}`); // Log before fetch
     try {
-      const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.USERS}/${id}`);
-      const data = await response.json();
+      const response = await fetch(url);
+      console.log(`[getUserById] Fetch response received. Status: ${response.status}, OK: ${response.ok}`); // Log after fetch resolves
+
+      // Check if the response was successful
+      if (!response.ok) {
+        // Log the error status and potentially the response text
+        const errorText = await response.text(); // Read response text if not JSON
+        console.error(`Error fetching user ${id}: ${response.status} ${response.statusText}`, errorText);
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      // Log the raw text response before parsing JSON
+      const responseText = await response.text();
+      console.log(`[getUserById] Raw response for user ${id}:`, responseText.substring(0, 100) + '...'); // Log truncated text
+      
+      // Now try parsing the logged text
+      const data = JSON.parse(responseText); 
+      console.log(`[getUserById] JSON parsed successfully for user ${id}`);
       return data;
     } catch (error) {
-      console.error(`Error fetching user with ID ${id}:`, error);
+      console.error(`[getUserById] Error fetching or processing user with ID ${id}:`, error); // Enhanced error log
+      // Log the specific type of error if possible
+      if (error instanceof TypeError) {
+        console.error("[getUserById] Caught TypeError specifically.");
+      }
       return null;
     }
   }

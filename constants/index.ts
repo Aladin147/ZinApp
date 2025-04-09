@@ -8,7 +8,7 @@ export { default as animations } from './animations';
 export { default as flags } from './flags';
 
 // API endpoints for the mock server
-export const API_BASE_URL = 'http://localhost:3001';
+export const API_BASE_URL = 'http://192.168.100.24:3001'; // Use local network IP
 export const API_ENDPOINTS = {
   STYLISTS: '/stylists',
   SERVICES: '/services',

@@ -3,6 +3,7 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "react-native", // Explicitly set JSX mode for React Native
+    "esModuleInterop": true, // Add for better module interop
     "baseUrl": ".",
     "paths": {
       "*": ["*"],

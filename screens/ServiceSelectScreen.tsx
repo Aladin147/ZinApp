@@ -2,9 +2,9 @@ import React from 'react'; // Use standard import
 import { View, Text, Button } from 'react-native';
 // import { styled } from 'nativewind'; // Remove NativeWind import
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types'; // Use relative path for now
-import { colors, spacing } from '../constants'; // Use relative path for now
-import tw from '../twrnc'; // Import twrnc
+import { RootStackParamList } from '@types'; // Use path alias
+import { colors, spacing } from '@constants'; // Use path alias
+import tw from 'twrnc'; // Import directly from library
 
 // Remove styled components
 // const StyledView = styled(View);
