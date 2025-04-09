@@ -1,14 +1,16 @@
-import React from 'react'; // Use standard import
-import { View, Text, Button } from 'react-native';
-// import { styled } from 'nativewind'; // Remove NativeWind import
+import React, { useState } from 'react';
+import { View, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@types'; // Use path alias
-import { colors, spacing } from '@constants'; // Use path alias
-import tw from 'twrnc'; // Import directly from library
+import { RootStackParamList } from '@types';
+import { colors } from '@constants';
+import tw from 'twrnc';
 
-// Remove styled components
-// const StyledView = styled(View);
-// const StyledText = styled(Text);
+// Import our custom components
+import Screen from '@components/layout/Screen';
+import Header from '@components/layout/Header';
+import Typography from '@components/common/Typography';
+import Button from '@components/common/Button';
+import ServiceIconBtn from '@components/specific/ServiceIconBtn';
 
 type ServiceSelectScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -19,22 +21,62 @@ type Props = {
   navigation: ServiceSelectScreenNavigationProp;
 };
 
+// Mock service data
+const services = [
+  { id: 1, name: 'Haircut', price: 50, icon: '✂️' },
+  { id: 2, name: 'Beard Trim', price: 30, icon: '🧔' },
+  { id: 3, name: 'Braids', price: 70, icon: '💇' },
+  { id: 4, name: 'Full Service', price: 100, icon: '💈' },
+];
+
 const ServiceSelectScreen: React.FC<Props> = ({ navigation }) => {
+  const [selectedService, setSelectedService] = useState<number | null>(null);
+
+  const handleServiceSelect = (serviceId: number) => {
+    setSelectedService(serviceId);
+  };
+
+  const handleContinue = () => {
+    if (selectedService) {
+      navigation.navigate('StylistListScreen', { serviceId: selectedService });
+    }
+  };
+
   return (
-    // Use standard View with twrnc style
-    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
-      {/* Use standard Text with twrnc style */}
-      <Text style={[tw`text-xl font-semibold mb-6`, { color: colors.textMain }]}>
-        What do you need today? (ServiceSelectScreen)
-      </Text>
-      {/* Placeholder for ServiceIconBtn components */}
-      {/* Standard Button, color prop is fine */}
-      <Button
-        title="Select Haircut (Navigate)" // Placeholder action
-        onPress={() => navigation.navigate('StylistListScreen', { serviceId: 1 })} // Pass example serviceId
-        color={colors.primary}
+    <Screen>
+      <Header
+        title="Select Service"
+        showBackButton
       />
-    </View> // Correct closing tag
+
+      <View style={tw`px-4 py-2`}>
+        <Typography variant="subheading" style={tw`mb-6`}>
+          What do you need today?
+        </Typography>
+
+        <View style={tw`flex-row flex-wrap justify-between mb-8`}>
+          {services.map((service) => (
+            <ServiceIconBtn
+              key={service.id}
+              icon={service.icon}
+              label={service.name}
+              price={service.price}
+              selected={selectedService === service.id}
+              onPress={() => handleServiceSelect(service.id)}
+            />
+          ))}
+        </View>
+
+        <Button
+          title="Continue"
+          variant="primary"
+          size="large"
+          style={tw`w-full mt-4`}
+          disabled={!selectedService}
+          onPress={handleContinue}
+        />
+      </View>
+    </Screen>
   );
 };
 

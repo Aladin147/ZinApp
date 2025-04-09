@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User } from '@types';
-import apiService from '@services/api';
-import { DEFAULT_USER_ID } from '@constants';
+// apiService import removed for DEMO MODE
+// import apiService from '@services/api';
+// DEFAULT_USER_ID import removed for DEMO MODE
+// import { DEFAULT_USER_ID } from '@constants';
 import flags from '@constants/flags';
 
 // Define the context state
@@ -33,49 +35,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);
 
-  // Auto-login with default user for demonstration
-  useEffect(() => {
-    const loadDefaultUser = async () => {
-      try {
-        const userData = await apiService.getUserById(DEFAULT_USER_ID);
-        if (userData) {
-          setUser(userData);
-          setIsVerified(userData.is_verified || false);
-          // Sync with flag system
-          flags.setFlag('is_verified', userData.is_verified || false);
-        }
-      } catch (err) {
-        setError('Failed to load default user');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // DEMO MODE: Hardcoded user data to bypass API completely
+  // This ensures the app works even when API is completely unavailable
+  const hardcodedUser: User = {
+    id: 10,
+    name: "Yassine",
+    is_verified: true,
+    trust_score: 87,
+    payment_methods: ["card", "cash"],
+    favorite_stylists: [1],
+    qr_discovery: true
+  };
 
-    loadDefaultUser();
+  // Auto-login with hardcoded user for demonstration
+  useEffect(() => {
+    // Simulate a brief loading state for UI consistency
+    setTimeout(() => {
+      console.log('DEMO MODE: Using hardcoded user data');
+      setUser(hardcodedUser);
+      setIsVerified(hardcodedUser.is_verified);
+      flags.setFlag('is_verified', hardcodedUser.is_verified);
+      setIsLoading(false);
+    }, 500);
   }, []);
 
-  // Login function
+  // Login function - DEMO MODE: Always uses hardcoded user
   const login = async (userId: number) => {
     setIsLoading(true);
     setError(null);
-    
-    try {
-      const userData = await apiService.getUserById(userId);
-      if (userData) {
-        setUser(userData);
-        setIsVerified(userData.is_verified || false);
-        // Sync with flag system
-        flags.setFlag('is_verified', userData.is_verified || false);
-      } else {
-        setError('User not found');
-      }
-    } catch (err) {
-      setError('Authentication failed');
-      console.error(err);
-    } finally {
+
+    // Simulate API call with timeout
+    setTimeout(() => {
+      console.log(`DEMO MODE: Login successful with hardcoded user (requested ID: ${userId})`);
+      // In demo mode, we always return the same user regardless of ID
+      // In a real app, we would fetch the user with the specified ID
+      setUser(hardcodedUser);
+      setIsVerified(hardcodedUser.is_verified);
+      flags.setFlag('is_verified', hardcodedUser.is_verified);
       setIsLoading(false);
-    }
+    }, 800);
   };
 
   // Logout function
@@ -90,13 +88,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const newVerifiedState = !isVerified;
     setIsVerified(newVerifiedState);
     flags.setFlag('is_verified', newVerifiedState);
-    
+
     if (user) {
       setUser({
         ...user,
         is_verified: newVerifiedState,
-        payment_methods: newVerifiedState 
-          ? ['card', 'cash'] 
+        payment_methods: newVerifiedState
+          ? ['card', 'cash']
           : ['card']
       });
     }

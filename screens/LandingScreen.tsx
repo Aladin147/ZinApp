@@ -1,14 +1,15 @@
-import React from 'react'; // Use standard import
-import { View, Text, Button } from 'react-native';
-// import { styled } from 'nativewind'; // Remove NativeWind import
+import React from 'react';
+import { View, Image, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@types'; // Use path alias
-import { colors, spacing } from '@constants'; // Use path alias
-import tw from 'twrnc'; // Import directly from library
+import { RootStackParamList } from '@types';
+import { colors } from '@constants';
+import tw from 'twrnc';
 
-// Remove styled components
-// const StyledView = styled(View);
-// const StyledText = styled(Text);
+// Import our custom components
+import Screen from '@components/layout/Screen';
+import Typography from '@components/common/Typography';
+import Button from '@components/common/Button';
+import Card from '@components/common/Card';
 
 type LandingScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -21,21 +22,67 @@ type Props = {
 
 const LandingScreen: React.FC<Props> = ({ navigation }) => {
   return (
-    // Use standard View with twrnc style
-    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
-      {/* Use standard Text with twrnc style */}
-      {/* Combine twrnc style with inline style for custom color */}
-      <Text style={[tw`text-2xl font-bold mb-8`, { color: colors.textMain }]}>
-        Welcome to ZinApp (LandingScreen)
-      </Text>
-      {/* Standard Button, color prop is fine */}
-      <Button
-        title="Let's Book"
-        onPress={() => navigation.navigate('ServiceSelectScreen')}
-        color={colors.primary}
-      />
-    </View> // Correct closing tag
+    <Screen scrollable>
+      <View style={tw`flex-1 items-center justify-center p-6`}>
+        {/* Logo */}
+        <View style={tw`items-center mb-12 mt-8`}>
+          <View style={styles.logoContainer}>
+            <Typography variant="heading" size="large" align="center" style={tw`text-3xl`}>
+              ZinApp
+            </Typography>
+          </View>
+          <Typography variant="caption" align="center" style={tw`mt-2`}>
+            On-Demand Grooming Platform
+          </Typography>
+        </View>
+
+        {/* Welcome Card */}
+        <Card style={tw`w-full mb-8`}>
+          <Typography variant="subheading" weight="bold" style={tw`mb-2`}>
+            Welcome to ZinApp
+          </Typography>
+          <Typography variant="body" style={tw`mb-4`}>
+            Book haircuts, beard trims, braids, or full services in seconds.
+          </Typography>
+          <Typography variant="caption" color={colors.textMuted}>
+            Discover stylists by proximity, rating, and portfolio.
+          </Typography>
+        </Card>
+
+        {/* Action Buttons */}
+        <Button
+          title="Let's Book"
+          variant="primary"
+          size="large"
+          style={tw`w-full mb-4`}
+          onPress={() => navigation.navigate('ServiceSelectScreen')}
+        />
+
+        <Button
+          title="Scan Stylist QR"
+          variant="outline"
+          style={tw`w-full`}
+          onPress={() => navigation.navigate('ServiceSelectScreen')}
+        />
+      </View>
+    </Screen>
   );
 };
+
+const styles = StyleSheet.create({
+  logoContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: colors.primary,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+});
 
 export default LandingScreen;

@@ -1,15 +1,16 @@
-import React from 'react'; // Use standard import
-import { View, Text, Button, FlatList } from 'react-native';
-// import { styled } from 'nativewind'; // Remove NativeWind import
+import React, { useState, useEffect } from 'react';
+import { View, FlatList, ActivityIndicator } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types'; // Use path alias
-import { colors, spacing } from '@constants'; // Use path alias
-import tw from 'twrnc'; // Import directly from library
+import { RootStackParamList } from '@types';
+import { colors } from '@constants';
+import tw from 'twrnc';
 
-// Remove styled components
-// const StyledView = styled(View);
-// const StyledText = styled(Text);
+// Import our custom components
+import Screen from '@components/layout/Screen';
+import Header from '@components/layout/Header';
+import Typography from '@components/common/Typography';
+import BarberCard from '@components/specific/BarberCard';
 
 type StylistListScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -25,42 +26,96 @@ type Props = {
   route: StylistListScreenRouteProp;
 };
 
+// Mock stylist data
+const mockStylists = [
+  {
+    id: 1,
+    name: 'Hassan the Barber',
+    rating: 4.9,
+    distance_km: 2.1,
+    verified: true,
+    profile_picture: 'https://randomuser.me/api/portraits/men/32.jpg'
+  },
+  {
+    id: 2,
+    name: 'Yasin Styles',
+    rating: 4.7,
+    distance_km: 3.4,
+    verified: false,
+    profile_picture: 'https://randomuser.me/api/portraits/men/44.jpg'
+  },
+  {
+    id: 3,
+    name: 'Fatima Braids',
+    rating: 4.8,
+    distance_km: 1.8,
+    verified: true,
+    profile_picture: 'https://randomuser.me/api/portraits/women/65.jpg'
+  },
+];
+
 const StylistListScreen: React.FC<Props> = ({ navigation, route }) => {
   const serviceId = route.params?.serviceId;
+  const [loading, setLoading] = useState(true);
+  const [stylists, setStylists] = useState<typeof mockStylists>([]);
 
-  // Placeholder data - replace with API call later
-  const mockStylists = [
-    { id: 1, name: 'Hassan' },
-    { id: 2, name: 'Yasin' },
-  ];
+  // Simulate API call
+  useEffect(() => {
+    // Simulate network delay
+    const timer = setTimeout(() => {
+      setStylists(mockStylists);
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleStylistSelect = (stylistId: number) => {
+    navigation.navigate('BarberProfileScreen', { stylistId });
+  };
 
   return (
-    // Use standard View with twrnc style
-    <View style={tw`flex-1 bg-white p-4`}>
-      {/* Use standard Text with twrnc style + inline color */}
-      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
-        Available Stylists {serviceId ? `for Service ${serviceId}` : ''} (StylistListScreen)
-      </Text>
-      {/* Placeholder for BarberCard components */}
-      {/* Standard FlatList */}
-      <FlatList
-        data={mockStylists}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          // Use standard View with twrnc style
-          <View style={tw`mb-2 p-3 border border-gray-200 rounded`}>
-            {/* Use standard Text */}
-            <Text>{item.name}</Text>
-            {/* Standard Button */}
-            <Button
-              title="View Profile"
-              onPress={() => navigation.navigate('BarberProfileScreen', { stylistId: item.id })}
-              color={colors.primary}
-            />
-          </View>
-        )}
+    <Screen>
+      <Header
+        title={`Available Stylists${serviceId ? ` for Service ${serviceId}` : ''}`}
+        showBackButton
       />
-    </View> // Correct closing tag
+
+      <View style={tw`px-4 flex-1`}>
+        {loading ? (
+          <View style={tw`flex-1 items-center justify-center`}>
+            <ActivityIndicator size="large" color={colors.primary} />
+            <Typography variant="caption" style={tw`mt-2`}>
+              Finding stylists near you...
+            </Typography>
+          </View>
+        ) : (
+          <>
+            <Typography variant="body" style={tw`mb-4`}>
+              {stylists.length} stylists available in your area
+            </Typography>
+
+            <FlatList
+              data={stylists}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <BarberCard
+                  id={item.id}
+                  name={item.name}
+                  rating={item.rating}
+                  distance_km={item.distance_km}
+                  verified={item.verified}
+                  profile_picture={item.profile_picture}
+                  onPress={handleStylistSelect}
+                />
+              )}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={tw`pb-4`}
+            />
+          </>
+        )}
+      </View>
+    </Screen>
   );
 };
 
