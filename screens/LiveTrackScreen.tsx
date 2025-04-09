@@ -1,15 +1,15 @@
-import React from 'react'; // Use standard import
-import { View, Text, Button } from 'react-native';
-// import { styled } from 'nativewind'; // Remove NativeWind import
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import { RootStackParamList } from '@types'; // Use path alias
-import { colors, spacing } from '@constants'; // Use path alias
-import tw from 'twrnc'; // Import directly from library
+import { RootStackParamList } from '../types';
+import { colors, spacing } from '../constants';
+import MapTracker from '../components/specific/MapTracker';
+import Typography from '../components/common/Typography';
+import Button from '../components/common/Button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-// Remove styled components
-// const StyledView = styled(View);
-// const StyledText = styled(Text);
+
 
 type LiveTrackScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -28,27 +28,149 @@ type Props = {
 const LiveTrackScreen: React.FC<Props> = ({ navigation, route }) => {
   const bookingId = route.params?.bookingId;
 
-  // Placeholder - Add map view, ETA, avatar animation later
-  return (
-    // Use standard View with twrnc style
-    <View style={tw`flex-1 items-center justify-center bg-white p-4`}>
-      {/* Use standard Text with twrnc style + inline color */}
-      <Text style={[tw`text-xl font-semibold mb-4`, { color: colors.textMain }]}>
-        Tracking Booking {bookingId} (LiveTrackScreen)
-      </Text>
-      {/* Use standard Text with twrnc style + inline color */}
-      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>Map Placeholder</Text>
-      <Text style={[tw`mb-4`, { color: colors.textMuted }]}>ETA: 15 mins (Simulated)</Text>
-      <Text style={[tw`mb-6`, { color: colors.textMuted }]}>Stylist Avatar Placeholder</Text>
+  // State for ETA countdown
+  const [eta, setEta] = useState(15); // Start with 15 minutes
 
-      {/* Standard Button */}
+  // Mock stylist and user locations
+  const stylistLocation = {
+    latitude: 33.5899,
+    longitude: -7.6039,
+  };
+
+  const userLocation = {
+    latitude: 33.5921,
+    longitude: -7.6089,
+  };
+
+  // Mock waypoints for the route
+  const waypoints = [
+    {
+      latitude: 33.5910,
+      longitude: -7.6060,
+    },
+    {
+      latitude: 33.5915,
+      longitude: -7.6075,
+    },
+  ];
+
+  // Countdown ETA
+  useEffect(() => {
+    if (eta <= 0) return;
+
+    const timer = setTimeout(() => {
+      setEta(prevEta => prevEta - 1);
+    }, 60000); // Update every minute
+
+    return () => clearTimeout(timer);
+  }, [eta]);
+
+  // Handle stylist arrival
+  const handleArrival = () => {
+    navigation.navigate('Bsse7aScreen', { bookingId: bookingId });
+  };
+
+  // Simulate faster arrival for demo purposes
+  const simulateArrival = () => {
+    setEta(0);
+    setTimeout(() => {
+      handleArrival();
+    }, 1000);
+  };
+
+  return (
+    <View style={styles.container}>
+      {/* Map Tracker Component */}
+      <MapTracker
+        stylistLocation={stylistLocation}
+        userLocation={userLocation}
+        eta={eta}
+        stylistAvatar="https://via.placeholder.com/100"
+        stylistName="Hassan the Barber"
+        isVerified={true}
+        waypoints={waypoints}
+        onArrival={handleArrival}
+      />
+
+      {/* Action Buttons */}
+      <View style={styles.actionButtons}>
+        <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
+          <Icon name="phone" size={20} color={colors.primary} />
+          <Typography variant="caption" color={colors.primary} style={styles.actionText}>
+            Call
+          </Typography>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
+          <Icon name="comment" size={20} color={colors.primary} />
+          <Typography variant="caption" color={colors.primary} style={styles.actionText}>
+            Message
+          </Typography>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.actionButton} activeOpacity={0.7}>
+          <Icon name="times-circle" size={20} color={colors.error} />
+          <Typography variant="caption" color={colors.error} style={styles.actionText}>
+            Cancel
+          </Typography>
+        </TouchableOpacity>
+      </View>
+
+      {/* Demo Button */}
       <Button
         title="Simulate Arrival"
-        onPress={() => navigation.navigate('Bsse7aScreen', { bookingId: bookingId })}
-        color={colors.primary}
+        variant="primary"
+        size="small"
+        iconName="fast-forward"
+        iconPosition="left"
+        onPress={simulateArrival}
+        style={styles.demoButton}
       />
-    </View> // Correct closing tag
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.bgLight,
+  },
+  actionButtons: {
+    position: 'absolute',
+    top: spacing.lg,
+    left: spacing.md,
+    right: spacing.md,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: colors.bgLight,
+    borderRadius: 16,
+    padding: spacing.sm,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  actionButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: spacing.sm,
+    borderRadius: 8,
+  },
+  actionText: {
+    marginTop: spacing.xxs,
+  },
+  demoButton: {
+    position: 'absolute',
+    bottom: spacing.xl + 80, // Position above the ETA card
+    alignSelf: 'center',
+  },
+});
 
 export default LiveTrackScreen;

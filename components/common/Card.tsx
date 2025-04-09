@@ -4,16 +4,19 @@ import {
   StyleSheet,
   ViewProps,
   ViewStyle,
-  TouchableOpacity
+  TouchableOpacity,
+  Animated
 } from 'react-native';
-import { colors } from '@constants';
+import { colors, spacing } from '@constants';
 
 interface CardProps extends ViewProps {
   style?: ViewStyle;
   children: React.ReactNode;
   onPress?: () => void;
-  variant?: 'default' | 'flat' | 'elevated';
+  variant?: 'default' | 'flat' | 'elevated' | 'warm';
   padding?: 'none' | 'small' | 'medium' | 'large';
+  animated?: boolean;
+  borderColor?: string;
 }
 
 /**
@@ -30,19 +33,45 @@ const Card: React.FC<CardProps> = ({
   onPress,
   variant = 'default',
   padding = 'medium',
+  animated = false,
+  borderColor,
   ...props
 }) => {
+  // Animation value for fade-in effect
+  const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  // Start fade-in animation when component mounts
+  React.useEffect(() => {
+    if (animated) {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300, // Match the fade-in animation token from design
+        useNativeDriver: true,
+      }).start();
+    } else {
+      // If not animated, set opacity to 1 immediately
+      fadeAnim.setValue(1);
+    }
+  }, [animated, fadeAnim]);
+
   // Determine card styles based on variant
   const getCardStyle = () => {
+    const baseStyle = [styles.card];
+
+    if (borderColor) {
+      baseStyle.push({ borderColor, borderWidth: 1 });
+    }
+
     switch (variant) {
       case 'default':
-        return [styles.card];
+        return baseStyle;
       case 'flat':
-        return [styles.card, styles.flatCard];
+        return [...baseStyle, styles.flatCard];
       case 'elevated':
-        return [styles.card, styles.elevatedCard];
+        return [...baseStyle, styles.elevatedCard];
+      case 'warm':
+        return [...baseStyle, styles.warmCard];
       default:
-        return [styles.card];
+        return baseStyle;
     }
   };
 
@@ -69,32 +98,49 @@ const Card: React.FC<CardProps> = ({
     style,
   ];
 
-  // If onPress is provided, wrap in TouchableOpacity, otherwise use View
-  if (onPress) {
-    return (
-      <TouchableOpacity
-        style={cardStyles}
-        onPress={onPress}
-        activeOpacity={0.7}
-        {...props}
-      >
-        {children}
-      </TouchableOpacity>
-    );
-  }
+  // Animation style
+  const animStyle = {
+    opacity: fadeAnim,
+  };
 
-  return (
-    <View style={cardStyles} {...props}>
-      {children}
-    </View>
+  // Create the card content
+  const renderCard = () => {
+    // If onPress is provided, wrap in TouchableOpacity, otherwise use View
+    if (onPress) {
+      return (
+        <TouchableOpacity
+          style={cardStyles}
+          onPress={onPress}
+          activeOpacity={0.7}
+          {...props}
+        >
+          {children}
+        </TouchableOpacity>
+      );
+    }
+
+    return (
+      <View style={cardStyles} {...props}>
+        {children}
+      </View>
+    );
+  };
+
+  // If animated, wrap in Animated.View, otherwise render directly
+  return animated ? (
+    <Animated.View style={animStyle}>
+      {renderCard()}
+    </Animated.View>
+  ) : (
+    renderCard()
   );
 };
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: 'white',
+    backgroundColor: colors.bgLight,
     borderRadius: 16, // 16px border-radius from design specs
-    marginBottom: 16, // 16px outer margin from design specs
+    marginBottom: spacing.md, // 16px outer margin from design specs
   },
   flatCard: {
     // No shadow for flat cards as per design specs
@@ -106,6 +152,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
+  },
+  warmCard: {
+    backgroundColor: colors.warmSand, // Warm Sand background from design specs
   },
 });
 

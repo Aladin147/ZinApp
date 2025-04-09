@@ -6,20 +6,25 @@ import {
   TouchableOpacityProps,
   ViewStyle,
   TextStyle,
-  Animated
+  Animated,
+  View
 } from 'react-native';
-import { colors, typography } from '@constants';
+import { colors, typography, spacing } from '@constants';
 import Typography from './Typography';
 import tw from 'twrnc';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary' | 'outline' | 'text';
   size?: 'small' | 'medium' | 'large';
   loading?: boolean;
   disabled?: boolean;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  iconName?: string;
+  iconPosition?: 'left' | 'right';
+  fullWidth?: boolean;
 }
 
 /**
@@ -39,6 +44,9 @@ const Button: React.FC<ButtonProps> = ({
   disabled = false,
   style,
   textStyle,
+  iconName,
+  iconPosition = 'left',
+  fullWidth = false,
   ...props
 }) => {
   // Animation value for the bounce effect
@@ -70,23 +78,33 @@ const Button: React.FC<ButtonProps> = ({
         return [
           styles.button,
           styles.primaryButton,
-          styles.shadow
+          styles.shadow,
+          fullWidth && styles.fullWidth
         ];
       case 'secondary':
         return [
           styles.button,
-          styles.secondaryButton
+          styles.secondaryButton,
+          fullWidth && styles.fullWidth
         ];
       case 'outline':
         return [
           styles.button,
-          styles.outlineButton
+          styles.outlineButton,
+          fullWidth && styles.fullWidth
+        ];
+      case 'text':
+        return [
+          styles.button,
+          styles.textButton,
+          fullWidth && styles.fullWidth
         ];
       default:
         return [
           styles.button,
           styles.primaryButton,
-          styles.shadow
+          styles.shadow,
+          fullWidth && styles.fullWidth
         ];
     }
   };
@@ -112,10 +130,41 @@ const Button: React.FC<ButtonProps> = ({
       case 'secondary':
         return 'white';
       case 'outline':
+      case 'text':
         return colors.primary;
       default:
         return 'white';
     }
+  };
+
+  // Get icon size based on button size
+  const getIconSize = () => {
+    switch (size) {
+      case 'small':
+        return 14;
+      case 'medium':
+        return 18;
+      case 'large':
+        return 20;
+      default:
+        return 18;
+    }
+  };
+
+  // Render icon if provided
+  const renderIcon = () => {
+    if (!iconName) return null;
+
+    return (
+      <Icon
+        name={iconName}
+        size={getIconSize()}
+        color={variant === 'primary' || variant === 'secondary' ? 'white' : colors.primary}
+        style={[
+          iconPosition === 'left' ? styles.iconLeft : styles.iconRight,
+        ]}
+      />
+    );
   };
 
   // Combine all styles
@@ -140,17 +189,21 @@ const Button: React.FC<ButtonProps> = ({
         {loading ? (
           <ActivityIndicator
             size="small"
-            color={variant === 'outline' ? colors.primary : 'white'}
+            color={variant === 'outline' || variant === 'text' ? colors.primary : 'white'}
           />
         ) : (
-          <Typography
-            variant="button"
-            color={getTextColor()}
-            align="center"
-            style={textStyle}
-          >
-            {title}
-          </Typography>
+          <View style={styles.contentContainer}>
+            {iconPosition === 'left' && renderIcon()}
+            <Typography
+              variant="button"
+              color={getTextColor()}
+              align="center"
+              style={textStyle}
+            >
+              {title}
+            </Typography>
+            {iconPosition === 'right' && renderIcon()}
+          </View>
         )}
       </TouchableOpacity>
     </Animated.View>
@@ -175,6 +228,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.primary,
   },
+  textButton: {
+    backgroundColor: 'transparent',
+    paddingHorizontal: spacing.sm,
+  },
   disabledButton: {
     opacity: 0.5,
   },
@@ -184,6 +241,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 3,
+  },
+  fullWidth: {
+    width: '100%',
+  },
+  contentContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconLeft: {
+    marginRight: spacing.xs,
+  },
+  iconRight: {
+    marginLeft: spacing.xs,
   },
 });
 

@@ -1,15 +1,12 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '@types';
-import { colors } from '@constants';
+import { RootStackParamList } from '../types';
+import { colors } from '../constants';
 import tw from 'twrnc';
 
 // Import our custom components
-import Screen from '@components/layout/Screen';
-import Typography from '@components/common/Typography';
-import Button from '@components/common/Button';
-import Card from '@components/common/Card';
+import { Screen, Typography, Button, Card, Logo } from '../components';
 
 type LandingScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -26,11 +23,11 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
       <View style={tw`flex-1 items-center justify-center p-6`}>
         {/* Logo */}
         <View style={tw`items-center mb-12 mt-8`}>
-          <View style={styles.logoContainer}>
-            <Typography variant="heading" size="large" align="center" style={tw`text-3xl`}>
-              ZinApp
-            </Typography>
-          </View>
+          <Logo
+            variant="normal"
+            width={200}
+            style={styles.logoContainer}
+          />
           <Typography variant="caption" align="center" style={tw`mt-2`}>
             On-Demand Grooming Platform
           </Typography>
@@ -38,7 +35,7 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
 
         {/* Welcome Card */}
         <Card style={tw`w-full mb-8`}>
-          <Typography variant="subheading" weight="bold" style={tw`mb-2`}>
+          <Typography variant="sectionHeader" style={tw`mb-2`}>
             Welcome to ZinApp
           </Typography>
           <Typography variant="body" style={tw`mb-4`}>
@@ -61,8 +58,16 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
         <Button
           title="Scan Stylist QR"
           variant="outline"
-          style={tw`w-full`}
+          style={tw`w-full mb-4`}
           onPress={() => navigation.navigate('ServiceSelectScreen')}
+        />
+
+        <Button
+          title="View Logo Showcase"
+          variant="text"
+          iconName="image"
+          iconPosition="left"
+          onPress={() => navigation.navigate('LogoShowcaseScreen')}
         />
       </View>
     </Screen>

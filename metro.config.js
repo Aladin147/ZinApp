@@ -8,13 +8,18 @@ const config = getDefaultConfig(__dirname);
 // Ensure the project root is watched
 config.watchFolders = [__dirname];
 
-// Optional: Explicitly tell Metro where assets are, although assetBundlePatterns in app.json should cover this.
-// config.resolver.assetExts.push('cjs'); // Example if needed for specific extensions
-// config.server.enhanceMiddleware = (middleware) => { // Example middleware enhancement
-//   return (req, res, next) => {
-//     // custom logic here
-//     return middleware(req, res, next);
-//   };
-// };
+// Configure SVG support
+const { transformer, resolver } = config;
+
+config.transformer = {
+  ...transformer,
+  babelTransformerPath: require.resolve('react-native-svg-transformer'),
+};
+
+config.resolver = {
+  ...resolver,
+  assetExts: resolver.assetExts.filter((ext) => ext !== 'svg'),
+  sourceExts: [...resolver.sourceExts, 'svg'],
+};
 
 module.exports = config;
