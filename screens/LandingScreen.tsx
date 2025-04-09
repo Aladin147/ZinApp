@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Animated, ScrollView } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import { colors, spacing, themeColors } from '@constants'; // Use alias
+import { colors, spacing } from '../constants'; // Use relative path for now
 import { FontAwesome } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
+// import { LinearGradient } from 'expo-linear-gradient'; // Not needed anymore
 // import { MotiView } from 'moti'; // Comment out Moti
 
 // Import our custom components
-import { Screen, Typography, Button, Card } from '../components';
+import { ImmersiveScreen, Typography, Button, Card, HeroHeader, ServiceButton } from '../components';
 
 type LandingScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -41,97 +41,184 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
   ];
 
   return (
-    <Screen>
-      {/* Hero Section with Background */}
-      <View style={styles.heroContainer}>
-        <LinearGradient
-          colors={[colors.primary, '#FF8F66']}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        >
-          <Animated.View style={[styles.heroContent, { opacity: fadeAnim }]}>
-            {/* <MotiView
-              from={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: 'timing', duration: 1000 }}
-              style={[styles.logo, { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 40 }]}
-            > */}
-            <View style={[styles.logo, { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 40 }]}>
-              <FontAwesome name="scissors" size={32} color="white" />
-            {/* </MotiView> */}
-            </View>
-            <Typography variant="screenTitle" color={colors.bgLight} style={styles.heroTitle}>
-              ZinApp
-            </Typography>
-            <Typography variant="body" color={colors.bgLight} style={styles.heroSubtitle}>
-              Premium Grooming On-Demand
-            </Typography>
-          </Animated.View>
-        </LinearGradient>
+    <ImmersiveScreen contentPadding={0} statusBarStyle="light-content" scrollable={true}>
+      {/* Hero Section with HeroHeader */}
+      <HeroHeader
+        title="ZinApp"
+        icon={require('../assets/images/LOGO-StandAlone_ZinApp.png')}
+        style={styles.heroHeader}
+      />
+
+      {/* Subtitle */}
+      <View style={styles.subtitleContainer}>
+        <Typography variant="body" color="white" style={styles.heroSubtitle}>
+          Premium Grooming On-Demand
+        </Typography>
       </View>
 
       {/* Main Content */}
       <View style={styles.content}>
         {/* Welcome Card */}
-        {/* <MotiView
-          from={{ opacity: 0, translateY: 20 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: 'timing', duration: 800, delay: 300 }}
-        > */}
-          <Card style={styles.welcomeCard}>
-            <Typography variant="sectionHeader" style={styles.welcomeTitle}>
-              Welcome to ZinApp
-            </Typography>
-            <Typography variant="body" color={colors.textMuted} style={styles.welcomeText}>
-              Book haircuts, beard trims, braids, or full services in seconds. Discover stylists by proximity, rating, and portfolio.
-            </Typography>
-          </Card>
-        {/* </MotiView> */}
+        <Card
+          style={styles.welcomeCard}
+          variant="bubble"
+          withShadow
+        >
+          <Typography variant="sectionHeader" style={styles.welcomeTitle}>
+            Welcome to ZinApp
+          </Typography>
+          <Typography variant="body" color={colors.textPrimary} style={styles.welcomeText}>
+            Book haircuts, beard trims, braids, or full services in seconds. Discover stylists by proximity, rating, and portfolio.
+          </Typography>
+        </Card>
 
         {/* Service Selection */}
-        {/* <MotiView
-          from={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ type: 'timing', duration: 800, delay: 500 }}
-        > */}
-          <Typography variant="sectionHeader" style={styles.sectionTitle}>
-            What do you need today?
-          </Typography>
-        {/* </MotiView> */}
+        <Typography variant="sectionHeader" color="white" style={styles.sectionTitle}>
+          What do you need today?
+        </Typography>
 
-        <View style={styles.serviceGrid}>
-          {serviceOptions.map((service, index) => (
-            // <MotiView
-            //   key={service.id}
-            //   from={{ opacity: 0, scale: 0.9, translateY: 20 }}
-            //   animate={{ opacity: 1, scale: 1, translateY: 0 }}
-            //   transition={{ type: 'timing', duration: 600, delay: 600 + (index * 100) }}
-            // >
-              <TouchableOpacity
-                key={service.id} // Add key here since MotiView is removed
-                style={styles.serviceCard}
+        {/* Service Buttons - Horizontal Scrollable */}
+        <View style={styles.serviceButtonsContainer}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.serviceScroll}
+          >
+            {serviceOptions.map((service) => (
+              <ServiceButton
+                key={service.id}
+                name={service.name}
+                icon={service.icon}
+                color={service.color}
                 onPress={() => navigation.navigate('StylistListScreen', { serviceId: service.id })}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.iconContainer, { backgroundColor: service.color }]}>
-                  <FontAwesome name={service.icon} size={24} color="white" />
-                </View>
-                <Typography variant="bodyMedium" style={styles.serviceName}>
-                  {service.name}
-                </Typography>
-              </TouchableOpacity>
-            // </MotiView>
-          ))}
+                variant="circle"
+                size="medium"
+                style={styles.serviceButton}
+              />
+            ))}
+          </ScrollView>
         </View>
 
+        {/* Featured Stylists Section */}
+        <Typography variant="sectionHeader" color="white" style={styles.sectionTitle}>
+          Top Stylists
+        </Typography>
+
+        {/* Stylist Cards - Horizontal Scrollable */}
+        <View style={styles.stylistCardsContainer}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.stylistScroll}
+          >
+            {/* Placeholder stylist cards */}
+            <TouchableOpacity activeOpacity={0.8}>
+              <Card style={styles.stylistCard} variant="bubble" withShadow>
+                <View style={styles.stylistCardContent}>
+                  <View style={styles.stylistAvatar}>
+                    <FontAwesome name="user" size={24} color={colors.primary} />
+                  </View>
+                  <Typography variant="bodyMedium" style={styles.stylistName}>Sarah J.</Typography>
+                  <Typography variant="caption" color={colors.textMuted}>⭐ 4.8 (120)</Typography>
+                </View>
+              </Card>
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8}>
+              <Card style={styles.stylistCard} variant="bubble" withShadow>
+                <View style={styles.stylistCardContent}>
+                  <View style={styles.stylistAvatar}>
+                    <FontAwesome name="user" size={24} color={colors.stylistBlue} />
+                  </View>
+                  <Typography variant="bodyMedium" style={styles.stylistName}>Mike T.</Typography>
+                  <Typography variant="caption" color={colors.textMuted}>⭐ 4.9 (85)</Typography>
+                </View>
+              </Card>
+            </TouchableOpacity>
+
+            <TouchableOpacity activeOpacity={0.8}>
+              <Card style={styles.stylistCard} variant="bubble" withShadow>
+                <View style={styles.stylistCardContent}>
+                  <View style={styles.stylistAvatar}>
+                    <FontAwesome name="user" size={24} color={colors.success} />
+                  </View>
+                  <Typography variant="bodyMedium" style={styles.stylistName}>Alex R.</Typography>
+                  <Typography variant="caption" color={colors.textMuted}>⭐ 4.7 (92)</Typography>
+                </View>
+              </Card>
+            </TouchableOpacity>
+          </ScrollView>
+        </View>
+
+        {/* Popular Locations Section */}
+        <Typography variant="sectionHeader" color="white" style={styles.sectionTitle}>
+          Popular Locations
+        </Typography>
+
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.locationsScroll}
+        >
+          {/* Location cards */}
+          <TouchableOpacity activeOpacity={0.8}>
+            <Card style={styles.locationCard} variant="bubble" withShadow>
+              <View style={styles.locationImagePlaceholder}>
+                <FontAwesome name="map-marker" size={24} color={colors.primary} />
+              </View>
+              <Typography variant="bodyMedium" style={styles.locationName}>Downtown</Typography>
+              <Typography variant="caption" color={colors.textMuted}>12 stylists</Typography>
+            </Card>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.8}>
+            <Card style={styles.locationCard} variant="bubble" withShadow>
+              <View style={styles.locationImagePlaceholder}>
+                <FontAwesome name="map-marker" size={24} color={colors.stylistBlue} />
+              </View>
+              <Typography variant="bodyMedium" style={styles.locationName}>Westside</Typography>
+              <Typography variant="caption" color={colors.textMuted}>8 stylists</Typography>
+            </Card>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.8}>
+            <Card style={styles.locationCard} variant="bubble" withShadow>
+              <View style={styles.locationImagePlaceholder}>
+                <FontAwesome name="map-marker" size={24} color={colors.success} />
+              </View>
+              <Typography variant="bodyMedium" style={styles.locationName}>Uptown</Typography>
+              <Typography variant="caption" color={colors.textMuted}>15 stylists</Typography>
+            </Card>
+          </TouchableOpacity>
+        </ScrollView>
+
+        {/* Special Offers Section */}
+        <Typography variant="sectionHeader" color="white" style={styles.sectionTitle}>
+          Special Offers
+        </Typography>
+
+        <Card style={styles.offerCard} variant="bubble" withShadow>
+          <View style={styles.offerCardContent}>
+            <View style={styles.offerTextContainer}>
+              <Typography variant="subheading" style={styles.offerTitle}>
+                20% OFF First Booking
+              </Typography>
+              <Typography variant="caption" color={colors.textMuted} style={styles.offerDescription}>
+                Use code WELCOME20 on your first appointment
+              </Typography>
+              <TouchableOpacity style={styles.offerButton}>
+                <Typography variant="caption" color={colors.primary} style={{fontWeight: '600'}}>
+                  Apply Code
+                </Typography>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.offerIconContainer}>
+              <FontAwesome name="gift" size={36} color={colors.primary} />
+            </View>
+          </View>
+        </Card>
+
         {/* Action Buttons */}
-        {/* <MotiView
-          from={{ opacity: 0, translateY: 30 }}
-          animate={{ opacity: 1, translateY: 0 }}
-          transition={{ type: 'timing', duration: 800, delay: 1000 }}
-          style={styles.buttonContainer}
-        > */}
         <View style={styles.buttonContainer}>
           <Button
             title="Find Nearby Stylists"
@@ -140,6 +227,7 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
             iconName="map-marker"
             iconPosition="left"
             style={styles.primaryButton}
+            textStyle={styles.buttonText}
             onPress={() => navigation.navigate('StylistListScreen', { serviceId: 1 })}
           />
 
@@ -150,57 +238,75 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
             iconName="qrcode"
             iconPosition="left"
             style={styles.secondaryButton}
+            textStyle={styles.secondaryButtonText}
             onPress={() => navigation.navigate('ServiceSelectScreen')}
           />
-        {/* </MotiView> */}
+
+          <Button
+            title="Browse All Services"
+            variant="outline"
+            size="large"
+            iconName="list"
+            iconPosition="left"
+            style={styles.secondaryButton}
+            textStyle={styles.secondaryButtonText}
+            onPress={() => navigation.navigate('ServiceSelectScreen')}
+          />
         </View>
+
+        {/* App Info Section */}
+        <Card style={styles.infoCard} variant="bubble" withShadow>
+          <Typography variant="subheading" style={styles.infoTitle}>
+            About ZinApp
+          </Typography>
+          <Typography variant="body" color={colors.textMuted} style={styles.infoText}>
+            ZinApp connects you with top stylists in your area for haircuts, beard trims, braids, and more. Book appointments, track your stylist's arrival, and enjoy premium grooming services on-demand.
+          </Typography>
+          <View style={styles.infoStats}>
+            <View style={styles.statItem}>
+              <Typography variant="subheading" color={colors.primary}>500+</Typography>
+              <Typography variant="caption" color={colors.textMuted}>Stylists</Typography>
+            </View>
+            <View style={styles.statItem}>
+              <Typography variant="subheading" color={colors.primary}>20k+</Typography>
+              <Typography variant="caption" color={colors.textMuted}>Customers</Typography>
+            </View>
+            <View style={styles.statItem}>
+              <Typography variant="subheading" color={colors.primary}>50k+</Typography>
+              <Typography variant="caption" color={colors.textMuted}>Bookings</Typography>
+            </View>
+          </View>
+        </Card>
       </View>
-    </Screen>
+    </ImmersiveScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  heroContainer: {
-    height: 220,
-    width: '100%',
+  heroHeader: {
+    height: 140, // Reduced height for better spacing
+    borderRadius: 0, // Remove border radius for full-width header
   },
-  gradient: {
-    flex: 1,
-    justifyContent: 'center',
+  subtitleContainer: {
     alignItems: 'center',
-  },
-  heroContent: {
-    alignItems: 'center',
-    paddingHorizontal: spacing.md,
-  },
-  logo: {
-    width: 80,
-    height: 80,
+    paddingVertical: spacing.sm,
+    backgroundColor: 'transparent', // Make it transparent to show the coral background
     marginBottom: spacing.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  heroTitle: {
-    marginBottom: spacing.xxs,
   },
   heroSubtitle: {
     opacity: 0.9,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   content: {
-    flex: 1,
     padding: spacing.md,
-    marginTop: -20,
+    paddingBottom: spacing.xxxl, // Extra padding at bottom for scrollable content
   },
   welcomeCard: {
-    marginBottom: spacing.lg,
+    marginBottom: spacing.md,
     padding: spacing.md,
-    borderRadius: 16,
-    backgroundColor: colors.bgLight,
-    shadowColor: themeColors.shadow,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    backgroundColor: colors.cream,
   },
   welcomeTitle: {
     marginBottom: spacing.xs,
@@ -209,53 +315,165 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   sectionTitle: {
+    marginBottom: spacing.sm,
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  serviceButtonsContainer: {
     marginBottom: spacing.md,
   },
-  serviceGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginBottom: spacing.xl,
+  serviceScroll: {
+    paddingBottom: spacing.sm,
+    paddingRight: spacing.md,
+    paddingLeft: spacing.xs,
   },
-  serviceCard: {
-    width: '48%',
-    backgroundColor: colors.bgLight,
-    borderRadius: 24, // More rounded corners like Glovo
-    padding: spacing.md,
+  serviceButton: {
+    marginRight: spacing.sm,
+  },
+  stylistCardsContainer: {
     marginBottom: spacing.md,
+  },
+  stylistScroll: {
+    paddingBottom: spacing.sm,
+    paddingRight: spacing.md,
+    paddingLeft: spacing.xs,
+  },
+  stylistCard: {
+    width: 120,
+    height: 160,
+    marginRight: spacing.md,
+    padding: spacing.sm,
+    backgroundColor: colors.cream,
+  },
+  stylistCardContent: {
     alignItems: 'center',
-    shadowColor: themeColors.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 3,
-    borderWidth: 1,
-    borderColor: colors.gray100,
+    justifyContent: 'center',
+    flex: 1,
   },
-  iconContainer: {
-    width: 56,
-    height: 56,
-    borderRadius: 28, // Fully rounded like Glovo
+  stylistAvatar: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: colors.cream,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: spacing.sm,
-    shadowColor: 'rgba(0,0,0,0.2)',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 3,
+    borderWidth: 2,
+    borderColor: colors.primary,
   },
-  serviceName: {
-    marginTop: spacing.xs,
+  stylistName: {
+    marginBottom: spacing.xs,
+  },
+  locationsScroll: {
+    paddingBottom: spacing.sm,
+    paddingRight: spacing.md,
+    paddingLeft: spacing.xs,
+  },
+  locationCard: {
+    width: 140,
+    height: 120,
+    marginRight: spacing.md,
+    padding: spacing.sm,
+    backgroundColor: colors.cream,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  locationImagePlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'rgba(244, 128, 93, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: spacing.sm,
+  },
+  locationName: {
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+  },
+  offerCard: {
+    marginBottom: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.cream,
+  },
+  offerCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  offerTextContainer: {
+    flex: 1,
+  },
+  offerTitle: {
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+  },
+  offerDescription: {
+    marginBottom: spacing.sm,
+  },
+  offerButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    backgroundColor: 'rgba(244, 128, 93, 0.1)',
+    borderRadius: 16,
+  },
+  offerIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(244, 128, 93, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: spacing.sm,
   },
   buttonContainer: {
     marginTop: spacing.md,
+    marginBottom: spacing.md,
   },
   primaryButton: {
     marginBottom: spacing.md,
+    backgroundColor: colors.cream, // Change button color for contrast
+    borderWidth: 0,
+  },
+  buttonText: {
+    color: colors.primary,
+    fontWeight: '600',
   },
   secondaryButton: {
     marginBottom: spacing.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Semi-transparent background
+    borderColor: colors.cream,
+    borderWidth: 2,
+  },
+  secondaryButtonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  infoCard: {
+    marginTop: spacing.md,
+    marginBottom: spacing.xl,
+    padding: spacing.md,
+    backgroundColor: colors.cream,
+  },
+  infoTitle: {
+    fontWeight: '600',
+    marginBottom: spacing.xs,
+  },
+  infoText: {
+    lineHeight: 20,
+    marginBottom: spacing.md,
+  },
+  infoStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: spacing.sm,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(0,0,0,0.05)',
+  },
+  statItem: {
+    alignItems: 'center',
   },
 });
 

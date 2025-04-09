@@ -3,13 +3,19 @@
  *
  * This file defines the spacing system for ZinApp, based on a 4pt grid system.
  * All spacing values are multiples of the base unit (4pt) to ensure consistency
- * throughout the app.
+ * throughout the app, as specified in the audit requirements.
  *
  * The spacing system includes:
  * - Core spacing scale (xxs to xxl)
  * - Named spacing for common use cases
  * - Component-specific spacing
  * - Helper function to get custom multiples of the base unit
+ *
+ * Audit Requirements:
+ * - 4pt spacing grid system
+ * - Cards: 16px outer margin, 12px inner padding
+ * - Buttons: 20px border radius
+ * - Sections: 24px bottom corners
  *
  * @see docs/DESIGN_TOKENS.md for the complete spacing specifications
  */
@@ -42,20 +48,21 @@ export const spacing = {
   inlineGap: BASE_UNIT * 2, // 8px - Gap between inline elements
   stackGap: BASE_UNIT * 3, // 12px - Gap between stacked elements
 
-  // Component-specific spacing
+  // Component-specific spacing - Audit requirements
   card: {
-    padding: BASE_UNIT * 4,     // 16px - Standard card padding
-    innerPadding: BASE_UNIT * 2, // 8px - Inner padding for nested elements
-    outerMargin: BASE_UNIT * 4,  // 16px - Margin around cards
+    padding: BASE_UNIT * 3,     // 12px - Inner padding (audit requirement)
+    innerPadding: BASE_UNIT * 3, // 12px - Inner padding for nested elements (audit requirement)
+    outerMargin: BASE_UNIT * 4,  // 16px - Margin around cards (audit requirement)
     gap: BASE_UNIT * 3,          // 12px - Gap between card elements
-    borderRadius: BASE_UNIT * 2,  // 8px - Standard card border radius
+    borderRadius: BASE_UNIT * 4,  // 16px - Card border radius (audit requirement)
   },
 
   button: {
     paddingVertical: BASE_UNIT * 3,   // 12px - Vertical padding for buttons
     paddingHorizontal: BASE_UNIT * 4, // 16px - Horizontal padding for buttons
     gap: BASE_UNIT * 2,               // 8px - Gap between button icon and text
-    borderRadius: BASE_UNIT * 2,      // 8px - Standard button border radius
+    borderRadius: BASE_UNIT * 5,      // 20px - Button border radius (audit requirement)
+    height: BASE_UNIT * 12,           // 48px-56px height (audit requirement)
   },
 
   input: {
@@ -67,6 +74,13 @@ export const spacing = {
   header: {
     padding: BASE_UNIT * 4,      // 16px - Header padding
     height: BASE_UNIT * 14,       // 56px - Standard header height
+  },
+
+  // Section-specific spacing - Audit requirements
+  section: {
+    bottomCornerRadius: BASE_UNIT * 6, // 24px - Section bottom corners (audit requirement)
+    padding: BASE_UNIT * 4,           // 16px - Section padding
+    marginBottom: BASE_UNIT * 6,      // 24px - Section bottom margin
   },
 
   // Icon sizes

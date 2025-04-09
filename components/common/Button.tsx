@@ -30,11 +30,11 @@ interface ButtonProps extends TouchableOpacityProps {
 /**
  * Button component following ZinApp design system
  *
- * Based on the specifications in the design documentation:
+ * Based on the specifications in the audit requirements:
  * - Primary color: Coral Orange (#F4805D)
- * - Border radius: 12px
- * - Height: 48px (standard), 56px (hero)
- * - Animation: Slight bounce on tap
+ * - Border radius: 20px (audit requirement)
+ * - Height: 48-56px (audit requirement)
+ * - Animation: Scale down to 0.95 briefly (audit requirement)
  */
 const Button: React.FC<ButtonProps> = ({
   title,
@@ -52,10 +52,10 @@ const Button: React.FC<ButtonProps> = ({
   // Animation value for the bounce effect
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
-  // Handle press animation
+  // Handle press animation - Scale down to 0.95 briefly (audit requirement)
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.92,
+      toValue: 0.95, // Scale down to 0.95 (audit requirement)
       useNativeDriver: true,
       speed: 25,
       bounciness: 10
@@ -123,8 +123,18 @@ const Button: React.FC<ButtonProps> = ({
     }
   };
 
-  // Determine text color based on variant
+  // Determine text color based on variant and style override
   const getTextColor = () => {
+    // Check if the button has a custom background color that would require text color adjustment
+    const hasCustomBgColor = style && (
+      (style as any).backgroundColor === colors.cream ||
+      (style as any).backgroundColor === colors.secondary
+    );
+
+    if (hasCustomBgColor) {
+      return colors.primary; // Use primary color text on light backgrounds
+    }
+
     switch (variant) {
       case 'primary':
       case 'secondary':
@@ -212,7 +222,7 @@ const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 24, // More rounded, bubbly buttons
+    borderRadius: 20, // 20px border radius (audit requirement)
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,

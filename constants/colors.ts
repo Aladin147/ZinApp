@@ -4,27 +4,25 @@
  * This file defines the color palette for ZinApp, including primary, secondary, and accent colors,
  * as well as utility colors for different states and grayscale values.
  *
- * The color system is based on the specifications in the design documentation (DESIGN_TOKENS.md).
+ * The color system is based on the specifications in the design documentation and audit requirements.
  *
  * @see docs/DESIGN_TOKENS.md for the complete color specifications
  */
 export const colors = {
-  // Brand colors - More vibrant and playful like Glovo
-  primary: '#FF5E5B',    // Vibrant coral red - Primary CTA, buttons, highlights, icons
-  secondary: '#F8F3ED',  // Background, card backdrops
-  cream: '#FCFBF9',      // Panel sections, forms
-  stylistBlue: '#00C1B2', // Teal blue for stylist elements - more vibrant like Glovo
+  // Brand colors - Audit-specified color palette with updated values
+  primary: '#F4805D',    // Coral - Primary CTA, buttons, highlights, icons
+  secondary: '#FEF1D8',  // Background, card backdrops (updated value)
+  cream: '#FFFAF2',      // Panel sections, forms (updated value)
+  stylistBlue: '#8CBACD', // Cool Blue for stylist-related components only
   warmSand: '#F8F3ED',   // Warm backgrounds, cards
   textSlate: '#3C3C3C',  // Body text, titles, icons
-  accent1: '#FFBD00',    // Glovo-like yellow accent
-  accent2: '#7B68EE',    // Playful purple accent
 
   // Backgrounds
-  bgLight: '#FCFBF9',    // Light backgrounds
-  bgDark: '#1C1C1E',     // Dark backgrounds
+  bgLight: '#FCFBF9',    // Secondary Cream - Light backgrounds
+  bgDark: '#3C3C3C',     // Text Slate - Dark backgrounds
 
   // Text
-  textPrimary: '#3C3C3C', // Headlines, primary text
+  textPrimary: '#3C3C3C', // Text/Foreground Slate - Headlines, primary text
   textMuted: '#7A7A7A',   // Secondary text, captions
 
   // Status/Utility colors
@@ -51,26 +49,28 @@ export const colors = {
  * These are named aliases for common use cases throughout the app.
  * Using these semantic color names makes it easier to maintain consistency
  * and update the theme in the future.
+ *
+ * Updated to match audit requirements.
  */
 export const themeColors = {
   // Button states
-  buttonPrimary: colors.primary,
-  buttonSecondary: colors.secondary,
-  buttonAccent: colors.stylistBlue,
-  buttonDisabled: colors.gray300,
-  buttonPressed: '#E06E4B', // Darker variant of primary
+  buttonPrimary: colors.primary,     // Coral - Primary CTA
+  buttonSecondary: colors.secondary, // Background color
+  buttonAccent: colors.stylistBlue,  // Cool Blue - Only for stylist-related elements
+  buttonDisabled: colors.gray300,    // Disabled state
+  buttonPressed: '#E06E4B',          // Darker variant of primary for pressed state
 
   // Backgrounds
-  background: colors.bgLight,
-  backgroundWarm: colors.warmSand,
-  cardBg: colors.bgLight,
-  cardBgWarm: colors.warmSand,
+  background: colors.secondary,     // #F8F3ED - Background
+  backgroundWarm: colors.warmSand, // #F8F3ED - Warm backgrounds
+  cardBg: colors.cream,           // #FCFBF9 - Secondary Cream for cards
+  cardBgWarm: colors.warmSand,    // #F8F3ED - Warm backgrounds for cards
 
   // Text variants
-  text: colors.textPrimary,
-  textSecondary: colors.textMuted,
-  textLight: colors.bgLight,
-  textOnPrimary: colors.bgLight,
+  text: colors.textPrimary,       // #3C3C3C - Text/Foreground Slate
+  textSecondary: colors.textMuted, // #7A7A7A - Secondary text
+  textLight: colors.bgLight,      // #FCFBF9 - Light text on dark backgrounds
+  textOnPrimary: colors.bgLight,  // #FCFBF9 - Text on primary buttons
 
   // Status
   statusSuccess: colors.success,
@@ -78,8 +78,8 @@ export const themeColors = {
   statusWarning: colors.warning,
   statusInfo: colors.info,
 
-  // Trust related
-  trustHighlight: colors.stylistBlue,
+  // Trust related - Only use Cool Blue for stylist-related elements
+  trustHighlight: colors.stylistBlue, // #8CBACD - Cool Blue for stylist-related elements
 
   // UI Elements
   border: colors.gray200,
@@ -88,11 +88,11 @@ export const themeColors = {
   shadowDark: 'rgba(0, 0, 0, 0.2)',
   overlay: 'rgba(0, 0, 0, 0.5)',
 
-  // Component specific
-  cardBackground: colors.cream,
-  screenBackground: colors.secondary,
-  buttonText: colors.bgLight,
-  stylistAccent: colors.stylistBlue,
+  // Component specific - Following audit requirements
+  cardBackground: colors.cream,       // #FCFBF9 - Secondary Cream for cards
+  screenBackground: colors.secondary, // #F8F3ED - Background
+  buttonText: colors.bgLight,        // #FCFBF9 - Text on buttons
+  stylistAccent: colors.stylistBlue, // #8CBACD - Cool Blue for stylist-related elements only
 };
 
 export default colors;

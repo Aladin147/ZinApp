@@ -2,34 +2,41 @@
  * Typography System for ZinApp
  *
  * This file defines the typography system for ZinApp, including font sizes, weights,
- * line heights, and font families. It follows the specifications in the design documentation.
+ * line heights, and font families. It follows the specifications in the audit requirements.
  *
  * Font Family: Inter (as a fallback for Uber Move)
  *
  * The typography system is organized into a set of variants that can be used throughout the app.
  * Each variant has a specific font family, size, weight, and line height.
  *
+ * Audit Requirements:
+ * - ScreenTitle: 24px, Bold - Screen headers
+ * - SectionHeader: 18px, Bold - Card titles, small blocks
+ * - BodyText: 14px, Regular - Descriptive text, labels
+ * - ButtonText: 16px, Medium - Button labels
+ *
  * @see docs/DESIGN_TOKENS.md for the complete typography specifications
  */
 
 export const typography = {
-  // Font sizes (in pixels)
+  // Font sizes (in pixels) - Audit requirements
   sizes: {
-    screenTitle: 24,
+    screenTitle: 24, // Screen headers
+    sectionHeader: 18, // Card titles, small blocks
+    body: 14, // Descriptive text, labels
+    button: 16, // Button labels
+    // Additional sizes for flexibility
     heading: 20,
-    sectionHeader: 18,
     subheading: 16,
-    button: 16,
-    body: 14,
     caption: 12,
   },
 
-  // Font weights
+  // Font weights - Audit requirements
   weights: {
-    regular: '400',
-    medium: '500',
+    regular: '400', // Regular - Body text
+    medium: '500',  // Medium - Button text
     semiBold: '600',
-    bold: '700',
+    bold: '700',    // Bold - Screen titles, section headers
   },
 
   // Line heights (in pixels)
@@ -51,20 +58,21 @@ export const typography = {
     extraWide: 1,
   },
 
-  // Font families
+  // Font families - Audit requirements
   fontFamilies: {
     // Primary font family (Inter as fallback for Uber Move)
-    primary: 'Inter',
-    primaryMedium: 'Inter-Medium',
-    primarySemiBold: 'Inter-SemiBold',
-    primaryBold: 'Inter-Bold',
+    // Audit specifies: "Font: Uber Move (fallback: Inter/Satoshi)"
+    primary: 'Inter',         // Regular weight
+    primaryMedium: 'Inter-Medium',   // Medium weight
+    primarySemiBold: 'Inter-SemiBold', // SemiBold weight
+    primaryBold: 'Inter-Bold',    // Bold weight
     // Monospace font family for code or tabular data
     mono: 'monospace',
   },
 
-  // Styled text variants
+  // Styled text variants - Audit requirements
   variants: {
-    // Screen titles (24px Bold)
+    // ScreenTitle: 24px, Bold - Screen headers
     screenTitle: {
       fontFamily: 'Inter-Bold',
       fontSize: 24,
@@ -80,7 +88,7 @@ export const typography = {
       letterSpacing: -0.5,
     },
 
-    // Section headers (18px Bold)
+    // SectionHeader: 18px, Bold - Card titles, small blocks
     sectionHeader: {
       fontFamily: 'Inter-Bold',
       fontSize: 18,
@@ -96,7 +104,7 @@ export const typography = {
       letterSpacing: 0,
     },
 
-    // Body text (14px Regular)
+    // BodyText: 14px, Regular - Descriptive text, labels
     body: {
       fontFamily: 'Inter',
       fontSize: 14,
@@ -120,7 +128,7 @@ export const typography = {
       letterSpacing: 0,
     },
 
-    // Button text (16px Medium)
+    // ButtonText: 16px, Medium - Button labels
     button: {
       fontFamily: 'Inter-Medium',
       fontSize: 16,

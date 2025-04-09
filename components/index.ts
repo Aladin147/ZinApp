@@ -5,14 +5,17 @@ export { default as Typography } from './common/Typography';
 export { default as Logo } from './common/Logo';
 export { default as RatingStars } from './common/RatingStars';
 export { default as Avatar } from './common/Avatar';
+export { default as HeroHeader } from './common/HeroHeader';
 
 // Layout components
 export { default as Screen } from './layout/Screen';
+export { default as ImmersiveScreen } from './layout/ImmersiveScreen';
 export { default as Header } from './layout/Header';
 
 // Specific components
 export { default as BarberCard } from './specific/BarberCard';
 export { default as ServiceIconBtn } from './specific/ServiceIconBtn';
+export { default as ServiceButton } from './specific/ServiceButton';
 
 export { default as MapTracker } from './specific/MapTracker';
 export { default as BookingCard } from './specific/BookingCard';

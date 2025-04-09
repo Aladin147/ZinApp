@@ -6,16 +6,26 @@ This document defines the UX interaction patterns and animation system that driv
 
 This system is non-optional — every UI element must behave consistently and elegantly.
 
+## 🎥 Audit Requirements
+Based on the audit feedback, the following animation requirements must be implemented:
+
+| Element | Animation Type |
+|---------|---------------|
+| Screen Transition | Slide + Fade (200-300ms) |
+| Button Tap | Scale down to 0.95 briefly |
+| Booking Confirmation | Confetti animation |
+| Map Avatar | Pulse animation (location) |
+
 ---
 
 ## ✋ Interaction Patterns
 
 ### ✅ Tap
-- All buttons must animate with a slight scale-in (95%) and bounce out
+- All buttons must animate with a slight scale-in (95%) and bounce out (audit requirement)
 - Active states show soft shadow (NativeWind `shadow-md` + `bg-opacity`)
 - CTA buttons use `bg-primary` (#F4805D) with icon + label
-- Button height: 48px (standard) / 56px (hero)
-- Button radius: 12px
+- Button height: 48-56px (audit requirement)
+- Button radius: 20px (audit requirement)
 
 ### ✋ Long-Press
 - Used for service cards (preview)
@@ -38,13 +48,14 @@ This system is non-optional — every UI element must behave consistently and el
 
 ---
 
-## 🎞️ Animation Tokens (Playful & Glovo-like)
+## 🎞️ Animation Tokens (Audit Requirements)
+
 | Token              | Duration  | Use                                    |
 |--------------------|----------|-----------------------------------------|
-| `screenTransition` | 300ms     | Slide + Fade screen transitions with bounce |
-| `buttonTap`        | 100ms     | Scale down to 0.92 with extra bounce   |
-| `confetti`         | 1200ms    | Booking confirmation animation         |
-| `mapPulse`         | 1500ms    | Pulsing animation for map avatars      |
+| `screenTransition` | 200-300ms | Slide + Fade screen transitions (audit requirement) |
+| `buttonTap`        | 100ms     | Scale down to 0.95 briefly (audit requirement)   |
+| `confetti`         | 1200ms    | Booking confirmation animation (audit requirement) |
+| `mapPulse`         | 1500ms    | Pulsing animation for map avatars (audit requirement) |
 | `fadeIn`           | 400ms     | Appear transitions for cards           |
 | `slideUp`          | 500ms     | Bottom sheets, Bsse7a screen           |
 | `bounce`           | 800ms     | Playful bounce for attention elements  |
@@ -66,13 +77,14 @@ This system is non-optional — every UI element must behave consistently and el
 
 ---
 
-## 🌗 Visual Feedback & Shadows (Glovo-inspired)
-- Cards should have subtle shadows for depth and playfulness (like Glovo)
-- Cards should have 24px border radius for a more playful, bubbly look
-- Buttons should have 24px border radius (fully rounded like Glovo)
-- Tappable elements should have exaggerated visual feedback (scale + color change)
-- Modal dialogs use background blur and bouncy scale pop-in
-- Use playful micro-interactions on important elements (wiggle, pulse, etc.)
+## 🌗 Visual Feedback & Shadows (Audit Requirements)
+- Cards should have minimal, flat design with no shadows (audit requirement)
+- Cards should have 16px border radius (audit requirement)
+- Buttons should have 20px border radius (audit requirement)
+- Sections should have 24px bottom corners (audit requirement)
+- Tappable elements should have visual feedback (scale down to 0.95 briefly)
+- Primary CTA always coral (#F4805D), bouncy, and full-width
+- Use Cool Blue accents (#8CBACD) primarily for stylist-related components, but can be used very sparingly elsewhere if needed
 
 ---
 

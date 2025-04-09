@@ -1,6 +1,7 @@
 # ZinApp Component Map
 
 ## 🧭 Purpose
+
 This document tracks all reusable UI components in ZinApp, their props, usage locations, and scope. Helps maintain design consistency, avoid redundancy, and guide automated coding agents.
 
 ---
@@ -12,9 +13,9 @@ This document tracks all reusable UI components in ZinApp, their props, usage lo
 | `Button`         | Action button with variants       | `title`, `variant`, `icon` | All screens                | `core`     |
 | `Card`           | Container with styling variants   | `variant`, `padding`       | All screens                | `core`     |
 | `Typography`     | Text with consistent styling      | `variant`, `color`         | All screens                | `core`     |
+| `HeroHeader`     | Screen header with coral background | `title`, `icon`, `bottomCornersOnly` | Multiple screens         | `core`     |
 | `Logo`           | ZinApp logo with variants         | `variant`, `width`         | Multiple screens           | `core`     |
 | `Avatar`         | Circular profile image            | `source`, `size`, `verified` | Multiple screens         | `core`     |
-| `QRScanner`      | QR code scanner with visual frame | `onScan`, `headerText`     | `BarberProfileScreen`      | `core`     |
 | `QRScanner`      | QR code scanner with visual frame | `onScan`, `headerText`     | `BarberProfileScreen`      | `core`     |
 | `ServiceIconBtn` | Icon button for haircut type      | `icon`, `label`, `onPress` | `ServiceSelectScreen`     | `core`     |
 | `BarberCard`     | Stylist preview card              | `name`, `rating`, `photo`  | `StylistListScreen`       | `shared`   |
@@ -30,7 +31,6 @@ This document tracks all reusable UI components in ZinApp, their props, usage lo
 | Component        | Purpose                                  |
 |------------------|-------------------------------------------|
 | `Bsse7aConfetti` | Animated celebration + feedback trigger   |
-| `QRScanner`      | Mock scan overlay                        |
 
 ---
 

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, StyleSheet, Image, TouchableOpacity, Animated, ImageBackground } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
-import { colors, spacing } from '@constants'; // Use alias
+import { colors, spacing } from '../constants';
 import { FontAwesome } from '@expo/vector-icons';
-// import { MotiView, MotiImage } from 'moti'; // Comment out Moti
-import { useAnimation } from '@hooks'; // Use alias
+import { LinearGradient } from 'expo-linear-gradient';
+import { useAnimation } from '../hooks';
 
 // Import our custom components
-import { Typography, Button, Card, Avatar, RatingStars } from '../components';
+import { Typography, Button, Card, Avatar, RatingStars, ImmersiveScreen } from '../components';
 
 type BarberProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -51,12 +51,26 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
       { uri: 'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60' },
     ],
     services: [
-      { id: 1, name: 'Haircut', price: 35, duration: '30 min' },
+      { id: 1, name: 'Haircut', price: 35, duration: '30 min', popular: true },
       { id: 2, name: 'Beard Trim', price: 25, duration: '20 min' },
-      { id: 3, name: 'Full Service', price: 55, duration: '45 min' },
+      { id: 3, name: 'Full Service', price: 55, duration: '45 min', popular: true },
+      { id: 4, name: 'Kids Cut', price: 20, duration: '20 min' },
+      { id: 5, name: 'Hot Towel Shave', price: 30, duration: '25 min' },
     ],
-    availability: ['Today', 'Tomorrow', 'Friday'],
+    availability: [
+      { day: 'Today', slots: ['10:00 AM', '2:30 PM', '4:15 PM'] },
+      { day: 'Tomorrow', slots: ['9:30 AM', '11:45 AM', '3:00 PM', '5:30 PM'] },
+      { day: 'Friday', slots: ['10:15 AM', '1:00 PM', '4:45 PM'] },
+    ],
+    specialties: ['Fades', 'Beard Styling', 'Hot Towel Shaves', 'Kids Cuts'],
+    languages: ['English', 'Spanish'],
   };
+  
+  // State for selected availability day
+  const [selectedDay, setSelectedDay] = useState<number>(0);
+  
+  // State for selected time slot
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
 
   // Start animations when component mounts
   useEffect(() => {
@@ -75,20 +89,36 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
   }, []);
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ImmersiveScreen backgroundColor={colors.stylistBlue} statusBarStyle="light-content" scrollable={true}>
       {/* Header Section with Profile Image */}
       <Animated.View
         style={[styles.header, { opacity: headerAnim.animatedValue }]}
       >
-        {/* <MotiImage
-          source={stylist.profileImage}
-          style={styles.coverImage}
-          from={{ opacity: 0.3, scale: 1.1 }}
-          animate={{ opacity: 0.7, scale: 1 }}
-          transition={{ type: 'timing', duration: 1000 }}
-        /> */}
-        <Image source={stylist.profileImage} style={styles.coverImage} />
-
+        <ImageBackground source={stylist.profileImage} style={styles.coverImage}>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.1)', 'rgba(140, 186, 205, 0.9)']}
+            style={styles.gradient}
+          >
+            {/* Back button */}
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
+            >
+              <FontAwesome name="arrow-left" size={18} color="white" />
+            </TouchableOpacity>
+            
+            {/* QR Badge */}
+            {isQrSource && (
+              <View style={styles.qrBadge}>
+                <FontAwesome name="qrcode" size={14} color="white" style={styles.qrIcon} />
+                <Typography variant="captionMedium" color="white">
+                  Scanned via QR
+                </Typography>
+              </View>
+            )}
+          </LinearGradient>
+        </ImageBackground>
 
         <Animated.View
           style={[styles.profileContainer, {
@@ -101,70 +131,75 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
             opacity: profileAnim.animatedValue
           }]}
         >
-          {/* <MotiView
-            from={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: 'spring', delay: 500, damping: 15 }}
-          > */}
+          <View style={styles.profileImageContainer}>
             <Avatar
               source={stylist.profileImage}
               size="large"
               verified={stylist.verified}
               style={styles.profileImage}
             />
-          {/* </MotiView> */}
+            
+            {/* Specialties badges */}
+            <View style={styles.specialtiesBadges}>
+              {stylist.specialties.slice(0, 2).map((specialty, index) => (
+                <View key={index} style={styles.specialtyBadge}>
+                  <Typography variant="caption" color="white" style={styles.specialtyText}>
+                    {specialty}
+                  </Typography>
+                </View>
+              ))}
+              {stylist.specialties.length > 2 && (
+                <View style={styles.specialtyBadge}>
+                  <Typography variant="caption" color="white" style={styles.specialtyText}>
+                    +{stylist.specialties.length - 2}
+                  </Typography>
+                </View>
+              )}
+            </View>
+          </View>
 
           <View style={styles.nameContainer}>
-            {/* <MotiView
-              from={{ opacity: 0, translateX: 20 }}
-              animate={{ opacity: 1, translateX: 0 }}
-              transition={{ type: 'timing', duration: 600, delay: 700 }}
-            > */}
-              <Typography variant="heading">
-                {stylist.name}
-              </Typography>
-            {/* </MotiView> */}
+            <Typography variant="heading" color="white" style={styles.stylistName}>
+              {stylist.name}
+            </Typography>
 
-            {/* <MotiView
-              from={{ opacity: 0, translateX: 20 }}
-              animate={{ opacity: 1, translateX: 0 }}
-              transition={{ type: 'timing', duration: 600, delay: 800 }}
-            > */}
-              <Typography variant="bodyMedium" color={colors.textMuted}>
-                {stylist.title}
-              </Typography>
-            {/* </MotiView> */}
+            <Typography variant="bodyMedium" color="white" style={{opacity: 0.9}}>
+              {stylist.title}
+            </Typography>
 
-            {/* <MotiView
-              from={{ opacity: 0, translateX: 20 }}
-              animate={{ opacity: 1, translateX: 0 }}
-              transition={{ type: 'timing', duration: 600, delay: 900 }}
-              style={styles.ratingContainer}
-            > */}
             <View style={styles.ratingContainer}>
               <RatingStars rating={stylist.rating} size={16} />
-              <Typography variant="body" color={colors.textMuted} style={styles.reviewCount}>
+              <Typography variant="body" color="white" style={{marginLeft: spacing.xs, opacity: 0.9}}>
                 ({stylist.reviewCount} reviews)
               </Typography>
-            {/* </MotiView> */}
+            </View>
+            
+            <View style={styles.locationContainer}>
+              <FontAwesome name="map-marker" size={14} color="white" style={styles.locationIcon} />
+              <Typography variant="caption" color="white" style={{opacity: 0.9}}>
+                {stylist.location}
+              </Typography>
             </View>
           </View>
         </Animated.View>
-
-        {isQrSource && (
-          // <MotiView
-          //   from={{ opacity: 0, scale: 0.5, translateY: -10 }}
-          //   animate={{ opacity: 1, scale: 1, translateY: 0 }}
-          //   transition={{ type: 'spring', delay: 1000, damping: 12 }}
-          //   style={styles.qrBadge}
-          // >
-          <View style={styles.qrBadge}>
-            <Typography variant="captionMedium" color={colors.bgLight}>
-              Scanned via QR
-            </Typography>
-          {/* </MotiView> */}
-          </View>
-        )}
+        
+        {/* Quick action buttons */}
+        <View style={styles.quickActions}>
+          <TouchableOpacity style={styles.actionButton}>
+            <FontAwesome name="phone" size={18} color={colors.stylistBlue} />
+            <Typography variant="caption" style={styles.actionText}>Call</Typography>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.actionButton}>
+            <FontAwesome name="share-alt" size={18} color={colors.stylistBlue} />
+            <Typography variant="caption" style={styles.actionText}>Share</Typography>
+          </TouchableOpacity>
+          
+          <TouchableOpacity style={styles.actionButton}>
+            <FontAwesome name="heart-o" size={18} color={colors.stylistBlue} />
+            <Typography variant="caption" style={styles.actionText}>Save</Typography>
+          </TouchableOpacity>
+        </View>
       </Animated.View>
 
       {/* Content Section */}
@@ -178,7 +213,7 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
         }]
       }]}>
         {/* About Section */}
-        <Card style={styles.section}>
+        <Card style={styles.section} variant="bubble" withShadow>
           <Typography variant="sectionHeader" style={styles.sectionTitle}>
             About
           </Typography>
@@ -186,136 +221,198 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
           <Typography variant="body" style={styles.bio}>
             {stylist.bio}
           </Typography>
-
-          <View style={styles.locationContainer}>
-            <FontAwesome name="map-marker" size={16} color={colors.primary} style={styles.locationIcon} />
-            <Typography variant="body" color={colors.textMuted}>
-              {stylist.location}
-            </Typography>
+          
+          <View style={styles.languagesContainer}>
+            {stylist.languages.map((language, index) => (
+              <View key={index} style={styles.languageBadge}>
+                <Typography variant="caption" color={colors.stylistBlue}>
+                  {language}
+                </Typography>
+              </View>
+            ))}
           </View>
         </Card>
 
         {/* Gallery Section */}
-        <Card style={styles.section}>
-          <Typography variant="sectionHeader" style={styles.sectionTitle}>
-            Gallery
-          </Typography>
+        <Card style={styles.section} variant="bubble" withShadow>
+          <View style={styles.sectionHeader}>
+            <Typography variant="sectionHeader" style={styles.sectionTitle}>
+              Gallery
+            </Typography>
+            <TouchableOpacity style={styles.viewAllButton}>
+              <Typography variant="caption" color={colors.stylistBlue}>
+                View All
+              </Typography>
+            </TouchableOpacity>
+          </View>
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.galleryContainer}>
             {stylist.gallery.map((image, index) => (
-              // <MotiView
-              //   key={index}
-              //   from={{ opacity: 0, scale: 0.9, translateX: 20 }}
-              //   animate={{ opacity: 1, scale: 1, translateX: 0 }}
-              //   transition={{ type: 'timing', duration: 600, delay: 1000 + (index * 200) }}
-              // >
-                <Image key={index} source={image} style={styles.galleryImage} />
-              // </MotiView>
+              <TouchableOpacity key={index} activeOpacity={0.9}>
+                <Image source={image} style={styles.galleryImage} />
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </Card>
 
         {/* Services Section */}
-        <Card style={styles.section}>
+        <Card style={styles.section} variant="bubble" withShadow>
           <Typography variant="sectionHeader" style={styles.sectionTitle}>
             Services
           </Typography>
 
-          {stylist.services.map((service, index) => (
-            // <MotiView
-            //   key={service.id}
-            //   from={{ opacity: 0, translateY: 10 }}
-            //   animate={{ opacity: 1, translateY: 0 }}
-            //   transition={{ type: 'timing', duration: 400, delay: 1200 + (index * 150) }}
-            //   style={styles.serviceItem}
-            // >
+          {stylist.services.map((service) => (
             <View key={service.id} style={styles.serviceItem}>
-              <View>
-                <Typography variant="bodyMedium">
-                  {service.name}
-                </Typography>
+              <View style={styles.serviceInfo}>
+                <View style={styles.serviceNameRow}>
+                  <Typography variant="bodyMedium" style={styles.serviceName}>
+                    {service.name}
+                  </Typography>
+                  {service.popular && (
+                    <View style={styles.popularTag}>
+                      <Typography variant="caption" color="white" style={styles.popularTagText}>
+                        Popular
+                      </Typography>
+                    </View>
+                  )}
+                </View>
                 <Typography variant="caption" color={colors.textMuted}>
                   {service.duration}
                 </Typography>
               </View>
 
-              <Typography variant="bodyBold" color={colors.primary}>
+              <Typography variant="bodyBold" color={colors.stylistBlue} style={styles.servicePrice}>
                 ${service.price}
               </Typography>
-            {/* </MotiView> */}
             </View>
           ))}
         </Card>
 
         {/* Availability Section */}
-        <Card style={styles.section}>
+        <Card style={styles.section} variant="bubble" withShadow>
           <Typography variant="sectionHeader" style={styles.sectionTitle}>
             Availability
           </Typography>
 
-          <View style={styles.availabilityContainer}>
-            {stylist.availability.map((day, index) => (
-              // <MotiView
-              //   key={index}
-              //   from={{ opacity: 0, scale: 0.8 }}
-              //   animate={{ opacity: 1, scale: 1 }}
-              //   transition={{ type: 'spring', delay: 1500 + (index * 150), damping: 12 }}
-              // >
-                <TouchableOpacity key={index} style={styles.availabilityItem}>
-                  <Typography variant="bodyMedium">
-                    {day}
-                  </Typography>
-                </TouchableOpacity>
-              // </MotiView>
+          {/* Day tabs */}
+          <View style={styles.dayTabsContainer}>
+            {stylist.availability.map((dayData, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={[styles.dayTab, selectedDay === index && styles.selectedDayTab]}
+                onPress={() => setSelectedDay(index)}
+              >
+                <Typography 
+                  variant="bodyMedium" 
+                  color={selectedDay === index ? 'white' : colors.textMuted}
+                >
+                  {dayData.day}
+                </Typography>
+              </TouchableOpacity>
+            ))}
+          </View>
+          
+          {/* Time slots */}
+          <View style={styles.timeSlotsContainer}>
+            {stylist.availability[selectedDay].slots.map((slot, index) => (
+              <TouchableOpacity 
+                key={index} 
+                style={[styles.timeSlot, selectedTimeSlot === slot && styles.selectedTimeSlot]}
+                onPress={() => setSelectedTimeSlot(slot)}
+              >
+                <Typography 
+                  variant="caption" 
+                  color={selectedTimeSlot === slot ? colors.stylistBlue : colors.textMuted}
+                >
+                  {slot}
+                </Typography>
+              </TouchableOpacity>
             ))}
           </View>
         </Card>
 
         {/* Booking Button */}
-        {/* <MotiView
-          from={{ opacity: 0, translateY: 20, scale: 0.95 }}
-          animate={{ opacity: 1, translateY: 0, scale: 1 }}
-          transition={{ type: 'spring', delay: 1800, damping: 12 }}
-        > */}
+        <View style={styles.bookingButtonContainer}>
           <Button
             title="Book Appointment"
             variant="primary"
             size="large"
+            iconName="calendar"
+            iconPosition="left"
             style={styles.bookButton}
             onPress={() => navigation.navigate('BookingScreen', { stylistId: stylist.id, serviceId: 1 })}
           />
-        {/* </MotiView> */}
+        </View>
       </Animated.View>
-    </ScrollView>
+    </ImmersiveScreen>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.bgLight,
-  },
   header: {
     position: 'relative',
-    backgroundColor: colors.warmSand,
   },
   coverImage: {
     width: '100%',
-    height: 150,
-    opacity: 0.7,
+    height: 220,
+  },
+  gradient: {
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-between',
+    padding: spacing.md,
+  },
+  backButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.sm,
   },
   profileContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     padding: spacing.md,
-    marginTop: -50,
+    marginTop: -60,
+  },
+  profileImageContainer: {
+    alignItems: 'center',
   },
   profileImage: {
     borderWidth: 3,
-    borderColor: colors.bgLight,
+    borderColor: 'white',
+    shadowColor: 'rgba(0,0,0,0.3)',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  specialtiesBadges: {
+    flexDirection: 'row',
+    marginTop: spacing.xs,
+    justifyContent: 'center',
+  },
+  specialtyBadge: {
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    borderRadius: 10,
+    marginHorizontal: 2,
+  },
+  specialtyText: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   nameContainer: {
     marginLeft: spacing.md,
+    flex: 1,
+  },
+  stylistName: {
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   ratingContainer: {
     flexDirection: 'row',
@@ -325,48 +422,98 @@ const styles = StyleSheet.create({
   reviewCount: {
     marginLeft: spacing.xs,
   },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: spacing.xs,
+  },
+  locationIcon: {
+    marginRight: spacing.xs,
+  },
   qrBadge: {
     position: 'absolute',
     top: spacing.md,
     right: spacing.md,
-    backgroundColor: colors.accent1, // Glovo-like yellow accent
+    backgroundColor: 'rgba(255,255,255,0.2)',
     paddingHorizontal: spacing.sm,
     paddingVertical: spacing.xxs,
-    borderRadius: 20, // More rounded like Glovo
-    shadowColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  qrIcon: {
+    marginRight: spacing.xs,
+  },
+  quickActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: 'white',
+    borderRadius: 20,
+    marginHorizontal: spacing.md,
+    marginBottom: spacing.md,
+    paddingVertical: spacing.sm,
+    shadowColor: 'rgba(0,0,0,0.1)',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
-    shadowRadius: 3,
+    shadowRadius: 4,
     elevation: 3,
+  },
+  actionButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: spacing.md,
+  },
+  actionText: {
+    marginTop: spacing.xxs,
+    color: colors.textMuted,
   },
   content: {
     padding: spacing.md,
+    paddingBottom: spacing.xxxl,
   },
   section: {
     marginBottom: spacing.md,
     padding: spacing.md,
-    borderRadius: 16,
+    borderRadius: 20,
+    backgroundColor: 'white',
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
   },
   sectionTitle: {
     marginBottom: spacing.sm,
   },
   bio: {
     marginBottom: spacing.sm,
+    lineHeight: 20,
   },
-  locationContainer: {
+  languagesContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
+    marginTop: spacing.sm,
   },
-  locationIcon: {
+  languageBadge: {
+    backgroundColor: 'rgba(140, 186, 205, 0.1)',
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    borderRadius: 12,
     marginRight: spacing.xs,
+  },
+  viewAllButton: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xxs,
+    backgroundColor: 'rgba(140, 186, 205, 0.1)',
+    borderRadius: 12,
   },
   galleryContainer: {
     marginTop: spacing.sm,
   },
   galleryImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 16, // More rounded like Glovo
+    width: 140,
+    height: 140,
+    borderRadius: 20,
     marginRight: spacing.sm,
     shadowColor: 'rgba(0,0,0,0.1)',
     shadowOffset: { width: 0, height: 2 },
@@ -380,27 +527,71 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: spacing.sm,
     borderBottomWidth: 1,
-    borderBottomColor: colors.gray100,
+    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
-  availabilityContainer: {
+  serviceInfo: {
+    flex: 1,
+  },
+  serviceNameRow: {
     flexDirection: 'row',
-    marginTop: spacing.sm,
+    alignItems: 'center',
+    marginBottom: spacing.xxs,
   },
-  availabilityItem: {
-    backgroundColor: colors.gray100,
+  serviceName: {
+    marginRight: spacing.xs,
+  },
+  popularTag: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: spacing.xs,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  popularTagText: {
+    fontSize: 10,
+    fontWeight: '600',
+  },
+  servicePrice: {
+    fontWeight: '700',
+  },
+  dayTabsContainer: {
+    flexDirection: 'row',
+    marginBottom: spacing.md,
+  },
+  dayTab: {
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
-    borderRadius: 20, // More rounded like Glovo
+    borderRadius: 20,
     marginRight: spacing.sm,
-    shadowColor: 'rgba(0,0,0,0.05)',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 1,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+  },
+  selectedDayTab: {
+    backgroundColor: colors.stylistBlue,
+  },
+  timeSlotsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  timeSlot: {
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: 16,
+    marginRight: spacing.sm,
+    marginBottom: spacing.sm,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  selectedTimeSlot: {
+    backgroundColor: 'white',
+    borderColor: colors.stylistBlue,
+  },
+  bookingButtonContainer: {
+    marginTop: spacing.md,
+    marginBottom: spacing.xl,
   },
   bookButton: {
-    marginTop: spacing.lg,
-    marginBottom: spacing.xl,
+    backgroundColor: colors.stylistBlue,
+    borderWidth: 0,
   },
 });
 

@@ -14,8 +14,20 @@ This document tracks known issues in the ZinApp codebase that are pending resolu
 - **Issue**: UI implementation is not fully aligned with design specifications
 - **Details**: Some components still missing, animation system incomplete
 - **Workaround**: Most core UI components have been implemented (Button, Card, Typography, Logo, RatingStars, MapTracker, BookingCard)
-- **Status**: Significant progress made offline, requires consistency audit & polish.
-- **Animation System (Moti)**: Temporarily disabled. Caused "Invalid hook call" / "useContext of null" errors, likely due to incompatibility with Moti v0.30.0 / Expo 52 / Reanimated 3.16.1 stack. Needs investigation or alternative solution (e.g., direct Reanimated usage). Animations currently non-functional.
+- **Status**: Significant progress made with immersive UI redesign. LandingScreen, StylistListScreen, ServiceSelectScreen, and BarberProfileScreen have been enhanced with the new design language.
+- **Animation System (Moti)**: Temporarily disabled. Caused "Invalid hook call" / "useContext of null" errors, likely due to incompatibility with Moti v0.30.0 / Expo 52 / Reanimated 3.16.1 stack. Using React Native's Animated API as an alternative solution.
+
+## UI Enhancement Issues
+
+- **Issue**: Some UI elements may not render consistently across all devices
+- **Details**:
+  - ImmersiveScreen: Decorative elements may overlap with content on smaller devices
+  - ServiceButton: Shadow may not render correctly on Android devices
+  - StylistListScreen: Filter button is currently non-functional
+  - ServiceSelectScreen: Category transition animation may stutter on older devices
+  - BarberProfileScreen: Profile animation may not complete if user scrolls too quickly
+- **Workaround**: Added extra padding in scrollable containers and used text shadows to improve readability
+- **Status**: To be addressed in future updates with more comprehensive testing across different devices
 
 ## Package Dependencies
 
