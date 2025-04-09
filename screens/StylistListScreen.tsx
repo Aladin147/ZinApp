@@ -3,12 +3,12 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
-import { colors } from '../constants';
+import { colors } from '@constants'; // Use alias
 import tw from 'twrnc';
-import { MotiView } from 'moti';
+// import { MotiView } from 'moti'; // Comment out Moti
 
 // Import our custom components
-import { Screen, Header, Typography, BarberCard } from '../components';
+import { Screen, Header, Typography, BarberCard } from '@components'; // Use alias
 
 type StylistListScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -74,51 +74,62 @@ const StylistListScreen: React.FC<Props> = ({ navigation, route }) => {
 
   return (
     <Screen>
-      <MotiView
+      {/* <MotiView
         from={{ opacity: 0, translateY: -10 }}
         animate={{ opacity: 1, translateY: 0 }}
         transition={{ type: 'timing', duration: 500 }}
-      >
+      > */}
         <Header
           title={`Available Stylists${serviceId ? ` for Service ${serviceId}` : ''}`}
           showBackButton
         />
-      </MotiView>
+      {/* </MotiView> */}
 
       <View style={tw`px-4 flex-1`}>
         {loading ? (
-          <MotiView
-            from={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: 'spring', damping: 15 }}
-            style={tw`flex-1 items-center justify-center`}
-          >
+          // <MotiView
+          //   from={{ opacity: 0, scale: 0.9 }}
+          //   animate={{ opacity: 1, scale: 1 }}
+          //   transition={{ type: 'spring', damping: 15 }}
+          //   style={tw`flex-1 items-center justify-center`}
+          // >
+          <View style={tw`flex-1 items-center justify-center`}>
             <ActivityIndicator size="large" color={colors.primary} />
             <Typography variant="caption" style={tw`mt-2`}>
               Finding stylists near you...
             </Typography>
-          </MotiView>
+          {/* </MotiView> */}
+          </View>
+        ) : stylists.length === 0 ? (
+          // Empty State
+          <View style={tw`flex-1 items-center justify-center`}>
+            <Typography variant="subheading" color={colors.textMuted} align="center">
+              No stylists found for this service in your area yet.
+            </Typography>
+            {/* Optionally add a button to browse all or change location */}
+          </View>
         ) : (
+          // List State
           <>
-            <MotiView
+            {/* <MotiView
               from={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ type: 'timing', duration: 500 }}
-            >
+            > */}
               <Typography variant="body" style={tw`mb-4`}>
                 {stylists.length} stylists available in your area
               </Typography>
-            </MotiView>
+            {/* </MotiView> */}
 
             <FlatList
               data={stylists}
               keyExtractor={(item) => item.id.toString()}
               renderItem={({ item, index }) => (
-                <MotiView
-                  from={{ opacity: 0, translateY: 20 }}
-                  animate={{ opacity: 1, translateY: 0 }}
-                  transition={{ type: 'timing', duration: 500, delay: 100 + (index * 100) }}
-                >
+                // <MotiView
+                //   from={{ opacity: 0, translateY: 20 }}
+                //   animate={{ opacity: 1, translateY: 0 }}
+                //   transition={{ type: 'timing', duration: 500, delay: 100 + (index * 100) }}
+                // >
                   <BarberCard
                     id={item.id}
                     name={item.name}
@@ -128,7 +139,7 @@ const StylistListScreen: React.FC<Props> = ({ navigation, route }) => {
                     profile_picture={item.profile_picture}
                     onPress={handleStylistSelect}
                   />
-                </MotiView>
+                // </MotiView>
               )}
               showsVerticalScrollIndicator={false}
               contentContainerStyle={tw`pb-4`}

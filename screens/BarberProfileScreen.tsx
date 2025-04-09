@@ -3,10 +3,10 @@ import { View, ScrollView, StyleSheet, Image, TouchableOpacity, Animated } from 
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../types';
-import { colors, spacing } from '../constants';
+import { colors, spacing } from '@constants'; // Use alias
 import { FontAwesome } from '@expo/vector-icons';
-import { MotiView, MotiImage } from 'moti';
-import { useAnimation } from '../hooks';
+// import { MotiView, MotiImage } from 'moti'; // Comment out Moti
+import { useAnimation } from '@hooks'; // Use alias
 
 // Import our custom components
 import { Typography, Button, Card, Avatar, RatingStars } from '../components';
@@ -80,13 +80,15 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
       <Animated.View
         style={[styles.header, { opacity: headerAnim.animatedValue }]}
       >
-        <MotiImage
+        {/* <MotiImage
           source={stylist.profileImage}
           style={styles.coverImage}
           from={{ opacity: 0.3, scale: 1.1 }}
           animate={{ opacity: 0.7, scale: 1 }}
           transition={{ type: 'timing', duration: 1000 }}
-        />
+        /> */}
+        <Image source={stylist.profileImage} style={styles.coverImage} />
+
 
         <Animated.View
           style={[styles.profileContainer, {
@@ -99,65 +101,69 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
             opacity: profileAnim.animatedValue
           }]}
         >
-          <MotiView
+          {/* <MotiView
             from={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: 'spring', delay: 500, damping: 15 }}
-          >
+          > */}
             <Avatar
               source={stylist.profileImage}
               size="large"
               verified={stylist.verified}
               style={styles.profileImage}
             />
-          </MotiView>
+          {/* </MotiView> */}
 
           <View style={styles.nameContainer}>
-            <MotiView
+            {/* <MotiView
               from={{ opacity: 0, translateX: 20 }}
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ type: 'timing', duration: 600, delay: 700 }}
-            >
+            > */}
               <Typography variant="heading">
                 {stylist.name}
               </Typography>
-            </MotiView>
+            {/* </MotiView> */}
 
-            <MotiView
+            {/* <MotiView
               from={{ opacity: 0, translateX: 20 }}
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ type: 'timing', duration: 600, delay: 800 }}
-            >
+            > */}
               <Typography variant="bodyMedium" color={colors.textMuted}>
                 {stylist.title}
               </Typography>
-            </MotiView>
+            {/* </MotiView> */}
 
-            <MotiView
+            {/* <MotiView
               from={{ opacity: 0, translateX: 20 }}
               animate={{ opacity: 1, translateX: 0 }}
               transition={{ type: 'timing', duration: 600, delay: 900 }}
               style={styles.ratingContainer}
-            >
+            > */}
+            <View style={styles.ratingContainer}>
               <RatingStars rating={stylist.rating} size={16} />
               <Typography variant="body" color={colors.textMuted} style={styles.reviewCount}>
                 ({stylist.reviewCount} reviews)
               </Typography>
-            </MotiView>
+            {/* </MotiView> */}
+            </View>
           </View>
         </Animated.View>
 
         {isQrSource && (
-          <MotiView
-            from={{ opacity: 0, scale: 0.5, translateY: -10 }}
-            animate={{ opacity: 1, scale: 1, translateY: 0 }}
-            transition={{ type: 'spring', delay: 1000, damping: 12 }}
-            style={styles.qrBadge}
-          >
+          // <MotiView
+          //   from={{ opacity: 0, scale: 0.5, translateY: -10 }}
+          //   animate={{ opacity: 1, scale: 1, translateY: 0 }}
+          //   transition={{ type: 'spring', delay: 1000, damping: 12 }}
+          //   style={styles.qrBadge}
+          // >
+          <View style={styles.qrBadge}>
             <Typography variant="captionMedium" color={colors.bgLight}>
               Scanned via QR
             </Typography>
-          </MotiView>
+          {/* </MotiView> */}
+          </View>
         )}
       </Animated.View>
 
@@ -197,14 +203,14 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
 
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.galleryContainer}>
             {stylist.gallery.map((image, index) => (
-              <MotiView
-                key={index}
-                from={{ opacity: 0, scale: 0.9, translateX: 20 }}
-                animate={{ opacity: 1, scale: 1, translateX: 0 }}
-                transition={{ type: 'timing', duration: 600, delay: 1000 + (index * 200) }}
-              >
-                <Image source={image} style={styles.galleryImage} />
-              </MotiView>
+              // <MotiView
+              //   key={index}
+              //   from={{ opacity: 0, scale: 0.9, translateX: 20 }}
+              //   animate={{ opacity: 1, scale: 1, translateX: 0 }}
+              //   transition={{ type: 'timing', duration: 600, delay: 1000 + (index * 200) }}
+              // >
+                <Image key={index} source={image} style={styles.galleryImage} />
+              // </MotiView>
             ))}
           </ScrollView>
         </Card>
@@ -216,13 +222,14 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
           </Typography>
 
           {stylist.services.map((service, index) => (
-            <MotiView
-              key={service.id}
-              from={{ opacity: 0, translateY: 10 }}
-              animate={{ opacity: 1, translateY: 0 }}
-              transition={{ type: 'timing', duration: 400, delay: 1200 + (index * 150) }}
-              style={styles.serviceItem}
-            >
+            // <MotiView
+            //   key={service.id}
+            //   from={{ opacity: 0, translateY: 10 }}
+            //   animate={{ opacity: 1, translateY: 0 }}
+            //   transition={{ type: 'timing', duration: 400, delay: 1200 + (index * 150) }}
+            //   style={styles.serviceItem}
+            // >
+            <View key={service.id} style={styles.serviceItem}>
               <View>
                 <Typography variant="bodyMedium">
                   {service.name}
@@ -235,7 +242,8 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
               <Typography variant="bodyBold" color={colors.primary}>
                 ${service.price}
               </Typography>
-            </MotiView>
+            {/* </MotiView> */}
+            </View>
           ))}
         </Card>
 
@@ -247,28 +255,28 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
 
           <View style={styles.availabilityContainer}>
             {stylist.availability.map((day, index) => (
-              <MotiView
-                key={index}
-                from={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', delay: 1500 + (index * 150), damping: 12 }}
-              >
-                <TouchableOpacity style={styles.availabilityItem}>
+              // <MotiView
+              //   key={index}
+              //   from={{ opacity: 0, scale: 0.8 }}
+              //   animate={{ opacity: 1, scale: 1 }}
+              //   transition={{ type: 'spring', delay: 1500 + (index * 150), damping: 12 }}
+              // >
+                <TouchableOpacity key={index} style={styles.availabilityItem}>
                   <Typography variant="bodyMedium">
                     {day}
                   </Typography>
                 </TouchableOpacity>
-              </MotiView>
+              // </MotiView>
             ))}
           </View>
         </Card>
 
         {/* Booking Button */}
-        <MotiView
+        {/* <MotiView
           from={{ opacity: 0, translateY: 20, scale: 0.95 }}
           animate={{ opacity: 1, translateY: 0, scale: 1 }}
           transition={{ type: 'spring', delay: 1800, damping: 12 }}
-        >
+        > */}
           <Button
             title="Book Appointment"
             variant="primary"
@@ -276,7 +284,7 @@ const BarberProfileScreen: React.FC<Props> = ({ navigation, route }) => {
             style={styles.bookButton}
             onPress={() => navigation.navigate('BookingScreen', { stylistId: stylist.id, serviceId: 1 })}
           />
-        </MotiView>
+        {/* </MotiView> */}
       </Animated.View>
     </ScrollView>
   );

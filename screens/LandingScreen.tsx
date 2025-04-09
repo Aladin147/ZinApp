@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types';
-import { colors, spacing, themeColors } from '../constants';
+import { colors, spacing, themeColors } from '@constants'; // Use alias
 import { FontAwesome } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
-import { MotiView } from 'moti';
+// import { MotiView } from 'moti'; // Comment out Moti
 
 // Import our custom components
 import { Screen, Typography, Button, Card } from '../components';
@@ -51,14 +51,16 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
           end={{ x: 1, y: 1 }}
         >
           <Animated.View style={[styles.heroContent, { opacity: fadeAnim }]}>
-            <MotiView
+            {/* <MotiView
               from={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: 'timing', duration: 1000 }}
               style={[styles.logo, { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 40 }]}
-            >
+            > */}
+            <View style={[styles.logo, { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 40 }]}>
               <FontAwesome name="scissors" size={32} color="white" />
-            </MotiView>
+            {/* </MotiView> */}
+            </View>
             <Typography variant="screenTitle" color={colors.bgLight} style={styles.heroTitle}>
               ZinApp
             </Typography>
@@ -72,11 +74,11 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
       {/* Main Content */}
       <View style={styles.content}>
         {/* Welcome Card */}
-        <MotiView
+        {/* <MotiView
           from={{ opacity: 0, translateY: 20 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 800, delay: 300 }}
-        >
+        > */}
           <Card style={styles.welcomeCard}>
             <Typography variant="sectionHeader" style={styles.welcomeTitle}>
               Welcome to ZinApp
@@ -85,28 +87,29 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
               Book haircuts, beard trims, braids, or full services in seconds. Discover stylists by proximity, rating, and portfolio.
             </Typography>
           </Card>
-        </MotiView>
+        {/* </MotiView> */}
 
         {/* Service Selection */}
-        <MotiView
+        {/* <MotiView
           from={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ type: 'timing', duration: 800, delay: 500 }}
-        >
+        > */}
           <Typography variant="sectionHeader" style={styles.sectionTitle}>
             What do you need today?
           </Typography>
-        </MotiView>
+        {/* </MotiView> */}
 
         <View style={styles.serviceGrid}>
           {serviceOptions.map((service, index) => (
-            <MotiView
-              key={service.id}
-              from={{ opacity: 0, scale: 0.9, translateY: 20 }}
-              animate={{ opacity: 1, scale: 1, translateY: 0 }}
-              transition={{ type: 'timing', duration: 600, delay: 600 + (index * 100) }}
-            >
+            // <MotiView
+            //   key={service.id}
+            //   from={{ opacity: 0, scale: 0.9, translateY: 20 }}
+            //   animate={{ opacity: 1, scale: 1, translateY: 0 }}
+            //   transition={{ type: 'timing', duration: 600, delay: 600 + (index * 100) }}
+            // >
               <TouchableOpacity
+                key={service.id} // Add key here since MotiView is removed
                 style={styles.serviceCard}
                 onPress={() => navigation.navigate('StylistListScreen', { serviceId: service.id })}
                 activeOpacity={0.7}
@@ -118,17 +121,18 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
                   {service.name}
                 </Typography>
               </TouchableOpacity>
-            </MotiView>
+            // </MotiView>
           ))}
         </View>
 
         {/* Action Buttons */}
-        <MotiView
+        {/* <MotiView
           from={{ opacity: 0, translateY: 30 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 800, delay: 1000 }}
           style={styles.buttonContainer}
-        >
+        > */}
+        <View style={styles.buttonContainer}>
           <Button
             title="Find Nearby Stylists"
             variant="primary"
@@ -148,7 +152,8 @@ const LandingScreen: React.FC<Props> = ({ navigation }) => {
             style={styles.secondaryButton}
             onPress={() => navigation.navigate('ServiceSelectScreen')}
           />
-        </MotiView>
+        {/* </MotiView> */}
+        </View>
       </View>
     </Screen>
   );

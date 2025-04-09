@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import { AuthProvider } from '@state/AuthContext';
-import AppNavigator from '@navigation/AppNavigator';
+import { AuthProvider } from '@state/AuthContext'; // Use alias
+import AppNavigator from '@navigation/AppNavigator'; // Use alias
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { colors } from './constants';
-import { Typography } from './components';
+import { colors } from '@constants'; // Use alias
+import { Typography } from '@components'; // Use alias
+import tw from 'twrnc'; // Add missing import
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -99,11 +100,11 @@ export default function App() {
         style={styles.sanityContainer}
         onLayout={onLayoutRootView}
       >
-        <Typography variant="screenTitle" align="center" style={{ marginBottom: 8 }}>
+        <Typography variant="screenTitle" align="center" style={tw`mb-2`}>
           ZinApp is alive ✅
         </Typography>
 
-        <Typography variant="body" align="center" color={colors.textMuted} style={{ marginBottom: 20 }}>
+        <Typography variant="body" align="center" color={colors.textMuted} style={tw`mb-5`}>
           Fonts loaded successfully
         </Typography>
 

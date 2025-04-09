@@ -21,6 +21,7 @@ This document tracks all reusable UI components in ZinApp, their props, usage lo
 | `RatingStars`    | 5-star feedback bar               | `rating`, `size`, `animated`| `Bsse7aScreen`, `Profile` | `shared`   |
 | `MapTracker`     | Live map with route overlay       | `coords`, `eta`, `avatar`  | `LiveTrackScreen`         | `core`     |
 | `BookingCard`    | Booking summary with actions      | `booking`, `stylist`       | `LandingScreen`           | `shared`   |
+| `ErrorBoundary`  | Catches JS errors in children     | `children`                 | `LiveTrackScreen`         | `core`     |
 
 ---
 
