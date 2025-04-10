@@ -1,311 +1,75 @@
 # ZinApp V2 Component System
 
-This document outlines the component system for ZinApp V2, including design principles, component structure, and visual guidelines.
-
-## Design Principles
-
-ZinApp V2 components follow these core design principles:
-
-1. **Depth & Layering**: Components use shadows, elevation, and layering to create a sense of depth and hierarchy.
-
-2. **Rounded Corners**: All components have rounded corners for a friendly, approachable feel.
-
-3. **Generous Padding**: Components use ample padding to create breathing room and improve readability.
-
-4. **Visual Feedback**: Every interactive component provides clear visual feedback.
-
-5. **Consistent Spacing**: Components use a consistent spacing system.
-
-6. **Expressive Typography**: Typography creates clear hierarchy and improves readability.
-
-7. **Playful Animations**: Subtle animations add personality and improve user experience.
-
-8. **Gamification Integration**: Components support gamification elements like XP, levels, and rewards.
-
-## Component Categories
-
-### 1. Foundation Components
-
-These are the basic building blocks of the UI:
-
-#### Button
-
-- **Variants**: Primary, Secondary, Outline, Text
-- **States**: Default, Hover, Pressed, Disabled
-- **Sizes**: Small, Medium, Large
-- **Features**:
-  - Rounded corners (12px radius)
-  - Icon support (left or right)
-  - Loading state
-  - Ripple effect on press
-  - Scale animation on press (0.98)
-
-#### Card
-
-- **Variants**: Standard, Elevated, Bubble
-- **States**: Default, Interactive, Selected
-- **Features**:
-  - Rounded corners (16px radius)
-  - Shadow with elevation
-  - Optional border
-  - Content padding (16px)
-  - Interactive hover state
-
-#### Typography
-
-- **Variants**: Heading (L/M/S), Body, Caption, Button
-- **Weights**: Regular, Medium, Bold
-- **Features**:
-  - Consistent line height
-  - Optional truncation
-  - Support for emphasis
-  - Automatic contrast adjustment
-
-#### Input
-
-- **Variants**: Text, Number, Select, Checkbox, Radio
-- **States**: Default, Focus, Error, Disabled
-- **Features**:
-  - Floating label
-  - Helper text
-  - Error message
-  - Icon support
-  - Animation on focus
-
-### 2. Layout Components
-
-These components handle layout and structure:
-
-#### ScreenWrapper
-
-- Provides consistent screen padding
-- Handles safe area insets
-- Supports scroll behavior
-- Includes background styling
-
-#### CardWrapper
-
-- Wraps content in a card with consistent styling
-- Handles padding and margins
-- Supports different card variants
-
-#### Grid
-
-- Flexible grid system for layout
-- Supports different column counts
-- Handles responsive behavior
-- Maintains consistent spacing
-
-#### Divider
-
-- Horizontal or vertical divider
-- Customizable color and thickness
-- Optional spacing around divider
-
-### 3. Feature Components
-
-These are more complex, feature-specific components:
-
-#### StylistCard
-
-- Displays stylist information
-- Shows rating and level
-- Includes avatar and services
-- Supports interaction for booking
-
-#### ServiceCard
-
-- Displays service information
-- Shows price and duration
-- Includes icon or image
-- Supports selection state
-
-#### BookingStep
-
-- Guides user through booking process
-- Shows current step and progress
-- Includes navigation controls
-- Maintains context between steps
-
-#### RatingInput
-
-- Allows user to rate experience
-- Shows current and average ratings
-- Includes animation on selection
-- Supports half-star ratings
-
-### 4. Feedback Components
-
-These components provide feedback to the user:
-
-#### Toast
-
-- Shows temporary messages
-- Supports success, error, info variants
-- Includes animation for entry/exit
-- Auto-dismisses after timeout
-
-#### Dialog
-
-- Modal dialog for important information
-- Supports different sizes and content
-- Includes primary and secondary actions
-- Has animation for entry/exit
-
-#### LoadingIndicator
-
-- Shows loading state
-- Supports different sizes
-- Includes animation
-- Optional text message
-
-#### ErrorDisplay
-
-- Shows error messages
-- Supports inline and full-screen variants
-- Includes retry action
-- Has appropriate error styling
-
-## Visual Specifications
-
-### Elevation & Shadows
-
-Components use a consistent elevation system:
-
-| Level | Use Case | Shadow Properties |
-|-------|----------|-------------------|
-| 0 | Flat elements | No shadow |
-| 1 | Cards, buttons | 0px 2px 4px rgba(0,0,0,0.1) |
-| 2 | Floating elements | 0px 4px 8px rgba(0,0,0,0.15) |
-| 3 | Dialogs, modals | 0px 8px 16px rgba(0,0,0,0.2) |
-| 4 | Popovers | 0px 12px 24px rgba(0,0,0,0.25) |
-
-### Corner Radius
-
-Components use a consistent corner radius system:
-
-| Size | Use Case | Radius |
-|------|----------|--------|
-| Small | Small elements (chips, tags) | 8px |
-| Medium | Buttons, inputs | 12px |
-| Large | Cards, dialogs | 16px |
-| Extra Large | Full-screen cards | 24px |
-
-### Spacing System
-
-Components use a consistent spacing system:
-
-| Token | Size | Use Case |
-|-------|------|----------|
-| spacing.xxs | 4px | Minimal spacing, icons |
-| spacing.xs | 8px | Tight spacing, related elements |
-| spacing.sm | 12px | Standard spacing |
-| spacing.md | 16px | Default content padding |
-| spacing.lg | 24px | Section spacing |
-| spacing.xl | 32px | Major section spacing |
-| spacing.xxl | 48px | Screen padding |
-
-### Animation Guidelines
-
-Components use consistent animation properties:
-
-| Type | Duration | Easing | Use Case |
-|------|----------|--------|----------|
-| Micro | 100-150ms | ease-out | Button press, toggle |
-| Small | 200-300ms | ease-in-out | Fade, slide |
-| Medium | 300-500ms | ease-in-out | Page transition |
-| Large | 500-800ms | ease-in-out | Complex animations |
-
-## Component Implementation
-
-### Component Structure
-
-Each component follows this structure:
-
-```typescript
-// Imports
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { colors, spacing } from '../constants';
-
-// Props interface
-interface ButtonProps {
-  title: string;
-  onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
-  disabled?: boolean;
-}
-
-// Component implementation
-const Button: React.FC<ButtonProps> = ({
-  title,
-  onPress,
-  variant = 'primary',
-  size = 'medium',
-  disabled = false,
-}) => {
-  // Component logic
-  
-  return (
-    <View style={[styles.container, styles[variant], styles[size], disabled && styles.disabled]}>
-      {/* Component content */}
-    </View>
-  );
-};
-
-// Styles
-const styles = StyleSheet.create({
-  container: {
-    // Base styles
-  },
-  // Variant styles
-  // Size styles
-  // State styles
-});
-
-export default Button;
-```
-
-### Style Guidelines
-
-1. Use design tokens for all visual properties (colors, spacing, typography)
-2. Implement variants and states as style objects
-3. Use composition for complex components
-4. Ensure accessibility for all components
-5. Include appropriate animations and transitions
-
-## Accessibility Guidelines
-
-All components must follow these accessibility guidelines:
-
-1. Ensure sufficient color contrast (WCAG AA)
-2. Provide appropriate text alternatives for non-text content
-3. Support keyboard navigation
-4. Include proper focus indicators
-5. Support screen readers with appropriate labels
-6. Allow for text resizing without breaking layout
-7. Provide sufficient touch targets (minimum 44x44px)
-
-## Component Documentation
-
-Each component should include:
-
-1. **Purpose**: What the component is for
-2. **Props**: All available props with types and descriptions
-3. **Variants**: Available variants with visual examples
-4. **States**: Different states the component can be in
-5. **Accessibility**: Accessibility considerations
-6. **Examples**: Usage examples with code snippets
-
-## QA Checklist for Components
-
-Before a component is considered complete, it should pass this checklist:
-
-- [ ] Implements all required variants and states
-- [ ] Uses design tokens for all visual properties
-- [ ] Includes appropriate animations and transitions
-- [ ] Follows accessibility guidelines
-- [ ] Works across different screen sizes
-- [ ] Has comprehensive documentation
-- [ ] Passes all unit tests
+## 1. Philosophy
+   - **Atomic Design Influence:** While not strictly adhering to Atomic Design, we draw inspiration from its principles of building UIs from small, reusable parts (Atoms -> Molecules -> Organisms -> Templates -> Pages).
+   - **Reusability:** Prioritize creating generic, reusable components (`lib/widgets/`) for common UI elements (buttons, cards, inputs, avatars).
+   - **Consistency:** Ensure all components adhere strictly to the V2 Brand Identity (`V2_BRAND_IDENTITY.md`), including colors, typography, spacing, and rounding defined in the design tokens.
+   - **Composability:** Design components to be easily composed together to build more complex UI structures and features.
+   - **Feature-Specific Components:** Components specific to a single feature reside within that feature's directory (`lib/features/*/widgets/`). Promote shared components (`lib/widgets/`) only when reuse across features is confirmed.
+   - **Accessibility:** All components must be built with accessibility in mind from the start (See `V2_ACCESSIBILITY_GUIDELINES.md`).
+
+## 2. Component Categories & Location
+   - **Core/Shared Widgets (`lib/widgets/`)**:
+     - **Purpose:** Highly reusable, generic UI elements used across multiple features.
+     - **Examples:**
+       - `AppButton`: Standard button with variants (primary, secondary, text).
+       - `AppCard`: Base card container with standard padding, rounding, and optional elevation.
+       - `AppTextField`: Styled text input field.
+       - `Avatar`: User/Stylist avatar display.
+       - `RatingStars`: Displays star ratings.
+       - `LoadingIndicator`: Consistent loading spinner/shimmer.
+       - `ScreenWrapper`: Standard screen layout wrapper (handles safe area, background color, basic padding).
+       - `Typography`: (Although often implemented as a helper function/extension rather than a widget) Ensures consistent text styling.
+       - `IconWidget`: Wrapper for displaying icons consistently.
+   - **Feature Widgets (`lib/features/*/widgets/`)**:
+     - **Purpose:** Components specific to a particular feature domain. May compose core widgets.
+     - **Examples:**
+       - `lib/features/booking/widgets/booking_card.dart`: Displays booking summary.
+       - `lib/features/stylist_discovery/widgets/stylist_card.dart`: Displays stylist preview.
+       - `lib/features/feed/widgets/post_card.dart`: Displays a social feed post.
+       - `lib/features/profile/widgets/xp_progress_bar.dart`: Displays user XP progress.
+   - **Screens (`lib/features/*/screens/`)**:
+     - **Purpose:** Top-level widgets representing full application screens. Compose feature widgets and core widgets to build the screen layout. Responsible for fetching data (via state management) and handling primary screen-level interactions.
+
+## 3. Component Design Principles
+   - **Stateless vs. Stateful:** Prefer `StatelessWidget` where possible. Use `StatefulWidget` only when managing local, ephemeral UI state not suitable for a global state management solution.
+   - **Constructor Parameters:** Use named parameters for clarity. Pass required data and callbacks. Avoid passing excessive configuration; rely on the theme for styling.
+   - **Theming:** Components should derive their styling (colors, fonts, spacing) primarily from the `ThemeData` defined in `lib/app/theme.dart`. Avoid hardcoding design token values directly within components.
+     ```dart
+     // Good: Use theme
+     Container(
+       color: Theme.of(context).colorScheme.primary,
+       padding: EdgeInsets.all(Theme.of(context).extension<AppSpacing>()!.medium),
+     )
+
+     // Bad: Hardcoding values
+     Container(
+       color: Color(0xFFD2FF4D), // Use AppColors.primaryHighlight instead
+       padding: EdgeInsets.all(16.0), // Use AppSpacing.medium instead
+     )
+     ```
+   - **Layout:** Use standard Flutter layout widgets (`Column`, `Row`, `Stack`, `Padding`, `SizedBox`, `Expanded`, `Flex`, etc.). Adhere to the 4pt grid system defined via spacing tokens.
+   - **Responsiveness:** Design components to adapt reasonably to different screen sizes. Use layout widgets like `Expanded` and `Flexible`, and consider `LayoutBuilder` for more complex adaptations if necessary. (See also responsive typography in `V2_TYPOGRAPHY_SYSTEM.md`).
+   - **Rounding:** Apply consistent corner rounding (`BorderRadius`) based on design tokens.
+   - **Elevation/Depth:** Use elevation or shadows subtly as defined in the brand identity to create depth, primarily through `AppCard` or similar wrappers.
+
+## 4. Key Base Components (Examples - To Be Implemented)
+
+   - **`AppButton`**:
+     - Parameters: `onPressed`, `label`, `variant` (primary, secondary, text), `icon`, `isLoading`, `isDisabled`.
+     - Styling: Uses `ElevatedButton`, `OutlinedButton`, `TextButton` with custom `ButtonStyle` derived from theme. Uses highlight color (`#D2FF4D`) for primary variant.
+   - **`AppCard`**:
+     - Parameters: `child`, `padding`, `margin`, `elevation`, `borderRadius`, `backgroundColor`.
+     - Styling: Uses `Card` or `Container` with `BoxDecoration`. Defaults based on theme (e.g., standard padding, rounding, background from `neutral.canvasLight` or `neutral.canvasDark`).
+   - **`ScreenWrapper`**:
+     - Parameters: `child`, `appBar`, `useSafeArea`, `backgroundColor`, `padding`.
+     - Styling: Uses `Scaffold`, `SafeArea`, `Container`. Sets default background color (`#232D30`).
+
+## 5. Development Workflow
+   - **Storybook (Optional but Recommended):** Consider using `storybook_flutter` to develop and document UI components in isolation. This helps visualize different states and variations.
+   - **Testing:** Write Widget Tests for core and feature components to verify rendering and basic interactions (See `V2_TEST_STRATEGY.md`).
+   - **Review:** Ensure new components adhere to these guidelines during code reviews.
+
+## 6. Evolution
+   - This system will evolve. When a component developed within a feature proves reusable, promote it to `lib/widgets/`.
+   - Regularly review `lib/widgets/` for consistency and potential consolidation.

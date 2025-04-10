@@ -1,217 +1,72 @@
-# ZinApp V2 Architecture
-
-This document outlines the architecture for ZinApp V2, based on the V2 memo and requirements.
-
-## Overview
-
-ZinApp V2 architecture is designed to support a more modular, maintainable, and visually engaging application. The architecture focuses on:
-
-- Clear separation of concerns
-- Modular component structure
-- Consistent styling through design tokens
-- Support for gamification features
-- Improved performance and responsiveness
-- Enhanced visual feedback and animations
-
-## Key Differences from V1
-
-ZinApp V2 introduces several architectural improvements over V1:
-
-1. **Design Token System**: V2 implements a comprehensive design token system for consistent styling, replacing the direct use of color values and styles in V1.
-
-2. **Component Architecture**: V2 uses a more modular component architecture with clear separation between UI, layout, and feature components.
-
-3. **File Structure**: V2 follows a stricter file organization with dedicated directories for UI components, layout components, and feature-specific code.
-
-4. **Gamification Layer**: V2 adds a gamification layer with XP, levels, and tokens, requiring new architectural components.
-
-5. **Animation System**: V2 incorporates a more robust animation system for enhanced visual feedback.
-
-6. **Theme Extension**: V2 uses Flutter Theme extension for design tokens, improving maintainability and consistency.
-
-## Component Architecture
-
-ZinApp V2 follows a hierarchical component architecture:
-
-### Component Hierarchy
-
-1. **Foundation Components**: Basic UI elements like buttons, cards, typography, and inputs.
-   - Located in `/components/ui/`
-   - Highly reusable and configurable
-   - Styled using design tokens
-
-2. **Layout Components**: Components that handle layout and structure.
-   - Located in `/components/layout/`
-   - Include screen wrappers, card wrappers, and grid systems
-   - Handle responsive behavior and spacing
-
-3. **Feature Components**: More complex, feature-specific components.
-   - Built using foundation and layout components
-   - Implement specific business logic
-   - Examples: StylistCard, ServiceCard, BookingStep
-
-4. **Screen Components**: Full screens composed of multiple components.
-   - Located in `/screens/`
-   - Orchestrate component interactions
-   - Handle navigation and data flow
-
-### Component Communication
-
-Components communicate through:
-
-1. **Props**: Direct parent-to-child communication
-2. **Context**: Shared state for related components
-3. **Events**: For component-to-screen communication
-4. **Global State**: For app-wide state management
-
-## State Management
-
-ZinApp V2 uses a multi-layered state management approach:
-
-### Global State
-
-- **App State**: Core application state (user, authentication, preferences)
-- **Gamification State**: XP, levels, tokens, and achievements
-- **Navigation State**: Current screen, navigation history
-
-### Local State
-
-- **Component State**: UI state specific to a component
-- **Screen State**: State specific to a screen
-- **Form State**: State for form inputs and validation
-
-### State Persistence
-
-- **Local Storage**: For user preferences and session data
-- **Secure Storage**: For sensitive information
-- **Mock API**: For simulating backend persistence during development
-
-### State Synchronization
-
-- **Real-time Updates**: For live tracking and notifications
-- **Optimistic Updates**: For improved perceived performance
-- **Error Handling**: For graceful recovery from failed operations
-
-## Data Flow
-
-ZinApp V2 implements a unidirectional data flow:
-
-### API Integration
-
-- **Mock API**: Simulated backend during development
-- **API Client**: Centralized API request handling
-- **Data Models**: Strongly typed data models for API responses
-- **Transformers**: Data transformation and normalization
-
-### Caching Strategy
-
-- **In-memory Cache**: For frequently accessed data
-- **Persistent Cache**: For offline support
-- **Cache Invalidation**: Rules for refreshing cached data
-
-### Offline Support
-
-- **Offline Detection**: Monitoring network connectivity
-- **Offline Actions**: Queue actions for later synchronization
-- **Conflict Resolution**: Handling conflicts during synchronization
-
-## Navigation
-
-ZinApp V2 uses a stack-based navigation system with enhanced transitions:
-
-### Screen Hierarchy
-
-- **Landing**: Entry point to the app
-- **Service Selection**: Browsing and selecting services
-- **Stylist List**: Browsing and selecting stylists
-- **Stylist Profile**: Viewing stylist details
-- **Booking**: Multi-step booking process
-- **Live Tracking**: Tracking stylist arrival
-- **Completion**: Post-service feedback and rewards
-
-### Navigation Patterns
-
-- **Stack Navigation**: For linear flows
-- **Tab Navigation**: For parallel sections
-- **Modal Navigation**: For overlays and dialogs
-
-### Transition Animations
-
-- **Custom Transitions**: Screen-specific transitions
-- **Shared Element Transitions**: For visual continuity
-- **Gesture-based Navigation**: Swipe gestures for navigation
-
-## Performance Optimizations
-
-ZinApp V2 implements several performance optimization strategies:
-
-### Rendering Optimization
-
-- **Memoization**: Preventing unnecessary re-renders
-- **Virtualized Lists**: For efficient list rendering
-- **Lazy Loading**: Loading components only when needed
-- **Code Splitting**: Breaking code into smaller chunks
-
-### Memory Management
-
-- **Resource Cleanup**: Proper cleanup of resources
-- **Image Optimization**: Optimized image loading and caching
-- **Garbage Collection**: Minimizing memory leaks
-
-### Network Optimization
-
-- **Request Batching**: Combining multiple requests
-- **Data Compression**: Minimizing data transfer
-- **Caching**: Reducing unnecessary network requests
-
-### Asset Loading
-
-- **Asset Preloading**: Loading critical assets early
-- **Progressive Loading**: Loading assets in order of importance
-- **Caching**: Storing assets for faster access
-
-## Gamification Architecture
-
-ZinApp V2 includes a dedicated gamification architecture:
-
-### XP and Level System
-
-- **XP Tracker**: Tracks user actions and awards XP
-- **Level Calculator**: Determines user level based on XP
-- **Reward Distributor**: Awards rewards for level-ups
-
-### Token Economy
-
-- **Token Wallet**: Manages user's token balance
-- **Transaction Processor**: Handles token transactions
-- **Reward Shop**: Interface for spending tokens
-
-### Achievement System
-
-- **Achievement Tracker**: Tracks progress toward achievements
-- **Badge Manager**: Awards and displays badges
-- **Notification System**: Alerts users of achievements
-
-## Error Handling
-
-ZinApp V2 implements a robust error handling system:
-
-### Error Types
-
-- **Network Errors**: Handling connectivity issues
-- **API Errors**: Handling server-side errors
-- **Validation Errors**: Handling input validation errors
-- **Application Errors**: Handling unexpected application errors
-
-### Error Presentation
-
-- **Toast Notifications**: For non-critical errors
-- **Error Dialogs**: For critical errors requiring action
-- **Inline Errors**: For form validation errors
-- **Error Pages**: For catastrophic errors
-
-### Error Recovery
-
-- **Retry Mechanisms**: Automatic and manual retry options
-- **Fallback Content**: Displaying alternative content when primary content fails
-- **Graceful Degradation**: Maintaining core functionality during errors
+# ZinApp V2 Flutter Application Architecture
+
+## 1. Overview
+   - **Goal:** To establish a clean, scalable, maintainable, and testable architecture for the ZinApp V2 Flutter application.
+   - **Approach:** We will adopt a layered architecture combined with a feature-first project structure and a suitable state management solution. This promotes separation of concerns and modularity.
+
+## 2. Core Architectural Layers
+   The application will be broadly divided into the following layers:
+
+   - **Presentation Layer:**
+     - **Responsibility:** Handles UI rendering, user input, and displaying data from the state management layer. Contains Widgets (Screens, Components).
+     - **Components:** Flutter Widgets (`StatelessWidget`, `StatefulWidget`), Screens (`lib/features/*/screens/`), Reusable Widgets (`lib/widgets/`, `lib/features/*/widgets/`).
+     - **Interaction:** Interacts with the State Management layer to get data and trigger actions/events.
+
+   - **State Management Layer:**
+     - **Responsibility:** Manages the application's state, handles UI events triggered from the Presentation Layer, and interacts with the Service/Business Logic Layer to fetch/update data.
+     - **Components:** State management solutions like Riverpod (preferred) or Provider, implementing patterns like Notifiers, Cubits, or BLoCs. Logic resides primarily within feature folders (`lib/features/*/provider/` or `cubit/` etc.).
+     - **Interaction:** Provides state streams/values to the Presentation Layer. Calls methods on the Service Layer.
+
+   - **Service / Business Logic Layer:**
+     - **Responsibility:** Encapsulates core business logic, data fetching/manipulation orchestration, and interaction with external services (API, storage, platform plugins).
+     - **Components:** Abstract `ApiService`, `AuthService`, `GamificationService`, etc. (`lib/services/`). Concrete implementations (`MockApiService`, `RealApiService`). Feature-specific logic might reside in `lib/features/*/logic/` if not suitable for a global service.
+     - **Interaction:** Called by the State Management Layer. Interacts with data sources (API, local storage) and potentially other services.
+
+   - **Data Layer:**
+     - **Responsibility:** Handles direct interaction with data sources (network API, local database, device storage, mock JSON files). Includes data models.
+     - **Components:** `MockApiService` / `RealApiService` implementations (contain data source interaction logic), Data Models (`lib/models/`), potentially Repository pattern implementations if complexity increases.
+     - **Interaction:** Accessed by the Service Layer.
+
+   - **Core / Shared Layer:**
+     - **Responsibility:** Contains application-wide utilities, constants, theme, routing, and base configurations not specific to any feature.
+     - **Components:** Code within `lib/app/`, `lib/config/`, `lib/constants/`, `lib/utils/`.
+
+## 3. State Management Strategy
+   - **Chosen Solution:** **Riverpod** (or Provider as a fallback if Riverpod proves too complex initially).
+   - **Rationale:**
+     - **Riverpod:** Offers compile-safe dependency injection, simplifies state management patterns (Provider, FutureProvider, StateNotifierProvider), reduces boilerplate compared to Provider, and promotes testability.
+     - **Provider:** Simpler learning curve, widely used, good for basic state management and dependency injection.
+   - **Implementation:**
+     - Use `StateNotifierProvider` (Riverpod) or `ChangeNotifierProvider` (Provider) for managing mutable screen/feature state.
+     - Use `Provider` for simple dependency injection of services (`ApiService`, `GamificationService`).
+     - Use `FutureProvider` / `StreamProvider` for handling asynchronous data fetching directly in the UI where appropriate.
+     - State logic will primarily reside within the respective feature folders (`lib/features/*/provider/`).
+
+## 4. Navigation / Routing
+   - **Chosen Solution:** **`go_router`** (or potentially Navigator 2.0 directly if complex nested routing is needed).
+   - **Rationale:** `go_router` provides declarative, URL-based routing, simplifies deep linking, handles platform back buttons correctly, and integrates well with state management for route guarding.
+   - **Implementation:** Define routes in `lib/app/router.dart`. Use `context.go()`, `context.push()` for navigation. Implement route guards for authentication checks.
+
+## 5. Dependency Injection
+   - **Approach:** Leverage the chosen state management solution (Riverpod/Provider) for dependency injection.
+   - **Implementation:** Define providers for services (`apiServiceProvider`, `gamificationServiceProvider`) at the top level of the application (`main.dart` or root widget) and access them within state notifiers or widgets using `ref.watch`/`ref.read` (Riverpod) or `context.watch`/`context.read` (Provider).
+
+## 6. Error Handling
+   - **Strategy:**
+     - Service layer methods return `Future`s that complete with data or throw specific, typed exceptions (e.g., `ApiException`, `NetworkException`, `NotFoundException`).
+     - State management layer catches these exceptions, updates the state to reflect the error (e.g., `state = AsyncError(...)` in Riverpod, or a specific error property), and potentially triggers side effects (e.g., showing a snackbar).
+     - Presentation layer listens to the error state and displays appropriate UI feedback (error messages, retry buttons).
+     - Use `ErrorBoundary` widgets (custom or package-based) for catching unexpected UI rendering errors.
+     - Integrate crash reporting (Crashlytics/Sentry) for unhandled exceptions (See `V2_APP_LIFECYCLE.md`).
+
+## 7. Modularity & Feature Slicing
+   - **Feature Folders:** The `lib/features/` directory is central. Each major feature (booking, auth, feed, profile) gets its own folder containing all related screens, widgets, and state logic.
+   - **Shared Components:** Truly reusable widgets (buttons, cards, avatars) reside in `lib/widgets/`. Avoid placing feature-specific widgets here.
+   - **Dependencies:** Features should ideally depend on services, models, constants, and shared widgets, but minimize direct dependencies between features. Use service layer interactions or state management coordination for cross-feature communication if needed.
+
+## 8. Testing Considerations
+   - The layered architecture and dependency injection facilitate testing:
+     - **Unit Tests:** Test services and state logic by mocking dependencies (e.g., mock `ApiService` when testing a state notifier).
+     - **Widget Tests:** Test widgets by providing mock state or mock service implementations via providers.
+     - **Integration Tests:** Test flows by providing the `MockApiService` implementation.
+   - (See `V2_TEST_STRATEGY.md` for more details).

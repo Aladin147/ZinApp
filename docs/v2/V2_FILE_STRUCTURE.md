@@ -1,200 +1,114 @@
-# ZinApp V2 File Structure
+# ZinApp V2 Flutter Project File Structure
 
-This document outlines the file structure and organization for ZinApp V2.
+This document defines the standard file and directory structure for the ZinApp V2 Flutter project. Adhering to this structure ensures consistency, maintainability, and ease of navigation.
 
-## Overview
-
-ZinApp V2 follows a modular, organized file structure to ensure maintainability, scalability, and clear separation of concerns. The structure is designed to support the new visual design, gamification features, and improved architecture.
-
-## Root Directory Structure
+## 1. Root Directory Structure
 
 ```
-/zinapp
-├── /assets            # Static assets
-│   ├── /icons         # Icon assets
-│   ├── /illustrations # Illustration assets
-│   ├── /animations    # Lottie and Rive animations
-│   └── /images        # Image assets
-├── /components        # Reusable UI components
-│   ├── /ui            # Basic UI components
-│   └── /layout        # Layout components
-├── /constants         # App-wide constants
-│   └── /design-tokens # Design tokens and theme
-├── /lib               # Application logic
-│   ├── /game_logic    # Gamification system logic
-│   └── /token_engine  # Token and rewards logic
-├── /mock-api          # Mock API server for development
-├── /screens           # App screens
-├── /types             # TypeScript type definitions
-├── /navigation        # Navigation configuration
-├── /docs              # Documentation files
-│   └── /v2            # V2-specific documentation
-├── App.tsx            # Main app component
-└── README.md          # Project overview
+zinapp_v2_flutter/
+├── android/             # Android specific files
+├── assets/              # Static assets (images, fonts, mock data, etc.)
+│   ├── fonts/
+│   ├── icons/
+│   ├── illustrations/
+│   ├── lottie/          # Lottie animation files (if used)
+│   └── rive/            # Rive animation files (if used)
+├── ios/                 # iOS specific files
+├── lib/                 # Main Dart application code
+│   ├── main.dart        # App entry point
+│   ├── app/             # Core app setup, routing, theme
+│   ├── config/          # Environment configuration
+│   ├── constants/       # App-wide constants (design tokens, strings)
+│   ├── features/        # Feature-specific modules (screens, widgets, logic)
+│   ├── models/          # Data models (plain Dart objects)
+│   ├── services/        # Business logic services (API, gamification, etc.)
+│   ├── utils/           # Utility functions and helpers
+│   └── widgets/         # Common reusable widgets (shared across features)
+├── linux/               # Linux specific files (if supporting desktop)
+├── macos/               # macOS specific files (if supporting desktop)
+├── test/                # Automated tests
+│   ├── unit/
+│   ├── widget/
+│   └── integration/
+├── web/                 # Web specific files (if supporting web)
+├── windows/             # Windows specific files (if supporting desktop)
+├── .gitignore
+├── analysis_options.yaml # Dart analyzer configuration
+├── pubspec.lock
+├── pubspec.yaml         # Flutter project dependencies and metadata
+└── README.md            # Project README
 ```
 
-## Detailed Structure
+## 2. `lib/` Directory Deep Dive
 
-### Components Directory
+-   **`main.dart`**: Initializes the app, sets up providers/service locators, and runs the main `App` widget.
+-   **`app/`**:
+    -   `app.dart`: Root `MaterialApp` or `CupertinoApp` widget.
+    -   `theme.dart`: Defines the application theme (colors, typography, component themes) based on design tokens.
+    -   `router.dart`: Defines navigation routes and logic (e.g., using `go_router` or `Navigator 2.0`).
+-   **`config/`**:
+    -   `env.dart`: Environment configuration (e.g., API base URL, mock data toggle flag). See `V2_DEV_SETUP.md`.
+-   **`constants/`**:
+    -   `app_colors.dart`: Color constants/tokens.
+    -   `app_typography.dart`: TextStyle constants/tokens.
+    -   `app_spacing.dart`: Spacing constants (padding, margins).
+    -   `app_animations.dart`: Animation duration/curve constants.
+    -   `app_strings.dart`: String constants for localization (or use dedicated localization package).
+    -   `design_tokens.dart`: (Optional) Central file importing/exporting all token types.
+-   **`features/`**: **(Primary Location for Feature Development)**
+    -   Organized by feature domain (e.g., `booking`, `authentication`, `profile`, `stylist_discovery`, `feed`).
+    -   Each feature directory typically contains:
+        -   `screens/`: Widgets representing full screens/pages.
+        -   `widgets/`: Widgets specific to this feature.
+        -   `cubit/` or `bloc/` or `provider/`: State management logic for the feature.
+        -   `logic/` or `usecases/`: Feature-specific business logic (if not in a global service).
+    -   Example:
+        ```
+        lib/features/booking/
+        ├── screens/
+        │   ├── booking_screen.dart
+        │   └── service_select_screen.dart
+        ├── widgets/
+        │   ├── booking_card.dart
+        │   └── service_button.dart
+        └── cubit/
+            └── booking_cubit.dart
+        ```
+-   **`models/`**: Contains plain Dart objects representing data structures (e.g., `user.dart`, `stylist.dart`, `booking.dart`). Should include `fromJson`/`toJson` methods if applicable.
+-   **`services/`**:
+    -   `api_service.dart`: Abstract interface for data fetching.
+    -   `mock_api_service.dart`: Mock implementation using local JSON.
+    -   `real_api_service.dart`: Real implementation using HTTP client.
+    -   `gamification_service.dart`: Logic for calculating XP, levels, tokens.
+    -   `auth_service.dart`: Authentication logic (login, logout, token management).
+    -   `notification_service.dart`: Handling push notifications (if applicable).
+-   **`utils/`**: General utility functions, extensions, formatters, validators, etc. (e.g., `date_formatter.dart`, `validators.dart`).
+-   **`widgets/`**: **(Common Reusable Widgets)**
+    -   Contains highly reusable UI components shared across multiple features (e.g., `CustomButton`, `Avatar`, `LoadingIndicator`, `ScreenWrapper`, `CardWrapper`).
 
-```
-/components
-├── /ui                # Basic UI components
-│   ├── Button.tsx     # Button component
-│   ├── Card.tsx       # Card component
-│   ├── Typography.tsx # Typography component
-│   ├── Icon.tsx       # Icon component
-│   └── ...            # Other UI components
-├── /layout            # Layout components
-│   ├── ScreenWrapper.tsx  # Screen wrapper component
-│   ├── CardWrapper.tsx    # Card wrapper component
-│   └── ...                # Other layout components
-└── /specific          # Feature-specific components
-    ├── StylistCard.tsx    # Stylist card component
-    ├── ServiceCard.tsx    # Service card component
-    └── ...                # Other specific components
-```
+## 3. `assets/` Directory
 
-### Constants Directory
+-   Organize assets logically.
+-   Use subdirectories for different asset types (`fonts`, `icons`, `illustrations`, `lottie`, `rive`).
+-   Ensure assets are declared in `pubspec.yaml`.
 
-```
-/constants
-├── index.ts           # Exports all constants
-├── spacing.ts         # Spacing constants
-├── /design-tokens     # Design tokens
-│   ├── colors.ts      # Color tokens
-│   ├── typography.ts  # Typography tokens
-│   ├── spacing.ts     # Spacing tokens
-│   └── theme.ts       # Theme configuration
-└── ...                # Other constants
-```
+## 4. `test/` Directory
 
-### Lib Directory
+-   Mirror the `lib/` structure where appropriate.
+-   Place unit tests (`_test.dart`) alongside the code they test or in corresponding `test/unit/` directories.
+-   Place widget tests (`_test.dart`) alongside the widgets they test or in corresponding `test/widget/` directories.
+-   Place integration tests in `test/integration/`.
 
-```
-/lib
-├── /game_logic        # Gamification system logic
-│   ├── index.ts       # Exports all game logic
-│   ├── xp.ts          # XP calculation and management
-│   ├── levels.ts      # Level definitions and progression
-│   └── rewards.ts     # Reward system logic
-├── /token_engine      # Token and rewards logic
-│   ├── index.ts       # Exports all token logic
-│   ├── tokens.ts      # Token management
-│   └── transactions.ts # Token transaction logic
-└── /mock_data         # Mock data for development
-    ├── users.json     # Mock user data
-    ├── stylists.json  # Mock stylist data
-    └── services.json  # Mock service data
-```
+## 5. Naming Conventions
+   - **Files:** `snake_case.dart` (e.g., `booking_screen.dart`, `api_service.dart`).
+   - **Classes:** `PascalCase` (e.g., `BookingScreen`, `ApiService`).
+   - **Variables/Functions:** `camelCase` (e.g., `userName`, `fetchUserProfile`).
+   - **Constants:** `camelCase` or `UPPER_SNAKE_CASE` (e.g., `defaultPadding`, `API_TIMEOUT`).
+   - **Private Members:** Prefix with underscore `_` (e.g., `_internalCounter`, `_fetchData`).
 
-### Screens Directory
-
-```
-/screens
-├── LandingScreen.tsx  # Landing screen
-├── ServiceSelectScreen.tsx # Service selection screen
-├── StylistListScreen.tsx   # Stylist list screen
-├── BarberProfileScreen.tsx # Barber profile screen
-├── BookingScreen.tsx       # Booking screen
-├── LiveTrackScreen.tsx     # Live tracking screen
-├── Bsse7aScreen.tsx        # Completion screen
-└── ...                     # Other screens
-```
-
-## File Naming Conventions
-
-1. **Components**: PascalCase (e.g., `Button.tsx`, `CardWrapper.tsx`)
-2. **Utilities and Hooks**: camelCase (e.g., `useAuth.ts`, `formatDate.ts`)
-3. **Constants**: camelCase (e.g., `colors.ts`, `spacing.ts`)
-4. **Screens**: PascalCase with Screen suffix (e.g., `LandingScreen.tsx`)
-5. **Types**: PascalCase with type-specific suffix (e.g., `UserType.ts`, `ApiResponse.ts`)
-
-## Import Conventions
-
-1. Use relative imports for files in the same directory or subdirectories
-2. Use absolute imports for files in different directories
-3. Group imports in the following order:
-   - React and React Native imports
-   - Third-party library imports
-   - Absolute imports from the project
-   - Relative imports
-
-Example:
-```typescript
-// React and React Native imports
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-
-// Third-party library imports
-import { useNavigation } from '@react-navigation/native';
-import { LinearGradient } from 'expo-linear-gradient';
-
-// Absolute imports from the project
-import { colors, spacing } from '../constants';
-import { Button, Typography } from '../components';
-
-// Relative imports
-import { formatPrice } from './utils';
-```
-
-## Mandatory File Structure Rules
-
-1. All UI components must go inside `/components/ui/`
-2. Shared layout wrappers (ScreenWrapper, CardWrapper) must go in `/components/layout/`
-3. Design tokens and constants must only live inside `/constants/design-tokens.ts`
-4. Illustration and icon assets must be placed in `/assets/illustrations/` and `/assets/icons/`
-5. Game logic must live in `/lib/game_logic/`
-6. Demo token logic must be in `/lib/token_engine/`
-
-## Component Structure
-
-Each component should follow this structure:
-
-```typescript
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { colors, spacing } from '../constants';
-
-// Define component props
-interface ButtonProps {
-  title: string;
-  onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'outline';
-  size?: 'small' | 'medium' | 'large';
-  disabled?: boolean;
-}
-
-// Component implementation
-const Button: React.FC<ButtonProps> = ({
-  title,
-  onPress,
-  variant = 'primary',
-  size = 'medium',
-  disabled = false,
-}) => {
-  // Component logic
-  
-  return (
-    <View style={[styles.container, styles[variant], styles[size], disabled && styles.disabled]}>
-      {/* Component content */}
-    </View>
-  );
-};
-
-// Component styles
-const styles = StyleSheet.create({
-  container: {
-    // Base styles
-  },
-  primary: {
-    // Primary variant styles
-  },
-  secondary: {
-    // Secondary variant styles
-  },
-  // Other styles
-});
-
-export default Button;
-```
+## 6. Rationale
+   - **Modularity:** Feature-based structure promotes separation of concerns and scalability.
+   - **Discoverability:** Consistent structure makes it easier to find code.
+   - **Reusability:** Clear separation of common widgets and utilities.
+   - **Testability:** Structure facilitates unit, widget, and integration testing.
+   - **Alignment:** Follows common conventions in the Flutter community.
