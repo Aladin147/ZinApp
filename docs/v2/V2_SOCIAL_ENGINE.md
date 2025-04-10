@@ -1,5 +1,9 @@
 # ZinApp V2 Social Engine & FYP Specification
 
+## 🔄 Alias Note
+This file covers topics referred to as `FYP_SYSTEM.md` in earlier documentation planning.
+---
+
 ## 1. Vision & Goals
    - **Vision:** To transform ZinApp from a utility booking app into an engaging community platform centered around style, stylists, and user experiences. The social engine will foster discovery, interaction, and loyalty.
    - **Goals:**
