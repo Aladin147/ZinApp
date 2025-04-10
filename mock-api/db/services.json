@@ -1,6 +1,0 @@
-[
-  { "id": 1, "name": "Haircut", "price": 50 },
-  { "id": 2, "name": "Beard Trim", "price": 30 },
-  { "id": 3, "name": "Braids", "price": 70 },
-  { "id": 4, "name": "Full Service", "price": 100 }
-]

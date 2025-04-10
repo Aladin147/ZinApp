@@ -1,70 +1,82 @@
-# OSX
-*.DS_Store
-
-# Xcode
-build/
-*.pbxuser
-!default.pbxuser
-*.mode1v3
-!default.mode1v3
-*.mode2v3
-!default.mode2v3
-*.perspectivev3
-!default.perspectivev3
-xcuserdata
-*.xccheckout
-*.moved-aside
-DerivedData
-*.hmap
-*.ipa
-*.xcuserstate
-project.xcworkspace
-
-# Android/IntelliJ
-build/
-.idea
-.gradle
-local.properties
-*.iml
-*.hprof
-
-# node.js
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# BUCK
-buck-out/
-\.buckd/
-*.keystore
-
-# Bundle artifacts
-*.jsbundle
-
-# CocoaPods
-/ios/Pods/
-
-# Expo
-.expo/
-web-build/
-dist/
-.cache/
-.expo-shared/
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Editor directories and files
-.vscode/
-*.swp
-*.swo
-
-# Testing
-coverage/
-
-# Logs
+# Miscellaneous
+*.class
 *.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# Flutter Generated Files
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+/ios/.symlinks/
+/ios/Flutter/App.framework
+/ios/Flutter/Flutter.framework
+/ios/Flutter/Flutter.podspec
+/ios/Runner/GeneratedPluginRegistrant.*
+/ios/Flutter/flutter_export_environment.sh
+/ios/Pods/
+/ios/Runner.xcworkspace/xcshareddata/
+/ios/Runner.xcworkspace/xcuserdata/
+/ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/
+/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+/ios/Runner.xcodeproj/xcuserdata/
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_assets/
+/ios/ServiceDefinitions.json
+/android/app/build/
+/android/.gradle/
+/android/gradle/wrapper/gradle-wrapper.jar
+/android/gradlew
+/android/gradlew.bat
+/android/local.properties
+/android/key.properties
+/.idea/
+/.vscode/
+/*.iml
+/nbproject/
+
+# Web Generated Files
+/web/build/
+/web/dart_sdk.js*
+/web/main.dart.js*
+/web/main.dart.bootstrap.js*
+/web/main.dart.unopt.js*
+/web/main.dart.unopt.js.map*
+/web/main.dart.unopt.sum*
+/web/main.dart.js.deps*
+/web/main.dart.js.map*
+/web/main.dart.js.tar.gz*
+/web/main.dart.js.zip*
+/web/main.dart.precompiled.js*
+/web/main.dart.precompiled.js.map*
+/web/main.dart.precompiled.js.deps*
+/web/main.dart.precompiled.js.tar.gz*
+/web/main.dart.precompiled.js.zip*
+/web/main.dart.unopt.js*
+/web/main.dart.unopt.js.map*
+/web/main.dart.unopt.js.deps*
+/web/main.dart.unopt.js.tar.gz*
+/web/main.dart.unopt.js.zip*
+/web/main.dart.unopt.wasm*
+/web/main.dart.unopt.wasm.map*
+/web/main.dart.unopt.wasm.deps*
+/web/main.dart.unopt.wasm.tar.gz*
+/web/main.dart.unopt.wasm.zip*
+/web/main.dart.wasm*
+/web/main.dart.wasm.map*
+/web/main.dart.wasm.deps*
+/web/main.dart.wasm.tar.gz*
+/web/main.dart.wasm.zip*
+/web/main.dart.precompiled.wasm*
+/web/main.dart.precompiled.wasm.map*
+/web/main.dart.precompiled.wasm.deps*
+/web/main.dart.precompiled.wasm.tar.gz*
+/web/main.dart.precompiled.wasm.zip*

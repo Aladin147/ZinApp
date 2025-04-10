@@ -1,0 +1,27 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  # Optional: Exclude generated files if necessary
+  # exclude:
+  #   - "**/*.g.dart"
+  #   - "**/*.freezed.dart"
+  errors:
+    # Treat specific info-level issues as warnings or errors if desired
+    # missing_required_param: warning
+    # avoid_print: warning # Enable this to warn about print statements
+
+linter:
+  rules:
+    # --- Rules inherited from flutter_lints ---
+    # (No need to list them all here)
+
+    # --- Additional stricter rules ---
+    always_use_package_imports: true  # Enforce package imports over relative ones
+    prefer_const_constructors: true     # Prefer const constructors where possible
+    # avoid_print: true                   # Discourage print statements (can be noisy during dev, enable later or use warning above)
+    require_trailing_commas: true     # Enforce trailing commas for better formatting diffs
+    # avoid_dynamic: true              # Consider enabling later for stricter typing
+    # exhaustive_cases: true           # Ensure switch statements on enums are exhaustive
+
+    # --- Potentially disable conflicting or noisy rules ---
+    # e.g., if a specific rule conflicts with project style

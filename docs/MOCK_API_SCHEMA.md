@@ -1,125 +1,147 @@
+# ZinApp V2 Mock API Schema & Strategy
 
-# ZinApp Mock API Schema
+## 1. Overview
+   - Purpose of the mock data system for V2 development and testing, particularly focusing on gamification and social features.
+   - Strategy: Utilizing local JSON files stored within the Flutter project structure, likely under `/lib/mock_data/` (to be confirmed once Flutter project is initialized). This allows for easy modification and development without requiring a running backend.
 
-## 🧭 Purpose
-This document defines the mock API schema that powers the demo version of ZinApp. It serves static JSON through a local server (`json-server` or basic Express.js), simulating a real backend without cloud dependencies. This enables seamless testing and visual flows for demo users, investors, or stakeholders.
+## 2. Data Models (JSON Structure)
+   - **`users.json`**:
+     ```json
+     [
+       {
+         "userId": "user123",
+         "username": "Hassan",
+         "profilePictureUrl": "path/to/hassan.png",
+         "xp": 150,
+         "zinTokens": 50,
+         "level": "Silver",
+         "followingStylists": ["stylist456"],
+         "followingUsers": ["user789"],
+         "bookingHistory": ["bookingABC", "bookingDEF"]
+       }
+       // ... more users
+     ]
+     ```
+   - **`stylists.json`**:
+     ```json
+     [
+       {
+         "stylistId": "stylist456",
+         "name": "Sarah J.",
+         "profilePictureUrl": "path/to/sarah.png",
+         "rating": 4.8,
+         "specialties": ["Fades", "Braids"],
+         "servicesOffered": ["service01", "service02"],
+         "availability": { "Monday": "9am-5pm", "...": "..." },
+         "isAvailableNow": true,
+         "location": { "latitude": 34.0, "longitude": -6.8 }
+       }
+       // ... more stylists
+     ]
+     ```
+   - **`services.json`**:
+     ```json
+     [
+       {
+         "serviceId": "service01",
+         "name": "Premium Fade",
+         "description": "Detailed fade with sharp lines.",
+         "price": 25.00,
+         "currency": "ZIN", // Or local currency if ZIN is separate
+         "durationMinutes": 45,
+         "xpReward": 20
+       }
+       // ... more services
+     ]
+     ```
+   - **`bookings.json`**:
+     ```json
+     [
+       {
+         "bookingId": "bookingABC",
+         "userId": "user123",
+         "stylistId": "stylist456",
+         "serviceId": "service01",
+         "bookingTime": "2025-04-11T14:00:00Z",
+         "status": "confirmed", // e.g., pending, confirmed, completed, cancelled
+         "pricePaid": 25.00,
+         "currency": "ZIN"
+       }
+       // ... more bookings
+     ]
+     ```
+   - **`ratings.json`**:
+     ```json
+     [
+       {
+         "ratingId": "ratingXYZ",
+         "bookingId": "bookingABC",
+         "userId": "user123",
+         "stylistId": "stylist456",
+         "score": 5, // e.g., 1-5 stars
+         "comment": "Amazing fade, Sarah is the best!",
+         "timestamp": "2025-04-11T15:00:00Z",
+         "xpReward": 5
+       }
+       // ... more ratings
+     ]
+     ```
+   - **`gamification.json`**:
+     ```json
+     {
+       "levels": [
+         { "name": "Bronze", "minXP": 0 },
+         { "name": "Silver", "minXP": 100 },
+         { "name": "Gold", "minXP": 500 },
+         { "name": "Prime", "minXP": 1500 },
+         { "name": "Legend", "minXP": 5000 }
+       ],
+       "actionRewards": {
+         "rateExperience": { "xp": 5 },
+         "postPhoto": { "xp": 10, "zinTokens": 5 },
+         "completeBooking": { "xp": 20 }, // Example, could vary by service
+         "commentOnPost": { "xp": 3 },
+         "tagPhoto": { "xp": 30, "zinTokens": 10 } // Example from memo
+       }
+     }
+     ```
+   - **`posts.json`** (For Social Engine):
+     ```json
+      [
+        {
+          "postId": "post001",
+          "userId": "user123", // or stylistId
+          "type": "check-in", // check-in, showcase, shared-style, review
+          "imageUrl": "path/to/image.png", // Optional
+          "caption": "Just got a fresh cut!",
+          "timestamp": "2025-04-10T16:00:00Z",
+          "likes": ["user789", "stylist456"],
+          "comments": [
+            { "commentId": "cmt01", "userId": "user789", "text": "Looks great!", "timestamp": "..." }
+          ],
+          "relatedBookingId": "bookingABC" // Optional link
+        }
+        // ... more posts
+      ]
+     ```
 
----
+## 3. Gamification & Token Logic Simulation
+   - **Triggering Actions:** UI interactions (e.g., tapping 'Rate', submitting a post) will call functions in a mock service utility.
+   - **Mock Service Utility:** This utility (e.g., `MockDataService.dart`) will read the relevant JSON file (e.g., `gamification.json` to find rewards, `users.json` to find the user).
+   - **Updating Data:** The utility will calculate new XP/token values and update the user's record in the `users.json` file (simulating a write operation). It will also create new records where necessary (e.g., add an entry to `ratings.json` or `posts.json`).
+   - **UI Updates:** The UI will re-read the updated data (or listen to changes via a state management solution like Provider or Riverpod) to display the new XP, token balance, level, or new posts/ratings.
+   - **Example Flow (Rating):**
+     1. User completes booking `bookingABC`.
+     2. User taps 'Rate' button on the rating screen for `bookingABC`.
+     3. UI calls `MockDataService.submitRating(userId: 'user123', bookingId: 'bookingABC', score: 5, comment: '...')`.
+     4. `MockDataService` reads `gamification.json`, finds `rateExperience` reward (5 XP).
+     5. `MockDataService` reads `users.json`, finds `user123`.
+     6. `MockDataService` updates `user123`'s XP (e.g., 150 + 5 = 155).
+     7. `MockDataService` checks if new XP crosses a level threshold in `gamification.json`. Updates level if needed.
+     8. `MockDataService` writes the updated `user123` record back to `users.json`.
+     9. `MockDataService` creates a new entry in `ratings.json`.
+     10. UI listening to user data updates and displays the new XP (155) and potentially a level-up notification.
 
-## 🗂️ Endpoints Overview
-
-| Endpoint           | Description                        |
-|--------------------|-------------------------------------|
-| `/stylists`        | All available stylists              |
-| `/bookings`        | User bookings                      |
-| `/users`           | User profiles (guest/verified)      |
-| `/services`        | Service options + pricing           |
-| `/ratings`         | Historical ratings for stylists     |
-
----
-
-## 🔧 /stylists (GET)
-```json
-[
-  {
-    "id": 1,
-    "name": "Hassan the Barber",
-    "rating": 4.9,
-    "distance_km": 2.1,
-    "verified": true,
-    "bio": "Fade specialist, 10+ yrs experience",
-    "services": [1, 2, 4],
-    "gallery": ["/img/fade1.jpg", "/img/fade2.jpg"],
-    "availability": "09:00 - 19:00",
-    "location": {
-      "lat": 33.5899,
-      "lng": -7.6039
-    },
-    "profile_picture": "/img/hassan.png",
-    "qr_link": "/barber/hassan"
-  }
-]
-```
-
----
-
-## 🔧 /services (GET)
-```json
-[
-  { "id": 1, "name": "Haircut", "price": 50 },
-  { "id": 2, "name": "Beard Trim", "price": 30 },
-  { "id": 3, "name": "Braids", "price": 70 },
-  { "id": 4, "name": "Full Service", "price": 100 }
-]
-```
-
----
-
-## 🔧 /bookings (GET, POST)
-```json
-[
-  {
-    "id": 101,
-    "user_id": 10,
-    "stylist_id": 1,
-    "service_id": 1,
-    "status": "confirmed",
-    "datetime": "2025-04-10T14:30:00Z",
-    "payment_method": "card",
-    "rating_given": false
-  }
-]
-```
-
----
-
-## 🔧 /users (GET)
-```json
-[
-  {
-    "id": 10,
-    "name": "Yassine",
-    "is_verified": true,
-    "trust_score": 87,
-    "payment_methods": ["card", "cash"],
-    "favorite_stylists": [1],
-    "qr_discovery": true
-  }
-]
-```
-
----
-
-## 🔧 /ratings (GET, POST)
-```json
-[
-  {
-    "id": 201,
-    "stylist_id": 1,
-    "user_id": 10,
-    "stars": 5,
-    "comment": "Clean fade, came fast.",
-    "timestamp": "2025-04-10T16:00:00Z"
-  }
-]
-```
-
----
-
-## 🔁 State Simulation Support
-Each record may contain optional demo flags:
-- `qr_discovery`: true → triggers trust UI elements
-- `rating_given`: false → triggers Bsse7a flow
-- `status`: can be `confirmed`, `en_route`, `arrived`, `canceled`
-
-Use local JSON edits or toggle endpoints to simulate flows.
-
----
-
-## 🔚 Notes
-- File structure should mirror `/mock-api/db/*.json`
-- Recommend 3 stylist records minimum for visual variance
-- Include rating distribution for realism
-- Use static timestamps in UTC for repeatable tests
-
-> With this mock API, ZinApp’s demo functions 100% offline, simulating a production experience without backend fragility.
+## 4. File Location & Access
+   - All mock JSON files will reside in `/lib/mock_data/` within the Flutter project.
+   - A dedicated Flutter service (e.g., `MockDataService.dart`) will encapsulate all logic for reading and simulating writes to these JSON files using standard Dart file I/O and JSON decoding/encoding libraries. This service will provide methods like `getUser(userId)`, `updateUserXP(userId, xpToAdd)`, `getStylists()`, `createBooking()`, etc.
