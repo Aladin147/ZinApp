@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
@@ -264,42 +266,64 @@ class ZinLogo extends StatelessWidget {
 
   /// Adds a drop shadow to the logo for a more sophisticated look
   Widget _buildShadowedLogo(Widget logo, {required double size, bool isCircular = false, double shadowOpacity = 0.45}) {
-    // Create a more refined shadow effect by using multiple layers
-    return Stack(
-      children: [
-        // Shadow layer 1 - larger blur, more transparent
-        Positioned(
-          left: 2.0,
-          top: 2.0,
-          child: Opacity(
-            opacity: shadowOpacity * 0.7,
-            child: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                Colors.black,
-                BlendMode.srcIn,
+    // For SVG logos, we need a more sophisticated approach to shadows
+    // We'll use a Container with a decoration that includes the logo as a foreground
+    // and a custom painter for the shadow
+    return SizedBox(
+      width: size * 1.1,  // Add some padding for the shadow
+      height: size * 1.1, // Add some padding for the shadow
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // First shadow layer - more diffuse
+          Positioned(
+            left: 3.0,
+            top: 3.0,
+            right: 0,
+            bottom: 0,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ui.ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                child: Opacity(
+                  opacity: shadowOpacity * 0.5,
+                  child: ColorFiltered(
+                    colorFilter: const ColorFilter.mode(
+                      Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                    child: logo,
+                  ),
+                ),
               ),
-              child: logo,
             ),
           ),
-        ),
-        // Shadow layer 2 - smaller blur, less transparent
-        Positioned(
-          left: 1.0,
-          top: 1.0,
-          child: Opacity(
-            opacity: shadowOpacity * 0.9,
-            child: ColorFiltered(
-              colorFilter: const ColorFilter.mode(
-                Colors.black,
-                BlendMode.srcIn,
+          // Second shadow layer - sharper
+          Positioned(
+            left: 1.5,
+            top: 1.5,
+            right: 1.5,
+            bottom: 1.5,
+            child: Opacity(
+              opacity: shadowOpacity * 0.7,
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Colors.black,
+                  BlendMode.srcIn,
+                ),
+                child: logo,
               ),
-              child: logo,
             ),
           ),
-        ),
-        // Original logo on top
-        logo,
-      ],
+          // Original logo
+          Positioned(
+            left: 0,
+            top: 0,
+            right: 3.0,
+            bottom: 3.0,
+            child: logo,
+          ),
+        ],
+      ),
     );
   }
 
