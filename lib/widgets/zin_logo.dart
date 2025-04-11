@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 
 /// Logo variants for different contexts
@@ -94,10 +95,13 @@ class ZinLogo extends StatelessWidget {
         switch (colorScheme) {
           case ZinLogoColorScheme.primaryOnDark:
             // Primary color logo (neon green on dark)
-            logoWidget = Image.asset(
-              'assets/logos/png/zinapp_logo_full.png',
-              height: size,
-              fit: BoxFit.contain,
+            logoWidget = _buildShadowedLogo(
+              SvgPicture.asset(
+                'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
+                height: size,
+                fit: BoxFit.contain,
+              ),
+              size: size,
             );
             break;
 
@@ -109,10 +113,11 @@ class ZinLogo extends StatelessWidget {
                 color: AppColors.baseDark,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.asset(
-                'assets/logos/png/zinapp_logo_for-neon_background.png',
+              child: SvgPicture.asset(
+                'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
                 height: size * 0.9,
                 fit: BoxFit.contain,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
             );
             break;
@@ -125,10 +130,11 @@ class ZinLogo extends StatelessWidget {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Image.asset(
-                'assets/logos/png/zinapp_logo_full.png',
+              child: SvgPicture.asset(
+                'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
                 height: size * 0.9,
                 fit: BoxFit.contain,
+                colorFilter: const ColorFilter.mode(AppColors.baseDark, BlendMode.srcIn),
               ),
             );
             break;
@@ -141,10 +147,11 @@ class ZinLogo extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'assets/logos/png/zinapp_logo_full.png',
+              child: SvgPicture.asset(
+                'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
                 height: size * 0.8,
                 fit: BoxFit.contain,
+                colorFilter: const ColorFilter.mode(AppColors.primaryHighlight, BlendMode.srcIn),
               ),
             );
             break;
@@ -179,11 +186,15 @@ class ZinLogo extends StatelessWidget {
     switch (colorScheme) {
       case ZinLogoColorScheme.primaryOnDark:
         // Standard icon with primary color
-        iconWidget = Image.asset(
-          'assets/logos/png/symbol_coin_only.png',
-          width: size,
-          height: size,
-          fit: BoxFit.contain,
+        iconWidget = _buildShadowedLogo(
+          SvgPicture.asset(
+            'assets/logos/svg/ZinApp_symbol_coin_only.svg',
+            width: size,
+            height: size,
+            fit: BoxFit.contain,
+          ),
+          size: size,
+          isCircular: true,
         );
         break;
 
@@ -195,11 +206,12 @@ class ZinLogo extends StatelessWidget {
             color: AppColors.baseDark,
             borderRadius: BorderRadius.circular(size * 0.2),
           ),
-          child: Image.asset(
-            'assets/logos/png/symbol_coin_only.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_symbol_coin_only.svg',
             width: size * 0.8,
             height: size * 0.8,
             fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
         );
         break;
@@ -212,11 +224,12 @@ class ZinLogo extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(size * 0.2),
           ),
-          child: Image.asset(
-            'assets/logos/png/symbol_coin_only.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_symbol_coin_only.svg',
             width: size * 0.8,
             height: size * 0.8,
             fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(AppColors.baseDark, BlendMode.srcIn),
           ),
         );
         break;
@@ -231,11 +244,12 @@ class ZinLogo extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * 0.2),
           ),
           padding: EdgeInsets.all(size * 0.1),
-          child: Image.asset(
-            'assets/logos/png/symbol_coin_only.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_symbol_coin_only.svg',
             width: size * 0.8,
             height: size * 0.8,
             fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(AppColors.primaryHighlight, BlendMode.srcIn),
           ),
         );
         break;
@@ -248,6 +262,23 @@ class ZinLogo extends StatelessWidget {
     );
   }
 
+  /// Adds a drop shadow to the logo for a more sophisticated look
+  Widget _buildShadowedLogo(Widget logo, {required double size, bool isCircular = false, double shadowOpacity = 0.45}) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromRGBO(0, 0, 0, shadowOpacity),
+            blurRadius: 6.0,
+            offset: const Offset(3.0, 3.0),
+          ),
+        ],
+      ),
+      child: logo,
+    );
+  }
+
   Widget _buildText(Color color) {
     // Use the PNG text logo with appropriate styling for each variant
     Widget textWidget;
@@ -255,10 +286,14 @@ class ZinLogo extends StatelessWidget {
     switch (colorScheme) {
       case ZinLogoColorScheme.primaryOnDark:
         // Primary color text
-        textWidget = Image.asset(
-          'assets/logos/png/zin_and_symbol.png',
-          height: size * 0.5,
-          fit: BoxFit.contain,
+        textWidget = _buildShadowedLogo(
+          SvgPicture.asset(
+            'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
+            height: size * 0.5,
+            fit: BoxFit.contain,
+          ),
+          size: size * 0.5,
+          shadowOpacity: 0.4,
         );
         break;
 
@@ -270,10 +305,11 @@ class ZinLogo extends StatelessWidget {
             color: AppColors.baseDark,
             borderRadius: BorderRadius.circular(size * 0.1),
           ),
-          child: Image.asset(
-            'assets/logos/png/zin_and_symbol.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
             height: size * 0.4,
             fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
           ),
         );
         break;
@@ -286,10 +322,11 @@ class ZinLogo extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(size * 0.1),
           ),
-          child: Image.asset(
-            'assets/logos/png/zin_and_symbol.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
             height: size * 0.4,
             fit: BoxFit.contain,
+            colorFilter: const ColorFilter.mode(AppColors.baseDark, BlendMode.srcIn),
           ),
         );
         break;
@@ -302,10 +339,11 @@ class ZinLogo extends StatelessWidget {
             borderRadius: BorderRadius.circular(size * 0.1),
           ),
           padding: EdgeInsets.symmetric(horizontal: size * 0.1),
-          child: Image.asset(
-            'assets/logos/png/zin_and_symbol.png',
+          child: SvgPicture.asset(
+            'assets/logos/svg/ZinApp_zinapp_logo_full.svg',
             height: size * 0.4,
             fit: BoxFit.contain,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn), // Can't be const because color is a parameter
           ),
         );
         break;

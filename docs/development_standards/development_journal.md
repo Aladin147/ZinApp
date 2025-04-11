@@ -1,5 +1,31 @@
 # Development Journal
 
+## 2024-04-11: Fixed SVG Rendering Issues
+
+### Work Completed
+- Fixed SVG rendering issues in the ZinLogo component
+- Optimized SVG files for better compatibility with Flutter
+- Implemented drop shadows using Flutter's BoxShadow
+- Updated the ZinLogo component to use SVG files instead of PNG
+
+### Technical Decisions
+- Removed internal CSS from SVG files and used presentation attributes instead
+- Reduced decimal precision in SVG files for better performance
+- Removed filter effects (drop shadows) from SVG files
+- Implemented drop shadows using Flutter's BoxDecoration and BoxShadow
+- Used ColorFilter to apply different colors to the same SVG
+
+### SVG Optimization Guidelines
+- Export SVGs from Adobe Illustrator with presentation attributes instead of internal CSS
+- Set decimal precision to 1 or 2 instead of 10
+- Avoid filters, masks, and other complex SVG features
+- Use basic shapes and paths for better compatibility
+
+### Future Improvements
+- Create a more comprehensive SVG asset management system
+- Implement caching for SVG assets to improve performance
+- Consider using vector_graphics package for more advanced SVG features
+
 ## 2024-04-11: Improved Typography on Light Backgrounds
 
 ### Work Completed
