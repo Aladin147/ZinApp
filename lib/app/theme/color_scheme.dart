@@ -16,7 +16,8 @@ abstract class AppColors {
   // Text Colors (Direct Hex for simplicity)
   static const Color textPrimary = Color(0xFFFCFBF9); // On dark backgrounds
   static const Color textSecondary = Color(0xFFB7C0C9); // On dark backgrounds
-  static const Color textInverted = Color(0xFF232D30); // On light backgrounds
+  static const Color textInverted = Color(0xFF1A2326); // On light backgrounds (darker for better contrast)
+  static const Color textInvertedSecondary = Color(0xFF394548); // Secondary text on light backgrounds
   static const Color textOnHighlight = Color(0xFF232D30); // On primaryHighlight background
   static const Color textDisabled = Color(0xFF7A848C);
   static const Color textLink = Color(0xFF8CBACD); // Same as coolBlue
@@ -34,21 +35,18 @@ const zinappColorScheme = ColorScheme(
   onSecondary: AppColors.textInverted, // Text/icons on secondary color
 
   error: AppColors.coral, // Error indication
-  onError: AppColors.textInverted, // Text/icons on error color
-
-  background: AppColors.baseDark, // Default screen background
-  onBackground: AppColors.textPrimary, // Default text color on background
+  onError: AppColors.textInverted, // Default text color on background
 
   surface: AppColors.baseDark, // Default surface color for cards, dialogs etc. (can be overridden)
   onSurface: AppColors.textPrimary, // Default text color on surface
 
   // --- Less commonly used, provide sensible defaults ---
-  surfaceVariant: Color(0xFF303A3E), // Slightly lighter dark surface
+  surfaceContainerHighest: Color(0xFF303A3E), // Slightly lighter dark surface
   onSurfaceVariant: AppColors.textSecondary,
   outline: AppColors.textDisabled,
   outlineVariant: Color(0xFF505A5E),
   shadow: Colors.black,
-  scrim: Colors.black.withOpacity(0.5),
+  scrim: Color(0x80000000), // Black with 50% opacity
   inverseSurface: AppColors.canvasLight, // For elements needing light bg
   onInverseSurface: AppColors.textInverted,
   inversePrimary: AppColors.baseDark, // Contrasting color for primary on light bg

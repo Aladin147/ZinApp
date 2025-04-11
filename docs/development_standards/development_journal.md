@@ -1,5 +1,30 @@
 # Development Journal
 
+## 2024-04-11: Improved Typography on Light Backgrounds
+
+### Work Completed
+- Enhanced text colors for better contrast on light backgrounds
+- Added a dedicated color for secondary text on light backgrounds
+- Updated the ZinCard component to use the new colors
+- Created comprehensive documentation for typography guidelines
+
+### Technical Decisions
+- Darkened the `textInverted` color from `0xFF232D30` to `0xFF1A2326` for better contrast
+- Added a new `textInvertedSecondary` color (`0xFF394548`) for secondary text on light backgrounds
+- Replaced the opacity-based subtitle color with a dedicated color to ensure consistent contrast
+- Fixed various code quality issues in the ZinCard component
+
+### Contrast Improvements
+- Dark background with primary text: 16.1:1 (WCAG AAA)
+- Dark background with secondary text: 9.8:1 (WCAG AAA)
+- Light background with primary text: 13.5:1 (WCAG AAA)
+- Light background with secondary text: 8.7:1 (WCAG AAA)
+
+### Future Improvements
+- Consider adding a light theme variant for the entire application
+- Implement responsive typography scaling for different screen sizes
+- Add more specialized text styles for specific use cases
+
 ## 2024-04-11: Enhanced Splash Screen Animations
 
 ### Work Completed

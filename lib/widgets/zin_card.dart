@@ -5,13 +5,13 @@ import 'package:zinapp_v2/app/theme/color_scheme.dart';
 enum ZinCardVariant {
   /// Standard card with dark background (default)
   standard,
-  
+
   /// Elevated card with higher elevation
   elevated,
-  
+
   /// Outlined card with border
   outlined,
-  
+
   /// Light card with light background
   light
 }
@@ -38,43 +38,43 @@ enum ZinCardVariant {
 class ZinCard extends StatelessWidget {
   /// The main content to display within the card
   final Widget child;
-  
+
   /// Optional title to display at the top of the card
   final String? title;
-  
+
   /// Optional subtitle to display below the title
   final String? subtitle;
-  
+
   /// Optional trailing widget to display in the header (e.g., an icon button)
   final Widget? trailing;
-  
+
   /// Optional footer widget to display at the bottom of the card
   final Widget? footer;
-  
+
   /// Card style variant
   final ZinCardVariant variant;
-  
+
   /// Optional padding inside the card content
   final EdgeInsetsGeometry? padding;
-  
+
   /// Optional margin around the card
   final EdgeInsetsGeometry? margin;
-  
+
   /// Optional background color (overrides the variant default)
   final Color? backgroundColor;
-  
+
   /// Optional border radius (overrides the theme default)
   final BorderRadius? borderRadius;
-  
+
   /// Optional elevation (overrides the variant default)
   final double? elevation;
-  
+
   /// Optional callback when the card is tapped
   final VoidCallback? onTap;
-  
+
   /// Whether to show a divider between header and content
   final bool showHeaderDivider;
-  
+
   /// Whether to show a divider between content and footer
   final bool showFooterDivider;
 
@@ -170,22 +170,20 @@ class ZinCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cardTheme = theme.cardTheme;
-    
+
     // Determine card properties based on variant
     final Color effectiveBackgroundColor = backgroundColor ?? _getBackgroundColor(variant);
     final double effectiveElevation = elevation ?? _getElevation(variant);
     final BorderRadius effectiveBorderRadius = borderRadius ?? BorderRadius.circular(16.0);
     final EdgeInsetsGeometry effectiveMargin = margin ?? const EdgeInsets.all(8.0);
     final EdgeInsetsGeometry effectiveContentPadding = padding ?? const EdgeInsets.all(16.0);
-    
+
     // Build card content
     Widget cardContent = _buildCardContent(
       context,
       effectiveContentPadding,
     );
-    
+
     // Apply InkWell for tap effect if onTap is provided
     if (onTap != null) {
       cardContent = InkWell(
@@ -196,7 +194,7 @@ class ZinCard extends StatelessWidget {
         child: cardContent,
       );
     }
-    
+
     // Build the card with appropriate styling
     return Card(
       margin: effectiveMargin,
@@ -205,14 +203,14 @@ class ZinCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: effectiveBorderRadius,
         side: variant == ZinCardVariant.outlined
-            ? BorderSide(color: AppColors.textDisabled, width: 1.0)
+            ? const BorderSide(color: AppColors.textDisabled, width: 1.0)
             : BorderSide.none,
       ),
       clipBehavior: Clip.antiAlias, // Ensure content respects rounded corners
       child: cardContent,
     );
   }
-  
+
   /// Builds the complete card content including header, body, and footer
   Widget _buildCardContent(
     BuildContext context,
@@ -220,36 +218,36 @@ class ZinCard extends StatelessWidget {
   ) {
     final hasHeader = title != null || subtitle != null || trailing != null;
     final hasFooter = footer != null;
-    
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Header section (if any)
         if (hasHeader) _buildHeader(context),
-        
+
         // Header divider (if enabled and has header)
         if (hasHeader && showHeaderDivider) _buildDivider(),
-        
+
         // Main content
         Padding(
           padding: contentPadding,
           child: child,
         ),
-        
+
         // Footer divider (if enabled and has footer)
         if (hasFooter && showFooterDivider) _buildDivider(),
-        
+
         // Footer section (if any)
         if (hasFooter) footer!,
       ],
     );
   }
-  
+
   /// Builds the card header with title, subtitle, and trailing widget
   Widget _buildHeader(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Row(
@@ -281,23 +279,23 @@ class ZinCard extends StatelessWidget {
                 ],
               ),
             ),
-          
+
           // Trailing widget
           if (trailing != null) trailing!,
         ],
       ),
     );
   }
-  
+
   /// Builds a divider with appropriate styling
   Widget _buildDivider() {
-    return Divider(
+    return const Divider(
       height: 1.0,
       thickness: 1.0,
-      color: AppColors.textDisabled.withOpacity(0.2),
+      color: Color(0x337A848C), // AppColors.textDisabled with 20% opacity
     );
   }
-  
+
   /// Gets the appropriate background color based on variant
   Color _getBackgroundColor(ZinCardVariant variant) {
     switch (variant) {
@@ -311,7 +309,7 @@ class ZinCard extends StatelessWidget {
         return AppColors.canvasLight;
     }
   }
-  
+
   /// Gets the appropriate elevation based on variant
   double _getElevation(ZinCardVariant variant) {
     switch (variant) {
@@ -325,7 +323,7 @@ class ZinCard extends StatelessWidget {
         return 1.0;
     }
   }
-  
+
   /// Gets the appropriate text color based on variant
   Color _getTextColor(ZinCardVariant variant) {
     switch (variant) {
@@ -335,12 +333,12 @@ class ZinCard extends StatelessWidget {
         return AppColors.textPrimary;
     }
   }
-  
+
   /// Gets the appropriate subtitle color based on variant
   Color _getSubtitleColor(ZinCardVariant variant) {
     switch (variant) {
       case ZinCardVariant.light:
-        return AppColors.textInverted.withOpacity(0.7);
+        return AppColors.textInvertedSecondary; // Use the new dedicated color for secondary text on light backgrounds
       default:
         return AppColors.textSecondary;
     }
