@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/app/theme/color_zones.dart';
 import 'package:zinapp_v2/widgets/animated_card.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
+import 'package:zinapp_v2/widgets/premium_card.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 import 'package:zinapp_v2/widgets/zin_badge.dart';
@@ -71,6 +73,14 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             const SizedBox(height: 32),
             _buildSectionTitle('Brand Backgrounds'),
             _buildBackgroundShowcase(),
+
+            const SizedBox(height: 32),
+            _buildSectionTitle('Premium Cards'),
+            _buildPremiumCardShowcase(),
+
+            const SizedBox(height: 32),
+            _buildSectionTitle('Color Zones'),
+            _buildColorZoneShowcase(),
 
             const SizedBox(height: 32),
             _buildSectionTitle('Avatar Variants'),
@@ -703,6 +713,246 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         const SizedBox(height: 8),
         Text(
           label,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  /// Builds a showcase of premium cards
+  Widget _buildPremiumCardShowcase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Premium cards with enhanced visual effects'),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 24,
+          children: [
+            // Dark Premium Card
+            _buildPremiumCardVariant(
+              'Dark Card',
+              PremiumCardVariant.dark,
+              false,
+            ),
+
+            // Light Premium Card
+            _buildPremiumCardVariant(
+              'Light Card',
+              PremiumCardVariant.light,
+              false,
+            ),
+
+            // Cool Premium Card
+            _buildPremiumCardVariant(
+              'Cool Accent Card',
+              PremiumCardVariant.cool,
+              false,
+            ),
+
+            // Coral Premium Card
+            _buildPremiumCardVariant(
+              'Coral Accent Card',
+              PremiumCardVariant.coral,
+              false,
+            ),
+
+            // Jade Premium Card
+            _buildPremiumCardVariant(
+              'Jade Accent Card',
+              PremiumCardVariant.jade,
+              false,
+            ),
+
+            // Featured Premium Card with Pattern
+            _buildPremiumCardVariant(
+              'Featured Card with Pattern',
+              PremiumCardVariant.featured,
+              true,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a single premium card variant
+  Widget _buildPremiumCardVariant(String label, PremiumCardVariant variant, bool showPattern) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 280,
+          child: PremiumCard(
+            variant: variant,
+            showPattern: showPattern,
+            onTap: () {},
+            header: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Premium card with enhanced animations and visual effects.',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 16),
+                ZinButton(
+                  label: 'Interactive Button',
+                  onPressed: () {},
+                ),
+              ],
+            ),
+            footer: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Hover to see effects',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  /// Builds a showcase of color zones
+  Widget _buildColorZoneShowcase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Color zones for maintaining brand identity with accessibility'),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 24,
+          children: [
+            // Interactive Zone
+            _buildColorZoneCard(
+              'Interactive Zone',
+              ColorZones.interactiveZone.background,
+              ColorZones.interactiveZone.textPrimary,
+              ColorZones.interactiveZone.textSecondary,
+              ColorZones.interactiveZone.action,
+              'Used for navigation, actions, and interactive elements',
+              'Dark background with neon accents',
+            ),
+
+            // Content Zone
+            _buildColorZoneCard(
+              'Content Zone',
+              ColorZones.contentZone.background,
+              ColorZones.contentZone.textPrimary,
+              ColorZones.contentZone.textSecondary,
+              ColorZones.contentZone.action,
+              'Used for reading-focused screens and content',
+              'Cream background with dark text',
+            ),
+
+            // Accent Zone - Cool
+            _buildColorZoneCard(
+              'Accent Zone - Cool',
+              ColorZones.accentZone.coolBackground,
+              ColorZones.accentZone.textOnCool,
+              ColorZones.accentZone.textOnCool.withOpacity(0.7),
+              ColorZones.accentZone.actionOnCool,
+              'Used for featured content and categories',
+              'Accent color backgrounds for emphasis',
+            ),
+
+            // Brand Zone
+            _buildColorZoneCard(
+              'Brand Zone',
+              ColorZones.brandZone.background,
+              ColorZones.brandZone.textOnDark,
+              ColorZones.brandZone.textOnDark.withOpacity(0.7),
+              ColorZones.brandZone.brandPrimary,
+              'Used for splash screen and onboarding',
+              'Prominent brand presence',
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a color zone card
+  Widget _buildColorZoneCard(
+    String title,
+    Color backgroundColor,
+    Color textColor,
+    Color secondaryTextColor,
+    Color actionColor,
+    String description,
+    String subtitle,
+  ) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 280,
+          child: Card(
+            color: backgroundColor,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: textColor,
+                        ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: secondaryTextColor,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: textColor,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: actionColor,
+                      foregroundColor: backgroundColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text('Action Button'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
