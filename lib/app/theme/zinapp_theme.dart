@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 // Assuming these files exist in the same directory or are imported correctly
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/app/theme/text_theme.dart';
+import 'package:zinapp_v2/app/transitions/zin_page_transitions.dart';
 
 // Define the main application theme
 final ThemeData zinappTheme = ThemeData(
   brightness: Brightness.dark, // Base theme brightness
   colorScheme: zinappColorScheme, // Use the defined V2 color scheme
   textTheme: zinappTextTheme, // Use the defined V2 text theme
-  fontFamily: primaryFontFamily, // Set default font family (Urbanist)
+  fontFamily: 'Roboto', // Use system default font
 
   // Apply base background color globally
   scaffoldBackgroundColor: AppColors.baseDark,
   // Use baseDark for general card/dialog backgrounds unless overridden
   cardColor: AppColors.baseDark,
-  dialogBackgroundColor: AppColors.baseDark,
+
+  // Use custom page transitions
+  pageTransitionsTheme: const ZinPageTransitions(),
 
   // --- Component Theme Overrides (Examples) ---
 
@@ -45,7 +48,7 @@ final ThemeData zinappTheme = ThemeData(
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       foregroundColor: zinappColorScheme.primary, // Highlight color for text/border
-      side: BorderSide(color: zinappColorScheme.primary, width: 1.5),
+      side: const BorderSide(color: AppColors.primaryHighlight, width: 1.5),
       textStyle: zinappTextTheme.labelLarge,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       shape: RoundedRectangleBorder(
@@ -81,7 +84,7 @@ final ThemeData zinappTheme = ThemeData(
   // Input Decoration Theme (for TextFields)
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: zinappColorScheme.surfaceVariant, // Slightly lighter dark bg for input
+    fillColor: zinappColorScheme.surfaceContainerHighest, // Slightly lighter dark bg for input
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
     hintStyle: zinappTextTheme.bodyMedium?.copyWith(color: AppColors.textDisabled),
     labelStyle: zinappTextTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
@@ -96,17 +99,26 @@ final ThemeData zinappTheme = ThemeData(
     ),
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide(color: zinappColorScheme.primary, width: 1.5), // Highlight border on focus
+      borderSide: const BorderSide(color: AppColors.primaryHighlight, width: 1.5), // Highlight border on focus
     ),
     errorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide(color: zinappColorScheme.error, width: 1.5),
+      borderSide: const BorderSide(color: AppColors.coral, width: 1.5),
     ),
     focusedErrorBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),
-      borderSide: BorderSide(color: zinappColorScheme.error, width: 2.0),
+      borderSide: const BorderSide(color: AppColors.coral, width: 2.0),
     ),
     errorStyle: zinappTextTheme.bodySmall?.copyWith(color: zinappColorScheme.error),
+  ),
+
+  // Dialog Theme
+  dialogTheme: const DialogThemeData(
+    backgroundColor: AppColors.baseDark,
+    elevation: 8.0,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(16.0)),
+    ),
   ),
 
   // Add other component themes as needed (ChipTheme, DialogTheme, etc.)
