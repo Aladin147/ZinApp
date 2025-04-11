@@ -264,18 +264,42 @@ class ZinLogo extends StatelessWidget {
 
   /// Adds a drop shadow to the logo for a more sophisticated look
   Widget _buildShadowedLogo(Widget logo, {required double size, bool isCircular = false, double shadowOpacity = 0.45}) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: isCircular ? BoxShape.circle : BoxShape.rectangle,
-        boxShadow: [
-          BoxShadow(
-            color: Color.fromRGBO(0, 0, 0, shadowOpacity),
-            blurRadius: 6.0,
-            offset: const Offset(3.0, 3.0),
+    // Create a more refined shadow effect by using multiple layers
+    return Stack(
+      children: [
+        // Shadow layer 1 - larger blur, more transparent
+        Positioned(
+          left: 2.0,
+          top: 2.0,
+          child: Opacity(
+            opacity: shadowOpacity * 0.7,
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: logo,
+            ),
           ),
-        ],
-      ),
-      child: logo,
+        ),
+        // Shadow layer 2 - smaller blur, less transparent
+        Positioned(
+          left: 1.0,
+          top: 1.0,
+          child: Opacity(
+            opacity: shadowOpacity * 0.9,
+            child: ColorFiltered(
+              colorFilter: const ColorFilter.mode(
+                Colors.black,
+                BlendMode.srcIn,
+              ),
+              child: logo,
+            ),
+          ),
+        ),
+        // Original logo on top
+        logo,
+      ],
     );
   }
 
