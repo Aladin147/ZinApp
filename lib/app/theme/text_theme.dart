@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
-// Assuming color_scheme.dart is in the same directory or imported correctly
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 
-// Define font family name (ensure this matches the declaration in pubspec.yaml)
-const String primaryFontFamily = 'Urbanist';
-
-// Define font weights (adjust mapping if font file uses different names for weights)
+// Define font weights
 const FontWeight regularWeight = FontWeight.w400;
 const FontWeight semiBoldWeight = FontWeight.w600;
 const FontWeight boldWeight = FontWeight.w800; // Corresponds to ExtraBold in some fonts
 
-// Define base text styles using the primary font and weights
-// Sizes are base values; responsive scaling can be applied later if needed.
+// Define base text styles
 abstract class AppTextStyles {
   // Headings
   static const TextStyle headingLarge = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 28.0,
     fontWeight: boldWeight,
     height: 1.3, // line-height = 1.3 * font-size
@@ -24,7 +18,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle headingMedium = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 24.0,
     fontWeight: boldWeight,
     height: 1.3,
@@ -33,7 +26,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle headingSmall = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 20.0,
     fontWeight: boldWeight,
     height: 1.3,
@@ -43,7 +35,6 @@ abstract class AppTextStyles {
 
   // Body Text
   static const TextStyle bodyLarge = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 18.0,
     fontWeight: regularWeight,
     height: 1.5,
@@ -52,7 +43,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle body = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 16.0,
     fontWeight: regularWeight,
     height: 1.5,
@@ -61,7 +51,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle bodySmall = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 14.0,
     fontWeight: regularWeight,
     height: 1.5,
@@ -70,7 +59,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle caption = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 13.0,
     fontWeight: regularWeight,
     height: 1.5,
@@ -80,7 +68,6 @@ abstract class AppTextStyles {
 
   // Interactive Text
   static const TextStyle buttonLarge = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 18.0, // Matches bodyLarge size
     fontWeight: semiBoldWeight,
     height: 1.2,
@@ -89,7 +76,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle buttonMedium = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 16.0, // Matches body size
     fontWeight: semiBoldWeight,
     height: 1.2,
@@ -97,7 +83,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle buttonSmall = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 14.0, // Matches bodySmall size
     fontWeight: semiBoldWeight,
     height: 1.2,
@@ -105,7 +90,6 @@ abstract class AppTextStyles {
   );
 
   static const TextStyle link = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 16.0, // Matches body size
     fontWeight: semiBoldWeight,
     height: 1.5,
@@ -116,7 +100,6 @@ abstract class AppTextStyles {
 
   // Special Text
   static const TextStyle token = TextStyle(
-    fontFamily: primaryFontFamily,
     fontSize: 16.0, // Example size, adjust as needed
     fontWeight: boldWeight, // Typically bold
     color: AppColors.textToken, // Specific token color
@@ -124,7 +107,7 @@ abstract class AppTextStyles {
 }
 
 // Create the TextTheme for ThemeData
-const zinappTextTheme = TextTheme(
+const TextTheme zinappTextTheme = TextTheme(
   // Display styles (Larger headings, less common in mobile apps)
   // displayLarge: AppTextStyles.headingLarge.copyWith(fontSize: 57), // Example mapping
   // displayMedium: AppTextStyles.headingLarge.copyWith(fontSize: 45),
@@ -136,9 +119,27 @@ const zinappTextTheme = TextTheme(
   headlineSmall: AppTextStyles.headingSmall, // Use for card titles, sub-sections
 
   // Title styles (Often used for AppBar titles, dialog titles)
-  titleLarge: AppTextStyles.headingSmall.copyWith(fontWeight: semiBoldWeight), // Example mapping
-  titleMedium: AppTextStyles.bodyLarge.copyWith(fontWeight: semiBoldWeight), // Example mapping
-  titleSmall: AppTextStyles.body.copyWith(fontWeight: semiBoldWeight), // Example mapping
+  titleLarge: TextStyle(
+    fontSize: 20.0,
+    fontWeight: semiBoldWeight,
+    height: 1.3,
+    letterSpacing: -0.25,
+    color: AppColors.textPrimary,
+  ), // Based on headingSmall
+  titleMedium: TextStyle(
+    fontSize: 18.0,
+    fontWeight: semiBoldWeight,
+    height: 1.5,
+    letterSpacing: 0.0,
+    color: AppColors.textPrimary,
+  ), // Based on bodyLarge
+  titleSmall: TextStyle(
+    fontSize: 16.0,
+    fontWeight: semiBoldWeight,
+    height: 1.5,
+    letterSpacing: 0.0,
+    color: AppColors.textPrimary,
+  ), // Based on body
 
   // Body styles (Standard text)
   bodyLarge: AppTextStyles.bodyLarge,

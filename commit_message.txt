@@ -1,0 +1,11 @@
+feat(ui): Implement ZinLogo component with multiple variants
+
+- Add ZinLogo component with support for different variants (full, icon, text)
+- Implement multiple color schemes (primary, white on dark, dark on light, outline)
+- Add animation support for the logo
+- Temporarily use PNG files due to SVG rendering issues
+- Document development decisions and future improvements
+
+This implementation provides a consistent way to display the ZinApp logo
+throughout the application with appropriate styling for different contexts.
+SVG implementation will be improved in a future update.

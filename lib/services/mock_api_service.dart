@@ -1,21 +1,99 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/services.dart' show rootBundle;
-import 'api_service.dart';
+import 'package:zinapp_v2/services/api_service.dart';
 
-// TODO: Replace placeholder models with actual model imports
-// import '../models/models.dart';
+import 'package:zinapp_v2/models/comment.dart';
+import 'package:zinapp_v2/models/post.dart';
+import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/models/user_profile.dart';
+// --- End Placeholder Models ---
 
-/// Mock implementation of the ApiService using local data (initially placeholders).
+
+/// Mock implementation of the ApiService using local JSON data.
 /// Simulates network delays and basic success/failure scenarios.
 class MockApiService implements ApiService {
-  // TODO: Implement loading and caching of mock JSON data from assets
-  // For now, using placeholder data and simulated delays.
   final Random _random = Random();
+  static const String _mockDataPath = 'assets/mock_data';
+
+  // Cache for loaded mock data to avoid repeated file reads
+  final Map<String, List<dynamic>> _mockDataCache = {};
 
   Future<void> _simulateDelay({int minMillis = 200, int maxMillis = 800}) async {
     final delay = minMillis + _random.nextInt(maxMillis - minMillis);
     await Future.delayed(Duration(milliseconds: delay));
+  }
+
+  /// Loads and caches a JSON file from the assets/mock_data directory.
+  Future<List<dynamic>> _loadJsonList(String fileName) async {
+    if (_mockDataCache.containsKey(fileName)) {
+      print("Using cached data for $fileName");
+      return _mockDataCache[fileName]!;
+    }
+    try {
+      print("Loading mock data from $fileName");
+      final String jsonString = await rootBundle.loadString('$_mockDataPath/$fileName');
+      print("Successfully loaded JSON string from $fileName");
+      final List<dynamic> jsonList = jsonDecode(jsonString) as List<dynamic>;
+      print("Successfully decoded JSON from $fileName: ${jsonList.length} items");
+      _mockDataCache[fileName] = jsonList;
+      return jsonList;
+    } catch (e) {
+      print("Error loading mock JSON asset $fileName: $e");
+      // Create some fallback data for testing
+      if (fileName == 'users.json') {
+        print("Creating fallback user data");
+        final fallbackData = [
+          {
+            "userId": "user123",
+            "username": "Hassan",
+            "profilePictureUrl": "",
+            "xp": 150,
+            "zinTokens": 50,
+            "level": "Silver",
+            "followingStylists": ["stylist456"],
+            "followingUsers": [],
+            "bookingHistory": []
+          }
+        ];
+        _mockDataCache[fileName] = fallbackData;
+        return fallbackData;
+      } else if (fileName == 'posts.json') {
+        print("Creating fallback post data");
+        final fallbackData = [
+          {
+            "postId": "post001",
+            "userId": "user123",
+            "type": "general",
+            "imageUrl": "",
+            "caption": "This is a test post",
+            "timestamp": DateTime.now().toIso8601String(),
+            "likes": [],
+            "comments": []
+          }
+        ];
+        _mockDataCache[fileName] = fallbackData;
+        return fallbackData;
+      } else if (fileName == 'stylists.json') {
+        print("Creating fallback stylist data");
+        final fallbackData = [
+          {
+            "stylistId": "stylist456",
+            "name": "Sarah J.",
+            "profilePictureUrl": "",
+            "rating": 4.8,
+            "specialties": ["Fades", "Braids"],
+            "servicesOffered": [],
+            "availability": { "Monday": "9am-5pm" },
+            "isAvailableNow": true,
+            "location": { "latitude": 34.0, "longitude": -6.8 }
+          }
+        ];
+        _mockDataCache[fileName] = fallbackData;
+        return fallbackData;
+      }
+      return []; // Return empty list on error
+    }
   }
 
   // --- Method Implementations ---
@@ -24,11 +102,16 @@ class MockApiService implements ApiService {
   Future<UserProfile> getUserProfile(String userId) async {
     await _simulateDelay();
     print('MockApiService: Fetching profile for $userId');
-    // TODO: Load from users.json and return actual UserProfile model
-    if (userId == 'user123') { // Example user
-      return const UserProfile(/* Mock data here */);
+    final users = await _loadJsonList('users.json');
+    final userData = users.firstWhere(
+      (user) => user is Map<String, dynamic> && user['userId'] == userId,
+      orElse: () => null,
+    );
+
+    if (userData != null) {
+      return UserProfile.fromJson(userData as Map<String, dynamic>);
     } else {
-      throw Exception('Mock User not found'); // Simulate not found
+      throw Exception('Mock User not found: $userId'); // Simulate not found
     }
   }
 
@@ -36,10 +119,12 @@ class MockApiService implements ApiService {
   Future<List<Stylist>> getNearbyStylists(double lat, double lon) async {
     await _simulateDelay();
     print('MockApiService: Fetching nearby stylists for $lat, $lon');
-    // TODO: Load from stylists.json and return List<Stylist>
-    // Simulate returning a list of 1-5 stylists
-    final count = 1 + _random.nextInt(5);
-    return List.generate(count, (_) => const Stylist(/* Mock data */));
+    final stylists = await _loadJsonList('stylists.json');
+    // TODO: Implement actual location filtering if needed for mock
+    return stylists
+        .whereType<Map<String, dynamic>>()
+        .map((data) => Stylist.fromJson(data))
+        .toList();
   }
 
   @override
@@ -51,34 +136,39 @@ class MockApiService implements ApiService {
   }) async {
     await _simulateDelay(maxMillis: 1200);
     print('MockApiService: Submitting booking for user $userId, stylist $stylistId');
-    // TODO: Simulate adding to bookings.json
-    // Simulate success/failure randomly or based on input
+    // TODO: Simulate adding to bookings.json (in-memory cache update?)
+    print('WARN: Mock booking submission always returns random success/fail.');
     return _random.nextBool(); // 50% chance of success
   }
 
   @override
   Future<void> updateUserXP(String userId, int xpGained) async {
     await _simulateDelay(minMillis: 50, maxMillis: 200);
-    print('MockApiService: Updating XP for user $userId by $xpGained');
-    // TODO: Implement logic to update mock users.json (in memory or file)
-    // This would likely involve calling a GamificationService internally
+    print('MockApiService: Simulating XP update for user $userId by $xpGained');
+    // TODO: Implement logic to update mock users.json (in-memory cache update?)
+    // This would likely involve calling a separate GamificationService internally
+    // For now, just log it.
   }
 
   @override
   Future<void> updateUserTokens(String userId, int tokensGained) async {
     await _simulateDelay(minMillis: 50, maxMillis: 200);
-    print('MockApiService: Updating Tokens for user $userId by $tokensGained');
-    // TODO: Implement logic to update mock users.json (in memory or file)
-    // This would likely involve calling a GamificationService internally
+    print('MockApiService: Simulating Token update for user $userId by $tokensGained');
+    // TODO: Implement logic to update mock users.json (in-memory cache update?)
+    // This would likely involve calling a separate GamificationService internally
+    // For now, just log it.
   }
 
   @override
   Future<List<Post>> getFeedPosts(String userId) async {
     await _simulateDelay();
     print('MockApiService: Fetching feed posts for $userId');
-    // TODO: Load from posts.json and return List<Post>
-    final count = 5 + _random.nextInt(10); // Simulate 5-14 posts
-    return List.generate(count, (_) => const Post(/* Mock data */));
+    final posts = await _loadJsonList('posts.json');
+     // TODO: Implement filtering/sorting based on userId if needed
+    return posts
+        .whereType<Map<String, dynamic>>()
+        .map((data) => Post.fromJson(data))
+        .toList();
   }
 
   @override
@@ -91,19 +181,12 @@ class MockApiService implements ApiService {
   }) async {
     await _simulateDelay(maxMillis: 600);
     print('MockApiService: Submitting rating for booking $bookingId by user $userId');
-    // TODO: Simulate adding to ratings.json
-    // TODO: Trigger XP update via updateUserXP
+    // TODO: Simulate adding to ratings.json (in-memory cache update?)
+    // TODO: Trigger XP update via updateUserXP call
+    print('WARN: Mock rating submission always returns true.');
+    // Simulate calling XP update
+    updateUserXP(userId, 5); // Example XP for rating
     return true; // Assume success for now
   }
 
-  // --- Helper to load JSON (Example - needs refinement for actual use) ---
-  // Future<Map<String, dynamic>> _loadJsonAsset(String assetPath) async {
-  //   try {
-  //     final String jsonString = await rootBundle.loadString(assetPath);
-  //     return jsonDecode(jsonString) as Map<String, dynamic>;
-  //   } catch (e) {
-  //     print("Error loading mock JSON asset $assetPath: $e");
-  //     return {};
-  //   }
-  // }
 }

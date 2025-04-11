@@ -1,9 +1,25 @@
 import 'package:flutter/material.dart';
-// Assuming theme file is correctly located and named
+import 'package:provider/provider.dart';
+import 'package:zinapp_v2/app/router.dart'; // Import the router
 import 'package:zinapp_v2/app/theme/zinapp_theme.dart';
+import 'package:zinapp_v2/features/auth/providers/auth_provider.dart';
+import 'package:zinapp_v2/features/auth/repositories/auth_repository.dart';
+import 'package:zinapp_v2/features/auth/services/mock_auth_service.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Create auth service and repository
+  final authService = MockAuthService();
+  final authRepository = AuthRepository(authService);
+
+  // Wrap the entire app in a MultiProvider
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider(authRepository)),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -12,23 +28,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ZinApp V2', // Updated title
+    // Use MaterialApp.router to integrate go_router
+    return MaterialApp.router(
+      title: 'ZinApp V2',
       theme: zinappTheme, // Apply the custom theme
-      debugShowCheckedModeBanner: false, // Optional: hide debug banner
-      // TODO: Replace with actual initial screen/router later
-      home: Scaffold(
-        body: Center(
-          // Use Theme.of(context) to access theme properties
-          child: Text(
-            'ZinApp V2 Initial Setup',
-            // Example of using defined TextTheme style
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      // Provide the router configuration
+      routerConfig: router,
     );
   }
 }
-
-// Removed default MyHomePage and _MyHomePageState classes

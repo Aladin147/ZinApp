@@ -1,0 +1,2 @@
+This is a placeholder file to ensure the directory is created in git.
+Actual post images should be placed in this directory.

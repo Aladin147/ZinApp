@@ -1,11 +1,6 @@
-// Define models path - adjust if models are structured differently
-// It's often good practice to have a barrel file (e.g., models.dart)
-// import '../models/models.dart';
-// For now, assume models will be imported directly or via a barrel file later.
-// Placeholder imports:
-import '../models/user_profile.dart'; // Placeholder
-import '../models/stylist.dart'; // Placeholder
-import '../models/post.dart'; // Placeholder
+import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/models/post.dart';
 
 /// Abstract interface for all data fetching and manipulation services.
 /// This allows swapping between mock and real implementations.
@@ -48,7 +43,4 @@ abstract class ApiService {
   // e.g., getServices(), getBookingDetails(bookingId), createPost(), likePost() etc.
 }
 
-// Define placeholder models for compilation - replace with actual models later
-class UserProfile { const UserProfile(); }
-class Stylist { const Stylist(); }
-class Post { const Post(); }
+// Models are now imported from their respective files
