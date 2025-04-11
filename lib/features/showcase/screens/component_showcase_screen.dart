@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/app/theme/color_zones.dart';
+import 'package:zinapp_v2/widgets/accessibility_aware_text.dart';
 import 'package:zinapp_v2/widgets/animated_card.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
 import 'package:zinapp_v2/widgets/premium_card.dart';
@@ -81,6 +82,10 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             const SizedBox(height: 32),
             _buildSectionTitle('Color Zones'),
             _buildColorZoneShowcase(),
+
+            const SizedBox(height: 32),
+            _buildSectionTitle('Accessibility Components'),
+            _buildAccessibilityShowcase(),
 
             const SizedBox(height: 32),
             _buildSectionTitle('Avatar Variants'),
@@ -947,6 +952,98 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  /// Builds a showcase of accessibility components
+  Widget _buildAccessibilityShowcase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Components that automatically ensure proper contrast'),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 24,
+          children: [
+            // Accessibility-aware text on dark background
+            _buildAccessibilityCard(
+              'Text on Dark Background',
+              AppColors.baseDark,
+              false,
+            ),
+
+            // Accessibility-aware text on cream background
+            _buildAccessibilityCard(
+              'Text on Cream Background',
+              AppColors.canvasLight,
+              false,
+            ),
+
+            // Accessibility-aware text on neon background
+            _buildAccessibilityCard(
+              'Text on Neon Background',
+              AppColors.primaryHighlight,
+              false,
+            ),
+
+            // Accessibility-aware text on cool blue background
+            _buildAccessibilityCard(
+              'Text on Cool Blue Background',
+              AppColors.coolBlue,
+              false,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a card showcasing accessibility-aware components
+  Widget _buildAccessibilityCard(String title, Color backgroundColor, bool showWarning) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 280,
+          child: AccessibilityAwareCard(
+            backgroundColor: backgroundColor,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AccessibilityAwareText(
+                  text: title,
+                  backgroundColor: backgroundColor,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                AccessibilityAwareText(
+                  text: 'This text automatically adjusts its color to ensure proper contrast with the background.',
+                  backgroundColor: backgroundColor,
+                  isSecondaryText: true,
+                ),
+                const SizedBox(height: 16),
+                AccessibilityAwareButton(
+                  label: 'Primary Button',
+                  backgroundColor: backgroundColor,
+                  onPressed: () {},
+                ),
+                const SizedBox(height: 8),
+                AccessibilityAwareButton(
+                  label: 'Secondary Button',
+                  backgroundColor: backgroundColor,
+                  onPressed: () {},
+                  variant: ButtonVariant.secondary,
+                ),
+              ],
             ),
           ),
         ),
