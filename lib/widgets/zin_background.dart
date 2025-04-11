@@ -112,11 +112,12 @@ class _ZinBackgroundState extends State<ZinBackground> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final Color effectiveBackgroundColor = widget.backgroundColor ?? AppColors.baseDark;
+    // Create pattern color with proper opacity
     final Color effectivePatternColor = widget.patternColor ??
         Color.fromRGBO(
-          AppColors.primaryHighlight.r.toInt(),
-          AppColors.primaryHighlight.g.toInt(),
-          AppColors.primaryHighlight.b.toInt(),
+          210, // D2 in hex
+          255, // FF in hex
+          77,  // 4D in hex
           widget.patternOpacity,
         );
 
