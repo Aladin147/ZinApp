@@ -6,7 +6,7 @@ import 'package:zinapp_v2/app/transitions/zin_navigation.dart';
 import 'package:zinapp_v2/app/transitions/zin_navigation_observer.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/widgets/splash_screen.dart';
-import 'package:zinapp_v2/widgets/zin_background.dart';
+// Import ZinBackgroundVariant through zin_navigation.dart
 // TODO: Import additional screen files when they are created
 // import 'package:zinapp_v2/features/auth/screens/login_screen.dart';
 // import 'package:zinapp_v2/features/home/screens/home_screen.dart'; // Example home
@@ -47,7 +47,7 @@ final GoRouter router = GoRouter(
             onGetStarted: () => context.go(AppRoutes.showcase),
           ),
           name: AppRoutes.landing,
-          backgroundPattern: ZinBackgroundPattern.featured,
+          backgroundVariant: ZinBackgroundVariant.featured,
         );
       },
     ),
@@ -60,7 +60,7 @@ final GoRouter router = GoRouter(
         return ZinNavigation.createGoRouterPage(
           child: const ComponentShowcaseScreen(),
           name: AppRoutes.showcase,
-          backgroundPattern: ZinBackgroundPattern.minimal,
+          backgroundVariant: ZinBackgroundVariant.minimal,
           backgroundColor: AppColors.baseDark,
         );
       },
@@ -76,7 +76,7 @@ final GoRouter router = GoRouter(
         return ZinNavigation.createGoRouterPage(
           child: const PlaceholderScreen(title: 'Home Screen'),
           name: AppRoutes.home,
-          backgroundPattern: ZinBackgroundPattern.subtle,
+          backgroundVariant: ZinBackgroundVariant.subtle,
         );
       },
       // TODO: Add nested routes for features accessible from home

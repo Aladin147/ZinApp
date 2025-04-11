@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/app/transitions/zin_route.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 
+// Re-export ZinBackgroundVariant for convenience
+export 'package:zinapp_v2/widgets/zin_background.dart' show ZinBackgroundVariant;
+
 /// A utility class for ZinApp navigation.
 ///
 /// Provides helper methods for navigating with custom ZinApp transitions.
@@ -14,14 +17,14 @@ class ZinNavigation {
   static Future<T?> push<T extends Object?>(
     BuildContext context,
     Widget page, {
-    ZinBackgroundPattern backgroundPattern = ZinBackgroundPattern.minimal,
+    ZinBackgroundVariant backgroundVariant = ZinBackgroundVariant.minimal,
     Color? backgroundColor,
     String? routeName,
   }) {
     return Navigator.of(context).push<T>(
       ZinRoute<T>(
         settings: RouteSettings(name: routeName),
-        backgroundPattern: backgroundPattern,
+        backgroundVariant: backgroundVariant,
         backgroundColor: backgroundColor,
         builder: (context) => page,
       ),
@@ -35,14 +38,14 @@ class ZinNavigation {
   static Future<T?> replace<T extends Object?>(
     BuildContext context,
     Widget page, {
-    ZinBackgroundPattern backgroundPattern = ZinBackgroundPattern.minimal,
+    ZinBackgroundVariant backgroundVariant = ZinBackgroundVariant.minimal,
     Color? backgroundColor,
     String? routeName,
   }) {
     return Navigator.of(context).pushReplacement<T, dynamic>(
       ZinRoute<T>(
         settings: RouteSettings(name: routeName),
-        backgroundPattern: backgroundPattern,
+        backgroundVariant: backgroundVariant,
         backgroundColor: backgroundColor,
         builder: (context) => page,
       ),
@@ -56,7 +59,7 @@ class ZinNavigation {
   static Future<T?> pushAndRemoveUntil<T extends Object?>(
     BuildContext context,
     Widget page, {
-    ZinBackgroundPattern backgroundPattern = ZinBackgroundPattern.minimal,
+    ZinBackgroundVariant backgroundVariant = ZinBackgroundVariant.minimal,
     Color? backgroundColor,
     String? routeName,
     bool Function(Route<dynamic>)? predicate,
@@ -64,7 +67,7 @@ class ZinNavigation {
     return Navigator.of(context).pushAndRemoveUntil<T>(
       ZinRoute<T>(
         settings: RouteSettings(name: routeName),
-        backgroundPattern: backgroundPattern,
+        backgroundVariant: backgroundVariant,
         backgroundColor: backgroundColor,
         builder: (context) => page,
       ),
@@ -80,7 +83,7 @@ class ZinNavigation {
     required Widget child,
     required String name,
     Object? arguments,
-    ZinBackgroundPattern backgroundPattern = ZinBackgroundPattern.minimal,
+    ZinBackgroundVariant backgroundVariant = ZinBackgroundVariant.minimal,
     Color? backgroundColor,
   }) {
     return CustomTransitionPage<T>(
@@ -96,7 +99,7 @@ class ZinNavigation {
         );
 
         // Determine if we're pushing or popping
-        final bool isPush = animation.status == AnimationStatus.forward || 
+        final bool isPush = animation.status == AnimationStatus.forward ||
                           animation.status == AnimationStatus.completed;
 
         // For pushing a new route
@@ -113,12 +116,13 @@ class ZinNavigation {
                 ),
                 child: ZinBackground(
                   backgroundColor: backgroundColor,
-                  pattern: backgroundPattern,
+                  variant: backgroundVariant,
                   patternOpacity: 0.1,
                   animated: true,
+                  child: const SizedBox(),
                 ),
               ),
-              
+
               // Content with slide and scale
               FadeTransition(
                 opacity: Tween<double>(begin: 0.0, end: 1.0).animate(primaryAnimation),
@@ -135,7 +139,7 @@ class ZinNavigation {
               ),
             ],
           );
-        } 
+        }
         // For popping a route
         else {
           return Stack(
@@ -150,12 +154,13 @@ class ZinNavigation {
                 ),
                 child: ZinBackground(
                   backgroundColor: backgroundColor,
-                  pattern: backgroundPattern,
+                  variant: backgroundVariant,
                   patternOpacity: 0.1,
                   animated: true,
+                  child: const SizedBox(),
                 ),
               ),
-              
+
               // Content with slide and scale
               FadeTransition(
                 opacity: Tween<double>(begin: 1.0, end: 0.0).animate(secondaryAnimation),

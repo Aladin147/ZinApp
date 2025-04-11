@@ -3,6 +3,9 @@ import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 
+// Re-export ZinBackgroundVariant for convenience
+export 'package:zinapp_v2/widgets/zin_background.dart' show ZinBackgroundVariant;
+
 /// A custom route that adds ZinApp branding to page transitions.
 ///
 /// This route enhances the standard page transitions with branded
@@ -13,7 +16,7 @@ class ZinRoute<T> extends PageRoute<T> {
     required this.builder,
     this.transitionDuration = AppAnimations.screenTransitionDuration,
     this.reverseTransitionDuration = AppAnimations.screenTransitionDuration,
-    this.backgroundPattern = ZinBackgroundPattern.minimal,
+    this.backgroundVariant = ZinBackgroundVariant.minimal,
     this.backgroundColor,
     this.maintainState = true,
     this.fullscreenDialog = false,
@@ -23,8 +26,8 @@ class ZinRoute<T> extends PageRoute<T> {
   /// The widget builder for this route.
   final WidgetBuilder builder;
 
-  /// The background pattern to use during the transition.
-  final ZinBackgroundPattern backgroundPattern;
+  /// The background variant to use during the transition.
+  final ZinBackgroundVariant backgroundVariant;
 
   /// The background color to use during the transition.
   final Color? backgroundColor;
@@ -76,14 +79,14 @@ class ZinRoute<T> extends PageRoute<T> {
     );
 
     // Determine if we're pushing or popping
-    final bool isPush = animation.status == AnimationStatus.forward || 
+    final bool isPush = animation.status == AnimationStatus.forward ||
                         animation.status == AnimationStatus.completed;
 
     return _ZinTransitionOverlay(
       animation: primaryAnimation,
       secondaryAnimation: secondAnimation,
       backgroundColor: backgroundColor ?? AppColors.baseDark,
-      backgroundPattern: backgroundPattern,
+      backgroundVariant: backgroundVariant,
       isPush: isPush,
       child: child,
     );
@@ -106,7 +109,7 @@ class _ZinTransitionOverlay extends StatelessWidget {
     required this.animation,
     required this.secondaryAnimation,
     required this.backgroundColor,
-    required this.backgroundPattern,
+    required this.backgroundVariant,
     required this.isPush,
   });
 
@@ -114,7 +117,7 @@ class _ZinTransitionOverlay extends StatelessWidget {
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
   final Color backgroundColor;
-  final ZinBackgroundPattern backgroundPattern;
+  final ZinBackgroundVariant backgroundVariant;
   final bool isPush;
 
   @override
@@ -122,7 +125,7 @@ class _ZinTransitionOverlay extends StatelessWidget {
     // For pushing a new route
     if (isPush) {
       return _buildPushTransition();
-    } 
+    }
     // For popping a route
     else {
       return _buildPopTransition();
@@ -143,12 +146,13 @@ class _ZinTransitionOverlay extends StatelessWidget {
           ),
           child: ZinBackground(
             backgroundColor: backgroundColor,
-            pattern: backgroundPattern,
+            variant: backgroundVariant,
             patternOpacity: 0.1,
             animated: true,
+            child: const SizedBox(),
           ),
         ),
-        
+
         // Content with slide and scale
         FadeTransition(
           opacity: Tween<double>(begin: 0.0, end: 1.0).animate(animation),
@@ -181,12 +185,13 @@ class _ZinTransitionOverlay extends StatelessWidget {
           ),
           child: ZinBackground(
             backgroundColor: backgroundColor,
-            pattern: backgroundPattern,
+            variant: backgroundVariant,
             patternOpacity: 0.1,
             animated: true,
+            child: const SizedBox(),
           ),
         ),
-        
+
         // Content with slide and scale
         FadeTransition(
           opacity: Tween<double>(begin: 1.0, end: 0.0).animate(secondaryAnimation),
