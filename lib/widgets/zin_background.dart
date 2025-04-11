@@ -66,13 +66,13 @@ class _ZinBackgroundState extends State<ZinBackground> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 8000), // Slow, subtle animation
     );
-    
+
     // Create pulse animation
     _pulseAnimation = TweenSequence<double>(
       AppAnimations.getZinPulseSequence(),
@@ -82,23 +82,23 @@ class _ZinBackgroundState extends State<ZinBackground> with SingleTickerProvider
         curve: Curves.easeInOut,
       ),
     );
-    
+
     // Start animation if enabled
     if (widget.animated) {
       _animationController.repeat(reverse: true);
     }
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
+
   @override
   void didUpdateWidget(ZinBackground oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Update animation state if animated property changes
     if (widget.animated != oldWidget.animated) {
       if (widget.animated) {
@@ -112,9 +112,14 @@ class _ZinBackgroundState extends State<ZinBackground> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final Color effectiveBackgroundColor = widget.backgroundColor ?? AppColors.baseDark;
-    final Color effectivePatternColor = widget.patternColor ?? 
-        AppColors.primaryHighlight.withOpacity(widget.patternOpacity);
-    
+    final Color effectivePatternColor = widget.patternColor ??
+        Color.fromRGBO(
+          AppColors.primaryHighlight.r.toInt(),
+          AppColors.primaryHighlight.g.toInt(),
+          AppColors.primaryHighlight.b.toInt(),
+          widget.patternOpacity,
+        );
+
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
@@ -136,7 +141,7 @@ class _ZinBackgroundState extends State<ZinBackground> with SingleTickerProvider
                   ),
                 ),
               ),
-              
+
               // Content
               child!,
             ],
@@ -187,29 +192,29 @@ class _ZinPatternPainter extends CustomPainter {
     final paint = Paint()
       ..color = patternColor
       ..style = PaintingStyle.fill;
-    
+
     // Calculate pattern parameters
     final elementSize = size.width * 0.05 * pulseValue;
     final spacing = size.width * 0.2 / density;
-    
+
     // Create a slight offset based on animation
     final offsetX = animationValue * spacing * 0.2;
     final offsetY = animationValue * spacing * 0.1;
-    
+
     // Draw pattern elements
     for (double x = -spacing; x < size.width + spacing; x += spacing) {
       for (double y = -spacing; y < size.height + spacing; y += spacing) {
         // Add some randomness to positions
         final randomX = x + (math.sin(y * 0.1) * spacing * 0.2) + offsetX;
         final randomY = y + (math.cos(x * 0.1) * spacing * 0.2) + offsetY;
-        
+
         // Draw a simplified "Z" shape (from ZinApp logo)
         final path = Path()
           ..moveTo(randomX, randomY)
           ..lineTo(randomX + elementSize, randomY)
           ..lineTo(randomX, randomY + elementSize)
           ..lineTo(randomX + elementSize, randomY + elementSize);
-        
+
         canvas.drawPath(path, paint);
       }
     }
@@ -221,22 +226,22 @@ class _ZinPatternPainter extends CustomPainter {
       ..color = patternColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
-    
+
     // Calculate pattern parameters
     final elementSize = size.width * 0.15 * pulseValue;
     final spacing = size.width * 0.4 / density;
-    
+
     // Create a slight offset based on animation
     final offsetX = animationValue * spacing * 0.3;
     final offsetY = animationValue * spacing * 0.2;
-    
+
     // Draw larger pattern elements
     for (double x = -spacing; x < size.width + spacing; x += spacing) {
       for (double y = -spacing; y < size.height + spacing; y += spacing) {
         // Add some randomness to positions
         final randomX = x + (math.sin(y * 0.05) * spacing * 0.3) + offsetX;
         final randomY = y + (math.cos(x * 0.05) * spacing * 0.3) + offsetY;
-        
+
         // Draw a stylized logo-inspired shape
         final path = Path()
           ..moveTo(randomX, randomY)
@@ -246,7 +251,7 @@ class _ZinPatternPainter extends CustomPainter {
           ..lineTo(randomX, randomY + elementSize)
           ..lineTo(randomX + elementSize * 0.5, randomY + elementSize * 0.5)
           ..close();
-        
+
         canvas.drawPath(path, paint);
       }
     }
@@ -257,22 +262,22 @@ class _ZinPatternPainter extends CustomPainter {
     final paint = Paint()
       ..color = patternColor
       ..style = PaintingStyle.fill;
-    
+
     // Calculate pattern parameters
     final dotSize = size.width * 0.01 * pulseValue;
     final spacing = size.width * 0.1 / density;
-    
+
     // Create a slight offset based on animation
     final offsetX = animationValue * spacing * 0.1;
     final offsetY = animationValue * spacing * 0.1;
-    
+
     // Draw small dots
     for (double x = 0; x < size.width; x += spacing) {
       for (double y = 0; y < size.height; y += spacing) {
         // Add some randomness to positions
         final randomX = x + (math.sin(y * 0.2) * spacing * 0.1) + offsetX;
         final randomY = y + (math.cos(x * 0.2) * spacing * 0.1) + offsetY;
-        
+
         // Draw a small dot
         canvas.drawCircle(Offset(randomX, randomY), dotSize, paint);
       }
@@ -285,34 +290,34 @@ class _ZinPatternPainter extends CustomPainter {
       ..color = patternColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
-    
+
     // Calculate pattern parameters
     final elementSize = size.width * 0.2 * pulseValue;
-    
+
     // Create a radial pattern emanating from the center
     final centerX = size.width * 0.5;
     final centerY = size.height * 0.5;
-    
+
     // Draw concentric shapes
     for (int i = 1; i <= 5; i++) {
       final radius = i * elementSize * (1 + animationValue * 0.1);
-      
+
       // Draw a stylized shape
       final path = Path();
-      
+
       // Create a shape with 6 points
       for (int j = 0; j < 6; j++) {
         final angle = (j * 60 + animationValue * 30) * math.pi / 180;
         final x = centerX + radius * math.cos(angle);
         final y = centerY + radius * math.sin(angle);
-        
+
         if (j == 0) {
           path.moveTo(x, y);
         } else {
           path.lineTo(x, y);
         }
       }
-      
+
       path.close();
       canvas.drawPath(path, paint);
     }

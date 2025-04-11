@@ -28,10 +28,10 @@ class AccessibilityUtils {
     final hueDifference = (creamHue - colorHue).abs();
 
     // If the color is light and has a similar hue to our cream, consider it cream
+    // Check if the color is in the cream family
     return isLightColor(color) &&
            (hueDifference < 30 || hueDifference > 330) &&
-           color.red > 240 &&
-           color.green > 230;
+           color.r > 240 && color.g > 230 && color.b > 210; // Cream color range
   }
 
   /// Gets the appropriate text color for a background to ensure proper contrast
@@ -122,9 +122,13 @@ class AccessibilityUtils {
 
   /// Helper method to check if two colors are similar within a tolerance
   static bool _colorsAreSimilar(Color a, Color b, int tolerance) {
-    return (a.red - b.red).abs() <= tolerance &&
-           (a.green - b.green).abs() <= tolerance &&
-           (a.blue - b.blue).abs() <= tolerance;
+    // Calculate color distance using RGB components
+    final double rDiff = (a.r - b.r).abs();
+    final double gDiff = (a.g - b.g).abs();
+    final double bDiff = (a.b - b.b).abs();
+
+    // Check if all components are within tolerance
+    return rDiff <= tolerance && gDiff <= tolerance && bDiff <= tolerance;
   }
 
   static Color ensureContrastWithBackground(

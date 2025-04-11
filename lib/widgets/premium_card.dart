@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
-import 'package:zinapp_v2/app/theme/color_zones.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 
@@ -9,19 +8,19 @@ import 'package:zinapp_v2/widgets/zin_background.dart';
 enum PremiumCardVariant {
   /// Standard dark card for interactive zones
   dark,
-  
+
   /// Light card for content zones
   light,
-  
+
   /// Accent card with cool blue theme
   cool,
-  
+
   /// Accent card with coral theme
   coral,
-  
+
   /// Accent card with jade theme
   jade,
-  
+
   /// Featured card with brand emphasis
   featured,
 }
@@ -33,37 +32,37 @@ enum PremiumCardVariant {
 class PremiumCard extends StatefulWidget {
   /// The child widget to display inside the card
   final Widget child;
-  
+
   /// The card variant
   final PremiumCardVariant variant;
-  
+
   /// Whether to show a subtle background pattern
   final bool showPattern;
-  
+
   /// The border radius of the card
   final BorderRadius? borderRadius;
-  
+
   /// The padding inside the card
   final EdgeInsetsGeometry? padding;
-  
+
   /// The margin around the card
   final EdgeInsetsGeometry? margin;
-  
+
   /// Callback when the card is tapped
   final VoidCallback? onTap;
-  
+
   /// Whether to animate the card on appearance
   final bool animateEntrance;
-  
+
   /// Optional header widget
   final Widget? header;
-  
+
   /// Optional footer widget
   final Widget? footer;
-  
+
   /// Whether to show a divider below the header
   final bool showHeaderDivider;
-  
+
   /// Whether to show a divider above the footer
   final bool showFooterDivider;
 
@@ -90,26 +89,26 @@ class PremiumCard extends StatefulWidget {
 class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStateMixin {
   // Animation controllers
   late AnimationController _animationController;
-  
+
   // Animations
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
-  late Animation<double> _opacityAnimation;
-  
+  // We're using AnimatedOpacity instead of an animation controller for the entrance effect
+
   // State tracking
   bool _isHovered = false;
   bool _isVisible = false;
-  
+
   @override
   void initState() {
     super.initState();
-    
+
     // Initialize animation controller
     _animationController = AnimationController(
       vsync: this,
       duration: AppAnimations.cardHoverDuration,
     );
-    
+
     // Scale animation
     _scaleAnimation = Tween<double>(
       begin: 1.0,
@@ -120,7 +119,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         curve: AppAnimations.cardHoverCurve,
       ),
     );
-    
+
     // Elevation animation
     _elevationAnimation = Tween<double>(
       begin: 0.0,
@@ -131,18 +130,9 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         curve: AppAnimations.cardHoverCurve,
       ),
     );
-    
-    // Opacity animation for entrance
-    _opacityAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
-      ),
-    );
-    
+
+    // Note: We're using AnimatedOpacity for entrance animation instead of an animation controller
+
     // Start entrance animation if enabled
     if (widget.animateEntrance) {
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -156,13 +146,13 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
       _isVisible = true;
     }
   }
-  
+
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
   }
-  
+
   // Handle mouse enter event
   void _handleMouseEnter(PointerEnterEvent event) {
     if (widget.onTap != null) {
@@ -172,7 +162,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
       _animationController.forward();
     }
   }
-  
+
   // Handle mouse exit event
   void _handleMouseExit(PointerExitEvent event) {
     setState(() {
@@ -180,7 +170,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
     });
     _animationController.reverse();
   }
-  
+
   // Get card colors based on variant
   CardColors _getCardColors() {
     switch (widget.variant) {
@@ -190,7 +180,12 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
           foreground: AppColors.textPrimary,
           secondary: AppColors.textSecondary,
           accent: AppColors.primaryHighlight,
-          divider: AppColors.textDisabled.withOpacity(0.3),
+          divider: Color.fromRGBO(
+            AppColors.textDisabled.r.toInt(),
+            AppColors.textDisabled.g.toInt(),
+            AppColors.textDisabled.b.toInt(),
+            0.3,
+          ),
         );
       case PremiumCardVariant.light:
         return CardColors(
@@ -198,31 +193,51 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
           foreground: AppColors.textInverted,
           secondary: AppColors.textInvertedSecondary,
           accent: AppColors.primaryHighlightDarker,
-          divider: AppColors.textInvertedSecondary.withOpacity(0.2),
+          divider: Color.fromRGBO(
+            AppColors.textInvertedSecondary.r.toInt(),
+            AppColors.textInvertedSecondary.g.toInt(),
+            AppColors.textInvertedSecondary.b.toInt(),
+            0.2,
+          ),
         );
       case PremiumCardVariant.cool:
         return CardColors(
-          background: AppColors.coolBlue.withOpacity(0.15),
+          background: const Color.fromRGBO(140, 186, 205, 0.15),
           foreground: AppColors.textInverted,
           secondary: AppColors.textInvertedSecondary,
           accent: AppColors.coolBlueDark,
-          divider: AppColors.coolBlueDark.withOpacity(0.3),
+          divider: Color.fromRGBO(
+            AppColors.coolBlueDark.r.toInt(),
+            AppColors.coolBlueDark.g.toInt(),
+            AppColors.coolBlueDark.b.toInt(),
+            0.3,
+          ),
         );
       case PremiumCardVariant.coral:
         return CardColors(
-          background: AppColors.coral.withOpacity(0.15),
+          background: const Color.fromRGBO(244, 128, 93, 0.15),
           foreground: AppColors.textInverted,
           secondary: AppColors.textInvertedSecondary,
           accent: AppColors.coralDark,
-          divider: AppColors.coralDark.withOpacity(0.3),
+          divider: Color.fromRGBO(
+            AppColors.coralDark.r.toInt(),
+            AppColors.coralDark.g.toInt(),
+            AppColors.coralDark.b.toInt(),
+            0.3,
+          ),
         );
       case PremiumCardVariant.jade:
         return CardColors(
-          background: AppColors.jadeLight.withOpacity(0.15),
+          background: const Color.fromRGBO(195, 255, 194, 0.15),
           foreground: AppColors.textInverted,
           secondary: AppColors.textInvertedSecondary,
           accent: AppColors.jadeDark,
-          divider: AppColors.jadeDark.withOpacity(0.3),
+          divider: Color.fromRGBO(
+            AppColors.jadeDark.r.toInt(),
+            AppColors.jadeDark.g.toInt(),
+            AppColors.jadeDark.b.toInt(),
+            0.3,
+          ),
         );
       case PremiumCardVariant.featured:
         return CardColors(
@@ -230,11 +245,16 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
           foreground: AppColors.textPrimary,
           secondary: AppColors.textSecondary,
           accent: AppColors.primaryHighlight,
-          divider: AppColors.primaryHighlight.withOpacity(0.3),
+          divider: Color.fromRGBO(
+            AppColors.primaryHighlight.r.toInt(),
+            AppColors.primaryHighlight.g.toInt(),
+            AppColors.primaryHighlight.b.toInt(),
+            0.3,
+          ),
         );
     }
   }
-  
+
   // Get background pattern variant based on card variant
   ZinBackgroundVariant _getPatternVariant() {
     switch (widget.variant) {
@@ -249,7 +269,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         return ZinBackgroundVariant.featured;
     }
   }
-  
+
   // Build divider
   Widget _buildDivider(Color dividerColor) {
     return Divider(
@@ -264,7 +284,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
     final cardColors = _getCardColors();
     final effectiveBorderRadius = widget.borderRadius ?? BorderRadius.circular(16);
     final effectivePadding = widget.padding ?? const EdgeInsets.all(16);
-    
+
     // Build card content
     Widget cardContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,7 +300,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         if (widget.footer != null) widget.footer!,
       ],
     );
-    
+
     // Add background pattern if enabled
     if (widget.showPattern) {
       cardContent = ClipRRect(
@@ -294,14 +314,14 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         ),
       );
     }
-    
+
     // Create the animated card
     Widget animatedCard = AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
         // Calculate the current elevation with animation
         final currentElevation = 1.0 + (_isHovered ? _elevationAnimation.value : 0);
-        
+
         // Create the card with current styling
         return Transform.scale(
           scale: _isHovered ? _scaleAnimation.value : 1.0,
@@ -317,7 +337,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
       },
       child: cardContent,
     );
-    
+
     // Add entrance animation if enabled
     if (widget.animateEntrance) {
       animatedCard = AnimatedOpacity(
@@ -327,7 +347,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         child: animatedCard,
       );
     }
-    
+
     // Add interactive handlers if onTap is provided
     if (widget.onTap != null) {
       return MouseRegion(
@@ -340,7 +360,7 @@ class _PremiumCardState extends State<PremiumCard> with SingleTickerProviderStat
         ),
       );
     }
-    
+
     return animatedCard;
   }
 }
@@ -352,7 +372,7 @@ class CardColors {
   final Color secondary;
   final Color accent;
   final Color divider;
-  
+
   CardColors({
     required this.background,
     required this.foreground,
