@@ -1,0 +1,24 @@
+[
+  {
+    "userId": "user123",
+    "username": "Hassan",
+    "profilePictureUrl": "assets/images/avatars/hassan.png",
+    "xp": 150,
+    "zinTokens": 50,
+    "level": "Silver",
+    "followingStylists": ["stylist456", "stylist789"],
+    "followingUsers": ["user789"],
+    "bookingHistory": ["bookingABC", "bookingDEF"]
+  },
+  {
+    "userId": "user789",
+    "username": "Sofia",
+    "profilePictureUrl": "assets/images/avatars/sofia.png",
+    "xp": 25,
+    "zinTokens": 10,
+    "level": "Bronze",
+    "followingStylists": ["stylist456"],
+    "followingUsers": ["user123"],
+    "bookingHistory": ["bookingGHI"]
+  }
+]

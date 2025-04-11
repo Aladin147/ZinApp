@@ -1,0 +1,86 @@
+[
+  {
+    "id": "style-001",
+    "name": "Modern Bob",
+    "image": "https://picsum.photos/seed/bob/400/600",
+    "category": "Short",
+    "tags": ["Bob", "Modern", "Sleek"],
+    "likes": 1245,
+    "stylist": {
+      "id": "stylist-001",
+      "name": "Alex Johnson",
+      "avatar": "https://i.pravatar.cc/300?img=1"
+    },
+    "description": "A sleek, modern bob with clean lines and subtle layers for movement."
+  },
+  {
+    "id": "style-002",
+    "name": "Beach Waves",
+    "image": "https://picsum.photos/seed/waves/400/600",
+    "category": "Medium",
+    "tags": ["Waves", "Casual", "Beachy"],
+    "likes": 987,
+    "stylist": {
+      "id": "stylist-002",
+      "name": "Jamie Smith",
+      "avatar": "https://i.pravatar.cc/300?img=2"
+    },
+    "description": "Effortless beach waves with a natural, sun-kissed look."
+  },
+  {
+    "id": "style-003",
+    "name": "Textured Pixie",
+    "image": "https://picsum.photos/seed/pixie/400/600",
+    "category": "Short",
+    "tags": ["Pixie", "Textured", "Edgy"],
+    "likes": 756,
+    "stylist": {
+      "id": "stylist-003",
+      "name": "Taylor Williams",
+      "avatar": "https://i.pravatar.cc/300?img=3"
+    },
+    "description": "A bold, textured pixie cut with lots of movement and personality."
+  },
+  {
+    "id": "style-004",
+    "name": "Balayage Curls",
+    "image": "https://picsum.photos/seed/balayage/400/600",
+    "category": "Long",
+    "tags": ["Curls", "Balayage", "Dimensional"],
+    "likes": 1532,
+    "stylist": {
+      "id": "stylist-004",
+      "name": "Morgan Davis",
+      "avatar": "https://i.pravatar.cc/300?img=4"
+    },
+    "description": "Beautiful, dimensional balayage highlights on natural curls."
+  },
+  {
+    "id": "style-005",
+    "name": "Braided Updo",
+    "image": "https://picsum.photos/seed/braids/400/600",
+    "category": "Updo",
+    "tags": ["Braids", "Updo", "Elegant"],
+    "likes": 876,
+    "stylist": {
+      "id": "stylist-005",
+      "name": "Jordan Brown",
+      "avatar": "https://i.pravatar.cc/300?img=5"
+    },
+    "description": "Elegant braided updo perfect for special occasions."
+  },
+  {
+    "id": "style-006",
+    "name": "Layered Shag",
+    "image": "https://picsum.photos/seed/shag/400/600",
+    "category": "Medium",
+    "tags": ["Shag", "Layers", "Retro"],
+    "likes": 654,
+    "stylist": {
+      "id": "stylist-001",
+      "name": "Alex Johnson",
+      "avatar": "https://i.pravatar.cc/300?img=1"
+    },
+    "description": "A modern take on the classic shag with lots of layers and texture."
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "postId": "post001",
+    "userId": "user123",
+    "type": "check-in",
+    "imageUrl": "assets/images/posts/hassan_cut.png",
+    "caption": "Just got a fresh cut from Sarah J.! Feeling sharp.",
+    "timestamp": "2025-04-10T10:30:00Z",
+    "likes": ["user789"],
+    "comments": [
+      { "commentId": "cmt01", "userId": "user789", "text": "Looks great!", "timestamp": "2025-04-10T10:35:00Z" }
+    ],
+    "relatedBookingId": "bookingABC",
+    "taggedStylistId": "stylist456"
+  },
+  {
+    "postId": "post002",
+    "stylistId": "stylist456",
+    "type": "showcase",
+    "imageUrl": "assets/images/posts/sarah_work.png",
+    "caption": "Loving this fade I did today! Slots open for next week.",
+    "timestamp": "2025-04-09T15:00:00Z",
+    "likes": ["user123", "user789"],
+    "comments": []
+  },
+   {
+    "postId": "post003",
+    "userId": "user789",
+    "type": "shared-style",
+    "imageUrl": "assets/images/posts/style_inspiration.png",
+    "caption": "Thinking about getting braids like this, what do you all think? Any stylist recommendations?",
+    "timestamp": "2025-04-08T11:00:00Z",
+    "likes": [],
+    "comments": [
+       { "commentId": "cmt02", "userId": "user123", "text": "Sarah J does amazing braids!", "timestamp": "2025-04-08T12:00:00Z" }
+    ]
+  }
+]
