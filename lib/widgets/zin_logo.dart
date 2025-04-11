@@ -1,0 +1,372 @@
+import 'package:flutter/material.dart';
+import 'package:zinapp_v2/app/theme/color_scheme.dart';
+
+/// Logo variants for different contexts
+enum ZinLogoVariant {
+  /// Full logo with text and icon
+  full,
+
+  /// Icon only
+  icon,
+
+  /// Text only
+  text
+}
+
+/// Color schemes for the logo
+enum ZinLogoColorScheme {
+  /// Primary color on dark background (default)
+  primaryOnDark,
+
+  /// Dark color on light background
+  darkOnLight,
+
+  /// White on dark background
+  whiteOnDark,
+
+  /// Outline version
+  outline
+}
+
+/// A component that renders the ZinApp logo in various formats.
+///
+/// This component provides consistent rendering of the ZinApp logo
+/// across the application, with support for different variants and color schemes.
+class ZinLogo extends StatelessWidget {
+  /// The variant of the logo to display
+  final ZinLogoVariant variant;
+
+  /// The color scheme to use for the logo
+  final ZinLogoColorScheme colorScheme;
+
+  /// The size of the logo (affects both icon and text)
+  final double size;
+
+  /// Whether to add a subtle animation effect
+  final bool animated;
+
+  const ZinLogo({
+    super.key,
+    this.variant = ZinLogoVariant.full,
+    this.colorScheme = ZinLogoColorScheme.primaryOnDark,
+    this.size = 48.0,
+    this.animated = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Determine colors based on color scheme
+    Color iconColor;
+    Color textColor;
+    Color? outlineColor;
+
+    switch (colorScheme) {
+      case ZinLogoColorScheme.primaryOnDark:
+        iconColor = AppColors.primaryHighlight;
+        textColor = AppColors.primaryHighlight;
+        outlineColor = null;
+        break;
+      case ZinLogoColorScheme.darkOnLight:
+        iconColor = AppColors.baseDark;
+        textColor = AppColors.baseDark;
+        outlineColor = null;
+        break;
+      case ZinLogoColorScheme.whiteOnDark:
+        iconColor = Colors.white;
+        textColor = Colors.white;
+        outlineColor = null;
+        break;
+      case ZinLogoColorScheme.outline:
+        iconColor = Colors.transparent;
+        textColor = AppColors.primaryHighlight;
+        outlineColor = AppColors.primaryHighlight;
+        break;
+    }
+
+    // Build the appropriate logo variant
+    Widget logo;
+
+    switch (variant) {
+      case ZinLogoVariant.full:
+        // For full logo, use the appropriate PNG based on color scheme
+        Widget logoWidget;
+
+        switch (colorScheme) {
+          case ZinLogoColorScheme.primaryOnDark:
+            // Primary color logo (neon green on dark)
+            logoWidget = Image.asset(
+              'assets/logos/png/zinapp_logo_full.png',
+              height: size,
+              fit: BoxFit.contain,
+            );
+            break;
+
+          case ZinLogoColorScheme.whiteOnDark:
+            // White on dark logo
+            logoWidget = Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: AppColors.baseDark,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                'assets/logos/png/zinapp_logo_for-neon_background.png',
+                height: size * 0.9,
+                fit: BoxFit.contain,
+              ),
+            );
+            break;
+
+          case ZinLogoColorScheme.darkOnLight:
+            // Dark on light logo
+            logoWidget = Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Image.asset(
+                'assets/logos/png/zinapp_logo_full.png',
+                height: size * 0.9,
+                fit: BoxFit.contain,
+              ),
+            );
+            break;
+
+          case ZinLogoColorScheme.outline:
+            // Outline logo
+            logoWidget = Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: AppColors.primaryHighlight, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Image.asset(
+                'assets/logos/png/zinapp_logo_full.png',
+                height: size * 0.8,
+                fit: BoxFit.contain,
+              ),
+            );
+            break;
+        }
+
+        logo = SizedBox(
+          width: size * 2.5,
+          height: size,
+          child: logoWidget,
+        );
+        break;
+      case ZinLogoVariant.icon:
+        logo = _buildIcon(iconColor, outlineColor);
+        break;
+      case ZinLogoVariant.text:
+        logo = _buildText(textColor);
+        break;
+    }
+
+    // Apply animation if requested
+    if (animated) {
+      return _AnimatedLogo(child: logo);
+    }
+
+    return logo;
+  }
+
+  Widget _buildIcon(Color color, Color? outlineColor) {
+    // Use the PNG icon with appropriate styling for each variant
+    Widget iconWidget;
+
+    switch (colorScheme) {
+      case ZinLogoColorScheme.primaryOnDark:
+        // Standard icon with primary color
+        iconWidget = Image.asset(
+          'assets/logos/png/symbol_coin_only.png',
+          width: size,
+          height: size,
+          fit: BoxFit.contain,
+        );
+        break;
+
+      case ZinLogoColorScheme.whiteOnDark:
+        // White icon on dark background
+        iconWidget = Container(
+          padding: EdgeInsets.all(size * 0.1),
+          decoration: BoxDecoration(
+            color: AppColors.baseDark,
+            borderRadius: BorderRadius.circular(size * 0.2),
+          ),
+          child: Image.asset(
+            'assets/logos/png/symbol_coin_only.png',
+            width: size * 0.8,
+            height: size * 0.8,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+
+      case ZinLogoColorScheme.darkOnLight:
+        // Dark icon on light background
+        iconWidget = Container(
+          padding: EdgeInsets.all(size * 0.1),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(size * 0.2),
+          ),
+          child: Image.asset(
+            'assets/logos/png/symbol_coin_only.png',
+            width: size * 0.8,
+            height: size * 0.8,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+
+      case ZinLogoColorScheme.outline:
+        // Outline icon
+        iconWidget = Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            border: Border.all(color: outlineColor!, width: 2),
+            borderRadius: BorderRadius.circular(size * 0.2),
+          ),
+          padding: EdgeInsets.all(size * 0.1),
+          child: Image.asset(
+            'assets/logos/png/symbol_coin_only.png',
+            width: size * 0.8,
+            height: size * 0.8,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+    }
+
+    return SizedBox(
+      width: size,
+      height: size,
+      child: iconWidget,
+    );
+  }
+
+  Widget _buildText(Color color) {
+    // Use the PNG text logo with appropriate styling for each variant
+    Widget textWidget;
+
+    switch (colorScheme) {
+      case ZinLogoColorScheme.primaryOnDark:
+        // Primary color text
+        textWidget = Image.asset(
+          'assets/logos/png/zin_and_symbol.png',
+          height: size * 0.5,
+          fit: BoxFit.contain,
+        );
+        break;
+
+      case ZinLogoColorScheme.whiteOnDark:
+        // White text on dark background
+        textWidget = Container(
+          padding: EdgeInsets.symmetric(horizontal: size * 0.1),
+          decoration: BoxDecoration(
+            color: AppColors.baseDark,
+            borderRadius: BorderRadius.circular(size * 0.1),
+          ),
+          child: Image.asset(
+            'assets/logos/png/zin_and_symbol.png',
+            height: size * 0.4,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+
+      case ZinLogoColorScheme.darkOnLight:
+        // Dark text on light background
+        textWidget = Container(
+          padding: EdgeInsets.symmetric(horizontal: size * 0.1),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(size * 0.1),
+          ),
+          child: Image.asset(
+            'assets/logos/png/zin_and_symbol.png',
+            height: size * 0.4,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+
+      case ZinLogoColorScheme.outline:
+        // Outlined text
+        textWidget = Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: color, width: 1),
+            borderRadius: BorderRadius.circular(size * 0.1),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: size * 0.1),
+          child: Image.asset(
+            'assets/logos/png/zin_and_symbol.png',
+            height: size * 0.4,
+            fit: BoxFit.contain,
+          ),
+        );
+        break;
+    }
+
+    return SizedBox(
+      height: size * 0.5,
+      child: textWidget,
+    );
+  }
+}
+
+/// A wrapper that adds subtle animation to the logo
+class _AnimatedLogo extends StatefulWidget {
+  final Widget child;
+
+  const _AnimatedLogo({required this.child});
+
+  @override
+  State<_AnimatedLogo> createState() => _AnimatedLogoState();
+}
+
+class _AnimatedLogoState extends State<_AnimatedLogo>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    )..repeat(reverse: true);
+
+    _pulseAnimation = Tween<double>(begin: 0.98, end: 1.02).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _pulseAnimation.value,
+          child: child,
+        );
+      },
+      child: widget.child,
+    );
+  }
+}
