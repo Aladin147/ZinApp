@@ -3,6 +3,7 @@ import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/animated_card.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
+import 'package:zinapp_v2/widgets/zin_background.dart';
 import 'package:zinapp_v2/widgets/zin_badge.dart';
 import 'package:zinapp_v2/widgets/zin_card.dart';
 import 'package:zinapp_v2/widgets/zin_logo.dart';
@@ -66,6 +67,10 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             const SizedBox(height: 32),
             _buildSectionTitle('Animated Components'),
             _buildAnimatedComponentsShowcase(),
+
+            const SizedBox(height: 32),
+            _buildSectionTitle('Brand Backgrounds'),
+            _buildBackgroundShowcase(),
 
             const SizedBox(height: 32),
             _buildSectionTitle('Avatar Variants'),
@@ -626,6 +631,79 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
               ),
             ),
           ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a showcase of brand-reinforcing backgrounds
+  Widget _buildBackgroundShowcase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Brand-reinforcing background patterns'),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: [
+            // Subtle Background
+            _buildBackgroundVariant(
+              'Subtle Pattern',
+              ZinBackgroundVariant.subtle,
+            ),
+
+            // Featured Background
+            _buildBackgroundVariant(
+              'Featured Pattern',
+              ZinBackgroundVariant.featured,
+            ),
+
+            // Minimal Background
+            _buildBackgroundVariant(
+              'Minimal Pattern',
+              ZinBackgroundVariant.minimal,
+            ),
+
+            // Special Background
+            _buildBackgroundVariant(
+              'Special Pattern',
+              ZinBackgroundVariant.special,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Builds a single background variant showcase
+  Widget _buildBackgroundVariant(String label, ZinBackgroundVariant variant) {
+    return Column(
+      children: [
+        SizedBox(
+          width: 250,
+          height: 150,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: ZinBackground(
+              variant: variant,
+              animated: true,
+              patternOpacity: 0.15, // Higher opacity for demo purposes
+              child: Center(
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
     );
