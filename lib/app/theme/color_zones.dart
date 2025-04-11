@@ -48,22 +48,22 @@ abstract class ColorZones {
 class _InteractiveZoneColors {
   /// Primary background color for interactive zone
   final Color background = AppColors.baseDark;
-  
+
   /// Secondary background color for layering
   final Color backgroundAlt = AppColors.baseDarkAlt;
-  
+
   /// Primary action color
   final Color action = AppColors.primaryHighlight;
-  
+
   /// Primary text color
   final Color textPrimary = AppColors.textPrimary;
-  
+
   /// Secondary text color
   final Color textSecondary = AppColors.textSecondary;
-  
+
   /// Card background color
   final Color cardBackground = AppColors.baseDarkAlt;
-  
+
   /// Accent color for highlights
   final Color accent = AppColors.coolBlue;
 
@@ -74,22 +74,22 @@ class _InteractiveZoneColors {
 class _ContentZoneColors {
   /// Primary background color for content zone
   final Color background = AppColors.canvasLight;
-  
+
   /// Secondary background color for layering
   final Color backgroundAlt = AppColors.canvasLightAlt;
-  
+
   /// Primary action color (darker variant for accessibility)
   final Color action = AppColors.primaryHighlightDarker;
-  
+
   /// Primary text color
   final Color textPrimary = AppColors.textInverted;
-  
+
   /// Secondary text color
   final Color textSecondary = AppColors.textInvertedSecondary;
-  
+
   /// Card background color
   final Color cardBackground = AppColors.canvasLightAlt;
-  
+
   /// Accent color for highlights (darker variant for accessibility)
   final Color accent = AppColors.coolBlueDark;
 
@@ -99,29 +99,29 @@ class _ContentZoneColors {
 /// Colors for the Accent Zone
 class _AccentZoneColors {
   /// Cool blue background
-  final Color coolBackground = AppColors.coolBlue.withOpacity(0.15);
-  
+  final Color coolBackground = const Color.fromRGBO(140, 186, 205, 0.15);
+
   /// Coral background
-  final Color coralBackground = AppColors.coral.withOpacity(0.15);
-  
+  final Color coralBackground = const Color.fromRGBO(244, 128, 93, 0.15);
+
   /// Jade background
-  final Color jadeBackground = AppColors.jadeLight.withOpacity(0.15);
-  
+  final Color jadeBackground = const Color.fromRGBO(195, 255, 194, 0.15);
+
   /// Text on cool background
   final Color textOnCool = AppColors.coolBlueDark;
-  
+
   /// Text on coral background
   final Color textOnCoral = AppColors.coralDark;
-  
+
   /// Text on jade background
   final Color textOnJade = AppColors.jadeDark;
-  
+
   /// Action color on cool background
   final Color actionOnCool = AppColors.coolBlueDark;
-  
+
   /// Action color on coral background
   final Color actionOnCoral = AppColors.coralDark;
-  
+
   /// Action color on jade background
   final Color actionOnJade = AppColors.jadeDark;
 
@@ -132,22 +132,22 @@ class _AccentZoneColors {
 class _BrandZoneColors {
   /// Primary background color for brand zone
   final Color background = AppColors.baseDark;
-  
+
   /// Secondary background for layering
   final Color backgroundAlt = AppColors.baseDarkAlt;
-  
+
   /// Primary brand color
   final Color brandPrimary = AppColors.primaryHighlight;
-  
+
   /// Secondary brand color
   final Color brandSecondary = AppColors.coolBlue;
-  
+
   /// Text on dark background
   final Color textOnDark = AppColors.textPrimary;
-  
+
   /// Text on light elements
   final Color textOnLight = AppColors.textOnHighlight;
-  
+
   /// Accent color
   final Color accent = AppColors.coral;
 
@@ -160,7 +160,7 @@ extension ColorZoneContext on BuildContext {
   Color getTextColorForBackground(Color backgroundColor) {
     // Calculate relative luminance
     final luminance = backgroundColor.computeLuminance();
-    
+
     // Use dark text on light backgrounds, light text on dark backgrounds
     if (luminance > 0.5) {
       return AppColors.textInverted;
@@ -168,12 +168,12 @@ extension ColorZoneContext on BuildContext {
       return AppColors.textPrimary;
     }
   }
-  
+
   /// Returns the appropriate action color based on the background color
   Color getActionColorForBackground(Color backgroundColor) {
     // Calculate relative luminance
     final luminance = backgroundColor.computeLuminance();
-    
+
     // Use darker action color on light backgrounds
     if (luminance > 0.5) {
       return AppColors.primaryHighlightDarker;
