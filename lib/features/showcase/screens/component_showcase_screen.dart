@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/widgets/animated_card.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 import 'package:zinapp_v2/widgets/zin_badge.dart';
@@ -61,6 +62,10 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
             const SizedBox(height: 32),
             _buildSectionTitle('Card Variants'),
             _buildCardShowcase(),
+
+            const SizedBox(height: 32),
+            _buildSectionTitle('Animated Components'),
+            _buildAnimatedComponentsShowcase(),
 
             const SizedBox(height: 32),
             _buildSectionTitle('Avatar Variants'),
@@ -535,6 +540,92 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall,
+        ),
+      ],
+    );
+  }
+
+  /// Builds a showcase of animated components
+  Widget _buildAnimatedComponentsShowcase() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Hover over or tap these components to see animations'),
+        const SizedBox(height: 16),
+        Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: [
+            // Animated Card
+            AnimatedCard(
+              elevation: 1.0,
+              color: AppColors.baseDark,
+              borderRadius: BorderRadius.circular(16),
+              padding: const EdgeInsets.all(16),
+              onTap: () {},
+              child: SizedBox(
+                width: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Animated Card',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppColors.textPrimary,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Hover over me to see scale and elevation animations',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textSecondary,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    ZinButton(
+                      label: 'Interactive Button',
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Light Animated Card
+            AnimatedCard(
+              elevation: 1.0,
+              color: const Color(0xFFF8F3ED), // Light background color
+              borderRadius: BorderRadius.circular(16),
+              padding: const EdgeInsets.all(16),
+              onTap: () {},
+              child: SizedBox(
+                width: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Light Animated Card',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: AppColors.textInverted,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Hover over me to see scale and elevation animations',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: AppColors.textInvertedSecondary,
+                          ),
+                    ),
+                    const SizedBox(height: 16),
+                    ZinButton.secondary(
+                      label: 'Interactive Button',
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
