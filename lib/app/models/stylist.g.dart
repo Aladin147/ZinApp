@@ -1,0 +1,33 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'stylist.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+Stylist _$StylistFromJson(Map<String, dynamic> json) => Stylist(
+  id: json['id'] as String,
+  username: json['username'] as String,
+  profilePictureUrl: json['profilePictureUrl'] as String?,
+  bio: json['bio'] as String?,
+  location: json['location'] as String?,
+  stylistProfile: StylistProfile.fromJson(
+    json['stylistProfile'] as Map<String, dynamic>,
+  ),
+  level: (json['level'] as num).toInt(),
+  rank: json['rank'] as String,
+  badges: (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
+);
+
+Map<String, dynamic> _$StylistToJson(Stylist instance) => <String, dynamic>{
+  'id': instance.id,
+  'username': instance.username,
+  'profilePictureUrl': instance.profilePictureUrl,
+  'bio': instance.bio,
+  'location': instance.location,
+  'stylistProfile': instance.stylistProfile,
+  'level': instance.level,
+  'rank': instance.rank,
+  'badges': instance.badges,
+};

@@ -1,0 +1,28 @@
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+User _$UserFromJson(Map<String, dynamic> json) => User(
+  id: json['id'] as String,
+  email: json['email'] as String,
+  username: json['username'] as String,
+  profilePictureUrl: json['profilePictureUrl'] as String?,
+  userType: $enumDecode(_$UserTypeEnumMap, json['userType']),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  lastLogin: DateTime.parse(json['lastLogin'] as String),
+);
+
+Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
+  'id': instance.id,
+  'email': instance.email,
+  'username': instance.username,
+  'profilePictureUrl': instance.profilePictureUrl,
+  'userType': _$UserTypeEnumMap[instance.userType]!,
+  'createdAt': instance.createdAt.toIso8601String(),
+  'lastLogin': instance.lastLogin.toIso8601String(),
+};
+
+const _$UserTypeEnumMap = {
+  UserType.regular: 'regular',
+  UserType.stylist: 'stylist',
+};

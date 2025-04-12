@@ -32,7 +32,8 @@ class ActionHubSection extends StatelessWidget {
           ],
         ),
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Quick action buttons
@@ -195,6 +196,7 @@ class ActionHubSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }

@@ -68,20 +68,16 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            // Gamer Dashboard (20% of screen height)
-            SizedBox(
-              height: size.height * 0.2,
-              child: GamerDashboardSection(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // Gamer Dashboard
+              GamerDashboardSection(
                 user: user,
               ),
-            ),
 
-            // Action Hub (30% of screen height)
-            SizedBox(
-              height: size.height * 0.3,
-              child: Consumer(
+              // Action Hub
+              Consumer(
                 builder: (context, ref, child) {
                   final stylistState = ref.watch(stylistProviderProvider);
                   return ActionHubSection(
@@ -91,11 +87,9 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
                   );
                 },
               ),
-            ),
 
-            // Social Feed (50% of screen height - remaining space)
-            Expanded(
-              child: Container(
+              // Social Feed
+              Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -109,14 +103,15 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
                     ),
                     const SizedBox(height: 16),
                     // Feed content
-                    Expanded(
+                    SizedBox(
+                      height: size.height * 0.5, // Fixed height for feed
                       child: _buildFeedContent(feedState),
                     ),
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: Column(

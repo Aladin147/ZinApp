@@ -1,0 +1,48 @@
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$userProfileServiceHash() =>
+    r'3296e7ec05eb86d15a7062b9dd5921bfe53267da';
+
+/// Provider for the UserProfileService
+///
+/// Copied from [userProfileService].
+@ProviderFor(userProfileService)
+final userProfileServiceProvider =
+    AutoDisposeProvider<UserProfileService>.internal(
+      userProfileService,
+      name: r'userProfileServiceProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$userProfileServiceHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef UserProfileServiceRef = AutoDisposeProviderRef<UserProfileService>;
+String _$userProfileProviderHash() =>
+    r'19ac695def662438188bb6121d6205c8bd1d9964';
+
+/// Provider for user profile state
+///
+/// Copied from [UserProfileProvider].
+@ProviderFor(UserProfileProvider)
+final userProfileProviderProvider =
+    AutoDisposeNotifierProvider<UserProfileProvider, UserProfileState>.internal(
+      UserProfileProvider.new,
+      name: r'userProfileProviderProvider',
+      debugGetCreateSourceHash:
+          const bool.fromEnvironment('dart.vm.product')
+              ? null
+              : _$userProfileProviderHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
+
+typedef _$UserProfileProvider = AutoDisposeNotifier<UserProfileState>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,0 +1,111 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'user_profile.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => UserProfile(
+  id: json['id'] as String,
+  email: json['email'] as String,
+  username: json['username'] as String,
+  profilePictureUrl: json['profilePictureUrl'] as String?,
+  userType: $enumDecode(_$UserTypeEnumMap, json['userType']),
+  createdAt: DateTime.parse(json['createdAt'] as String),
+  lastLogin: DateTime.parse(json['lastLogin'] as String),
+  xp: (json['xp'] as num).toInt(),
+  level: (json['level'] as num).toInt(),
+  tokens: (json['tokens'] as num).toInt(),
+  achievements:
+      (json['achievements'] as List<dynamic>).map((e) => e as String).toList(),
+  badges: (json['badges'] as List<dynamic>).map((e) => e as String).toList(),
+  rank: json['rank'] as String,
+  bio: json['bio'] as String?,
+  location: json['location'] as String?,
+  favoriteStyles:
+      (json['favoriteStyles'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+  favoriteStylistIds:
+      (json['favoriteStylistIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+  postsCount: (json['postsCount'] as num).toInt(),
+  bookingsCount: (json['bookingsCount'] as num).toInt(),
+  followersCount: (json['followersCount'] as num).toInt(),
+  followingCount: (json['followingCount'] as num).toInt(),
+  preferences: json['preferences'] as Map<String, dynamic>?,
+  stylistProfile:
+      json['stylistProfile'] == null
+          ? null
+          : StylistProfile.fromJson(
+            json['stylistProfile'] as Map<String, dynamic>,
+          ),
+);
+
+Map<String, dynamic> _$UserProfileToJson(UserProfile instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'email': instance.email,
+      'username': instance.username,
+      'profilePictureUrl': instance.profilePictureUrl,
+      'userType': _$UserTypeEnumMap[instance.userType]!,
+      'createdAt': instance.createdAt.toIso8601String(),
+      'lastLogin': instance.lastLogin.toIso8601String(),
+      'xp': instance.xp,
+      'level': instance.level,
+      'tokens': instance.tokens,
+      'achievements': instance.achievements,
+      'badges': instance.badges,
+      'rank': instance.rank,
+      'bio': instance.bio,
+      'location': instance.location,
+      'favoriteStyles': instance.favoriteStyles,
+      'favoriteStylistIds': instance.favoriteStylistIds,
+      'postsCount': instance.postsCount,
+      'bookingsCount': instance.bookingsCount,
+      'followersCount': instance.followersCount,
+      'followingCount': instance.followingCount,
+      'preferences': instance.preferences,
+      'stylistProfile': instance.stylistProfile,
+    };
+
+const _$UserTypeEnumMap = {
+  UserType.regular: 'regular',
+  UserType.stylist: 'stylist',
+};
+
+StylistProfile _$StylistProfileFromJson(Map<String, dynamic> json) =>
+    StylistProfile(
+      specialization: json['specialization'] as String,
+      services:
+          (json['services'] as List<dynamic>).map((e) => e as String).toList(),
+      rating: (json['rating'] as num).toDouble(),
+      reviewCount: (json['reviewCount'] as num).toInt(),
+      businessName: json['businessName'] as String?,
+      businessAddress: json['businessAddress'] as String?,
+      businessHours: json['businessHours'] as Map<String, dynamic>?,
+      portfolioUrls:
+          (json['portfolioUrls'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+      isAvailable: json['isAvailable'] as bool,
+      completedBookings: (json['completedBookings'] as num).toInt(),
+      clientCount: (json['clientCount'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$StylistProfileToJson(StylistProfile instance) =>
+    <String, dynamic>{
+      'specialization': instance.specialization,
+      'services': instance.services,
+      'rating': instance.rating,
+      'reviewCount': instance.reviewCount,
+      'businessName': instance.businessName,
+      'businessAddress': instance.businessAddress,
+      'businessHours': instance.businessHours,
+      'portfolioUrls': instance.portfolioUrls,
+      'isAvailable': instance.isAvailable,
+      'completedBookings': instance.completedBookings,
+      'clientCount': instance.clientCount,
+    };

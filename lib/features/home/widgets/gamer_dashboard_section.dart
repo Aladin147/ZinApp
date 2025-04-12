@@ -6,14 +6,13 @@ class GamerDashboardSection extends StatelessWidget {
   final UserProfile? user;
 
   const GamerDashboardSection({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Container(
       width: double.infinity,
@@ -24,18 +23,19 @@ class GamerDashboardSection extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.baseDark,
-            AppColors.baseDark.withOpacity(0.9),
+            AppColors.baseDark.withAlpha(230), // 0.9 opacity
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withAlpha(26), // 0.1 opacity
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
         ],
       ),
-      child: Column(
+      child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Top row: User info and tokens
@@ -54,7 +54,7 @@ class GamerDashboardSection extends StatelessWidget {
                       gradient: SweepGradient(
                         colors: [
                           AppColors.primaryHighlight,
-                          AppColors.primaryHighlight.withOpacity(0.3),
+                          AppColors.primaryHighlight.withAlpha(77), // 0.3 opacity
                         ],
                         stops: const [0.7, 0.7], // 70% progress
                       ),
@@ -92,7 +92,7 @@ class GamerDashboardSection extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryHighlight.withOpacity(0.2),
+                          color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
@@ -107,7 +107,7 @@ class GamerDashboardSection extends StatelessWidget {
                       Text(
                         'Level ${user?.level ?? 1}',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withAlpha(179), // 0.7 opacity
                         ),
                       ),
                     ],
@@ -122,11 +122,11 @@ class GamerDashboardSection extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryHighlight.withOpacity(0.2),
+                  color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primaryHighlight.withOpacity(0.3),
+                      color: AppColors.primaryHighlight.withAlpha(77), // 0.3 opacity
                       blurRadius: 8,
                       spreadRadius: 1,
                     ),
@@ -134,7 +134,7 @@ class GamerDashboardSection extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.token,
                       color: AppColors.primaryHighlight,
                       size: 18,
@@ -174,7 +174,7 @@ class GamerDashboardSection extends StatelessWidget {
                       vertical: 2,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryHighlight.withOpacity(0.2),
+                      color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -193,9 +193,9 @@ class GamerDashboardSection extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
-                      value: 0.7, // TODO: Calculate actual progress
-                      backgroundColor: AppColors.primaryHighlight.withOpacity(0.2),
-                      valueColor: AlwaysStoppedAnimation<Color>(
+                      value: (user?.xp ?? 0) / 1000, // Calculate progress based on XP (max 1000)
+                      backgroundColor: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
+                      valueColor: const AlwaysStoppedAnimation<Color>(
                         AppColors.primaryHighlight,
                       ),
                       minHeight: 12,
@@ -211,7 +211,7 @@ class GamerDashboardSection extends StatelessWidget {
                         (index) => Container(
                           width: 2,
                           height: 12,
-                          color: Colors.white.withOpacity(0.5),
+                          color: Colors.white.withAlpha(128), // 0.5 opacity
                         ),
                       ),
                     ),
@@ -241,8 +241,8 @@ class GamerDashboardSection extends StatelessWidget {
                   itemCount: 5, // Show 5 achievements or placeholders
                   itemBuilder: (context, index) {
                     // Show actual achievements if available, otherwise placeholders
-                    final hasAchievement = user?.achievements != null &&
-                        index < (user?.achievements?.length ?? 0);
+                    final achievements = user?.achievements;
+                    final hasAchievement = achievements != null && index < achievements.length;
 
                     return Container(
                       width: 60,
@@ -250,13 +250,13 @@ class GamerDashboardSection extends StatelessWidget {
                       margin: const EdgeInsets.only(right: 8),
                       decoration: BoxDecoration(
                         color: hasAchievement
-                            ? AppColors.primaryHighlight.withOpacity(0.2)
-                            : Colors.grey.withOpacity(0.2),
+                            ? AppColors.primaryHighlight.withAlpha(51) // 0.2 opacity
+                            : Colors.grey.withAlpha(51), // 0.2 opacity
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: hasAchievement
                               ? AppColors.primaryHighlight
-                              : Colors.grey.withOpacity(0.5),
+                              : Colors.grey.withAlpha(128), // 0.5 opacity
                           width: 2,
                         ),
                       ),
@@ -265,7 +265,7 @@ class GamerDashboardSection extends StatelessWidget {
                           hasAchievement ? Icons.emoji_events : Icons.lock,
                           color: hasAchievement
                               ? AppColors.primaryHighlight
-                              : Colors.grey.withOpacity(0.5),
+                              : Colors.grey.withAlpha(128), // 0.5 opacity
                           size: 24,
                         ),
                       ),
@@ -276,6 +276,7 @@ class GamerDashboardSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }
