@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+// import 'dart:convert'; // Removed duplicate import
+// import 'package:http/http.dart' as http; // Removed duplicate import
 import 'package:zinapp_v2/models/comment.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
-import 'package:zinapp_v2/services/api_config.dart';
+import 'package:zinapp_v2/config/env.dart'; // Use AppConfig from lib/config
 import 'package:zinapp_v2/services/mock_data.dart';
 
 /// Exception thrown when feed operations fail
@@ -17,17 +19,39 @@ class FeedException implements Exception {
 
 /// Service responsible for feed operations
 class FeedService {
-  final String baseUrl = ApiConfig.baseUrl;
+  // Use AppConfig for base URL and mock data flag
+  final String baseUrl = AppConfig.apiBaseUrl; // Use production URL when not mocking
+  final bool useMockData = AppConfig.useMockData;
 
-  /// Get all posts
-  Future<List<Post>> getAllPosts() async {
+  /// Get all posts with pagination support
+  ///
+  /// Parameters:
+  /// - [page]: The page number to fetch (1-based)
+  /// - [limit]: The number of posts per page
+  Future<List<Post>> getAllPosts({int page = 1, int limit = 10}) async {
     try {
-      if (ApiConfig.useMockData) {
-        // Use mock data
-        return MockData.posts.map((data) => Post.fromJson(data)).toList();
+      if (useMockData) { // Use the class member variable
+        // Use mock data with pagination
+        final allPosts = MockData.posts.map((data) => Post.fromJson(data)).toList();
+
+        // Sort by timestamp (newest first) to simulate real API behavior
+        allPosts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        // Apply pagination
+        final startIndex = (page - 1) * limit;
+        final endIndex = startIndex + limit;
+
+        if (startIndex >= allPosts.length) {
+          return []; // No more posts
+        }
+
+        return allPosts.sublist(
+          startIndex,
+          endIndex > allPosts.length ? allPosts.length : endIndex
+        );
       } else {
         final response = await http.get(
-          Uri.parse('$baseUrl/posts'),
+          Uri.parse('$baseUrl/posts?page=$page&limit=$limit'),
         );
 
         if (response.statusCode == 200) {
@@ -66,7 +90,7 @@ class FeedService {
   /// Get post by ID
   Future<Post> getPostById(String id) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Find post in mock data
         final postMatch = MockData.posts.where((p) => p['id'] == id).toList();
         if (postMatch.isEmpty) {
@@ -138,7 +162,7 @@ class FeedService {
   /// Toggle like status for a post
   Future<Post> toggleLike(String postId, bool isLiked) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         try {
           // Get current post
           final post = await getPostById(postId);
@@ -201,7 +225,7 @@ class FeedService {
   /// Get user profile for a post
   Future<UserProfile> getUserForPost(String userId) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Check users collection
         final userMatch = MockData.users.where((u) => u['id'] == userId).toList();
         if (userMatch.isNotEmpty) {
@@ -247,7 +271,7 @@ class FeedService {
   /// Get comments for a post
   Future<List<Comment>> getCommentsForPost(String postId) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Use mock data
         final comments = MockData.comments
             .where((comment) => comment['postId'] == postId)
@@ -310,7 +334,7 @@ class FeedService {
         'createdAt': DateTime.now().toIso8601String(),
       };
 
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Add to mock data
         MockData.comments.add(commentData);
 
@@ -368,7 +392,7 @@ class FeedService {
   /// Delete a comment
   Future<bool> deleteComment(String commentId, String postId) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Remove from mock data
         final commentIndex = MockData.comments.indexWhere((c) => c['id'] == commentId);
         if (commentIndex != -1) {

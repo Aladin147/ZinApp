@@ -1,10 +1,10 @@
 import 'package:zinapp_v2/models/booking.dart';
-import 'package:zinapp_v2/services/mock_data.dart';
+// import 'package:zinapp_v2/services/mock_data.dart'; // Unused import removed
 import 'package:uuid/uuid.dart';
 
 /// Service for managing bookings
 class BookingService {
-  final _uuid = const Uuid();
+  // final _uuid = const Uuid(); // Unused field removed
 
   /// Get all bookings for a user
   Future<List<Booking>> getUserBookings(String userId) async {

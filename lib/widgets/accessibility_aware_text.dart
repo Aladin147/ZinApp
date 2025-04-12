@@ -209,7 +209,7 @@ class AccessibilityAwareCard extends StatelessWidget {
     final isCreamBackground = AccessibilityUtils.isCreamColor(effectiveBackgroundColor);
     
     // Get the appropriate color zone for this background
-    final colorZone = AccessibilityUtils.getColorZoneForBackground(effectiveBackgroundColor);
+    // final colorZone = AccessibilityUtils.getColorZoneForBackground(effectiveBackgroundColor); // Unused variable
     
     // Create the card
     final card = Card(

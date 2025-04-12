@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart';
+// import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart'; // Unused import removed
 import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_card.dart';
 import 'package:zinapp_v2/models/stylist.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';

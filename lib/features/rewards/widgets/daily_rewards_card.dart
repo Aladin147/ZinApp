@@ -7,6 +7,9 @@ import 'package:zinapp_v2/providers/gamification/gamification_provider.dart';
 import 'package:zinapp_v2/widgets/dashboard/expandable_dashboard_card.dart';
 
 /// A card that displays daily rewards and streak information
+/// 
+/// This widget shows the user's current streak, allows them to claim
+/// daily rewards, and displays information about streak-based rewards.
 class DailyRewardsCard extends ConsumerStatefulWidget {
   const DailyRewardsCard({super.key});
 
@@ -31,8 +34,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationNotifierProvider);
+    // Use ref from ConsumerState
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -355,6 +357,10 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
     );
   }
 
+  /// Claims the daily reward for the current user
+  /// 
+  /// Shows a success message upon successful claiming
+  /// or an error message if claiming fails
   Future<void> _claimDailyReward(BuildContext context) async {
     final authState = ref.read(authProvider);
     if (!authState.isAuthenticated || authState.user == null) {
@@ -396,6 +402,10 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
   }
 }
 
+/// A widget that displays a day indicator for the week view
+/// 
+/// Shows a circle with the day letter, with different styling
+/// based on whether the day is active or is today
 class _DayIndicator extends StatelessWidget {
   final String day;
   final bool isActive;
