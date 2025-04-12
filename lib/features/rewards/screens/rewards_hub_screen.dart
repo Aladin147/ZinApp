@@ -17,7 +17,7 @@ class RewardsHubScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final authState = ref.watch(authProvider);
     final user = authState.user;
-    
+
     if (user == null) {
       return const Scaffold(
         body: Center(
@@ -25,7 +25,7 @@ class RewardsHubScreen extends ConsumerWidget {
         ),
       );
     }
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rewards Hub'),
@@ -131,7 +131,7 @@ class RewardsHubScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 24),
-            
+
             // Section title
             Text(
               'Earn Tokens & XP',
@@ -140,7 +140,7 @@ class RewardsHubScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Reward options grid
             GridView.count(
               crossAxisCount: 2,
@@ -207,7 +207,7 @@ class RewardsHubScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // Section title
             Text(
               'Spend Tokens',
@@ -216,7 +216,7 @@ class RewardsHubScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Spend options
             Row(
               children: [
@@ -256,7 +256,7 @@ class RewardsHubScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // Token history
             _buildTokenHistoryPreview(context),
           ],
@@ -264,7 +264,7 @@ class RewardsHubScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildRewardOptionCard(
     BuildContext context, {
     required String title,
@@ -274,7 +274,7 @@ class RewardsHubScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -328,7 +328,7 @@ class RewardsHubScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildSpendOptionCard(
     BuildContext context, {
     required String title,
@@ -337,11 +337,11 @@ class RewardsHubScreen extends ConsumerWidget {
     required VoidCallback onTap,
   }) {
     final theme = Theme.of(context);
-    
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 100,
+        height: 110,
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(16),
@@ -384,17 +384,17 @@ class RewardsHubScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildTokenHistoryPreview(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock transaction data
     final transactions = [
       {'amount': '+10', 'description': 'Daily challenge completed', 'time': '2 hours ago'},
       {'amount': '-50', 'description': 'Purchased premium avatar frame', 'time': 'Yesterday'},
       {'amount': '+25', 'description': 'Weekly streak bonus', 'time': '3 days ago'},
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -436,7 +436,7 @@ class RewardsHubScreen extends ConsumerWidget {
             itemBuilder: (context, index) {
               final transaction = transactions[index];
               final isPositive = transaction['amount']!.startsWith('+');
-              
+
               return ListTile(
                 leading: CircleAvatar(
                   backgroundColor: isPositive
