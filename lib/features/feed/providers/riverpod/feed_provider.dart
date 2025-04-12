@@ -1,4 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:zinapp_v2/models/comment.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/services/feed_service.dart';
@@ -8,7 +10,7 @@ part 'feed_provider.g.dart';
 
 /// Provider for the FeedService
 @riverpod
-FeedService feedService(FeedServiceRef ref) {
+FeedService feedService(Ref ref) {
   return FeedService();
 }
 
@@ -149,6 +151,27 @@ class Feed extends _$Feed {
     return state.postUsers[userId];
   }
 
+  /// Get user profile for a post (async version)
+  Future<UserProfile?> getUserForPostAsync(String userId) async {
+    if (state.postUsers.containsKey(userId)) {
+      return state.postUsers[userId];
+    }
+
+    try {
+      final user = await ref.read(feedServiceProvider).getUserForPost(userId);
+
+      // Update users in state
+      final updatedUsers = Map<String, UserProfile>.from(state.postUsers);
+      updatedUsers[userId] = user;
+
+      state = state.copyWith(postUsers: updatedUsers);
+
+      return user;
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Load user profiles for all posts
   Future<Map<String, UserProfile>> _loadUsersForPosts(List<Post> posts) async {
     final userIds = posts.map((post) => post.userId).toSet().toList();
@@ -171,6 +194,158 @@ class Feed extends _$Feed {
   /// Clear the current error message
   void clearError() {
     state = state.copyWith(error: null);
+  }
+
+  /// Set active post for comments
+  void setActivePost(String postId) {
+    state = state.copyWith(activePostId: postId);
+    loadCommentsForPost(postId);
+  }
+
+  /// Clear active post
+  void clearActivePost() {
+    state = state.copyWith(activePostId: null);
+  }
+
+  /// Load comments for a post
+  Future<void> loadCommentsForPost(String postId) async {
+    state = state.copyWith(isLoadingComments: true);
+
+    try {
+      final comments = await ref.read(feedServiceProvider).getCommentsForPost(postId);
+
+      // Update comments in state
+      final updatedComments = Map<String, List<Comment>>.from(state.postComments);
+      updatedComments[postId] = comments;
+
+      // Load user profiles for comments
+      final userIds = comments.map((comment) => comment.userId).toSet().toList();
+      final updatedUsers = await _loadUsersForIds(userIds);
+
+      state = state.copyWith(
+        postComments: updatedComments,
+        postUsers: updatedUsers,
+        isLoadingComments: false,
+        error: null,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoadingComments: false,
+        error: 'Failed to load comments: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Add a comment to a post
+  Future<bool> addComment({
+    required String postId,
+    required String userId,
+    required String text,
+  }) async {
+    try {
+      // Add the comment via service
+      final comment = await ref.read(feedServiceProvider).addComment(
+        postId: postId,
+        userId: userId,
+        text: text,
+      );
+
+      // Update comments in state
+      final updatedComments = Map<String, List<Comment>>.from(state.postComments);
+      if (updatedComments.containsKey(postId)) {
+        updatedComments[postId] = [comment, ...updatedComments[postId]!];
+      } else {
+        updatedComments[postId] = [comment];
+      }
+
+      // Update post comment count
+      final updatedPosts = List<Post>.from(state.posts);
+      final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
+      if (postIndex != -1) {
+        updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
+          commentsCount: updatedPosts[postIndex].commentsCount + 1,
+        );
+      }
+
+      state = state.copyWith(
+        postComments: updatedComments,
+        posts: updatedPosts,
+        error: null,
+      );
+
+      return true;
+    } catch (e) {
+      state = state.copyWith(error: 'Failed to add comment: ${e.toString()}');
+      return false;
+    }
+  }
+
+  /// Delete a comment
+  Future<bool> deleteComment(String commentId, String postId) async {
+    try {
+      // Find the comment in the current state
+      final comments = state.postComments[postId] ?? [];
+      final commentIndex = comments.indexWhere((c) => c.commentId == commentId);
+
+      if (commentIndex == -1) {
+        state = state.copyWith(error: 'Comment not found');
+        return false;
+      }
+
+      // Delete the comment via service
+      final success = await ref.read(feedServiceProvider).deleteComment(commentId, postId);
+
+      if (success) {
+        // Update comments in state
+        final updatedComments = Map<String, List<Comment>>.from(state.postComments);
+        if (updatedComments.containsKey(postId)) {
+          updatedComments[postId] = List<Comment>.from(updatedComments[postId]!)
+            ..removeWhere((c) => c.commentId == commentId);
+        }
+
+        // Update post comment count
+        final updatedPosts = List<Post>.from(state.posts);
+        final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
+        if (postIndex != -1) {
+          final currentCount = updatedPosts[postIndex].commentsCount;
+          updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
+            commentsCount: currentCount > 0 ? currentCount - 1 : 0,
+          );
+        }
+
+        state = state.copyWith(
+          postComments: updatedComments,
+          posts: updatedPosts,
+          error: null,
+        );
+
+        return true;
+      } else {
+        state = state.copyWith(error: 'Failed to delete comment');
+        return false;
+      }
+    } catch (e) {
+      state = state.copyWith(error: 'Error deleting comment: ${e.toString()}');
+      return false;
+    }
+  }
+
+  /// Load user profiles for a list of user IDs
+  Future<Map<String, UserProfile>> _loadUsersForIds(List<String> userIds) async {
+    final updatedUsers = Map<String, UserProfile>.from(state.postUsers);
+
+    for (final userId in userIds) {
+      if (!updatedUsers.containsKey(userId)) {
+        try {
+          final user = await ref.read(feedServiceProvider).getUserForPost(userId);
+          updatedUsers[userId] = user;
+        } catch (_) {
+          // Skip this user if there's an error
+        }
+      }
+    }
+
+    return updatedUsers;
   }
 
   /// Toggle like status for a post
@@ -219,13 +394,19 @@ class Feed extends _$Feed {
 class FeedState {
   final List<Post> posts;
   final Map<String, UserProfile> postUsers;
+  final Map<String, List<Comment>> postComments;
+  final String? activePostId;
   final bool isLoading;
+  final bool isLoadingComments;
   final String? error;
 
   const FeedState({
     required this.posts,
     required this.postUsers,
+    required this.postComments,
+    this.activePostId,
     required this.isLoading,
+    required this.isLoadingComments,
     this.error,
   });
 
@@ -234,7 +415,10 @@ class FeedState {
     return const FeedState(
       posts: [],
       postUsers: {},
+      postComments: {},
+      activePostId: null,
       isLoading: false,
+      isLoadingComments: false,
     );
   }
 
@@ -242,13 +426,19 @@ class FeedState {
   FeedState copyWith({
     List<Post>? posts,
     Map<String, UserProfile>? postUsers,
+    Map<String, List<Comment>>? postComments,
+    String? activePostId,
     bool? isLoading,
+    bool? isLoadingComments,
     String? error,
   }) {
     return FeedState(
       posts: posts ?? this.posts,
       postUsers: postUsers ?? this.postUsers,
+      postComments: postComments ?? this.postComments,
+      activePostId: activePostId ?? this.activePostId,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingComments: isLoadingComments ?? this.isLoadingComments,
       error: error,
     );
   }

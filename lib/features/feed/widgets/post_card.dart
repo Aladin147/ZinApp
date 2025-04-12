@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
 import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
+import 'package:zinapp_v2/features/feed/screens/post_comments_screen.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
@@ -143,6 +144,40 @@ class PostCard extends ConsumerWidget {
                 ),
               ),
             ],
+            // Comment preview (if there are comments)
+            if (post.commentsCount > 0)
+              InkWell(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => PostCommentsScreen(post: post),
+                    ),
+                  );
+                },
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.chat_bubble_outline,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        post.commentsCount == 1
+                            ? 'View 1 comment'
+                            : 'View all ${post.commentsCount} comments',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
             // Engagement stats
             Padding(
               padding: const EdgeInsets.all(12),
@@ -168,7 +203,19 @@ class PostCard extends ConsumerWidget {
                     context,
                     icon: Icons.comment,
                     count: post.commentsCount,
-                    onTap: onCommentTap,
+                    onTap: () {
+                      // Navigate to comments screen
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PostCommentsScreen(post: post),
+                        ),
+                      );
+
+                      // Call the onCommentTap callback if provided
+                      if (onCommentTap != null) {
+                        onCommentTap!();
+                      }
+                    },
                   ),
                   const SizedBox(width: 16),
                   _buildEngagementStat(

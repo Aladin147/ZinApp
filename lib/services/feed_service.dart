@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:zinapp_v2/models/comment.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/services/api_config.dart';
@@ -236,6 +237,193 @@ class FeedService {
     } catch (e) {
       if (e is FeedException) rethrow;
       throw FeedException('Error getting user for post: $e');
+    }
+  }
+
+  /// Get comments for a post
+  Future<List<Comment>> getCommentsForPost(String postId) async {
+    try {
+      if (ApiConfig.useMockData) {
+        // Use mock data
+        final comments = MockData.comments
+            .where((comment) => comment['postId'] == postId)
+            .map((data) => Comment(
+                  commentId: data['id'],
+                  userId: data['userId'],
+                  text: data['content'],
+                  timestamp: DateTime.parse(data['createdAt']),
+                ),)
+            .toList();
+
+        // Sort by timestamp (newest first)
+        comments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        return comments;
+      } else {
+        final response = await http.get(
+          Uri.parse('$baseUrl/comments?postId=$postId'),
+        );
+
+        if (response.statusCode == 200) {
+          final List<dynamic> commentsData = jsonDecode(response.body);
+          final comments = commentsData
+              .map((data) => Comment(
+                    commentId: data['id'],
+                    userId: data['userId'],
+                    text: data['content'],
+                    timestamp: DateTime.parse(data['createdAt']),
+                  ),)
+              .toList();
+
+          // Sort by timestamp (newest first)
+          comments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+          return comments;
+        } else {
+          throw FeedException(
+              'Failed to get comments: ${response.statusCode}',);
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error getting comments: $e');
+    }
+  }
+
+  /// Add a comment to a post
+  Future<Comment> addComment({
+    required String postId,
+    required String userId,
+    required String text,
+  }) async {
+    try {
+      final commentData = {
+        'id': 'comment${DateTime.now().millisecondsSinceEpoch}',
+        'postId': postId,
+        'userId': userId,
+        'content': text,
+        'likesCount': 0,
+        'createdAt': DateTime.now().toIso8601String(),
+      };
+
+      if (ApiConfig.useMockData) {
+        // Add to mock data
+        MockData.comments.add(commentData);
+
+        // Update post comment count
+        final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+        if (postIndex != -1) {
+          MockData.posts[postIndex]['commentsCount'] =
+              (MockData.posts[postIndex]['commentsCount'] as int) + 1;
+        }
+
+        // Simulate API delay
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        return Comment(
+          commentId: commentData['id'] as String,
+          userId: commentData['userId'] as String,
+          text: commentData['content'] as String,
+          timestamp: DateTime.parse(commentData['createdAt'] as String),
+        );
+      } else {
+        final response = await http.post(
+          Uri.parse('$baseUrl/comments'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(commentData),
+        );
+
+        if (response.statusCode == 201) {
+          final createdCommentData = jsonDecode(response.body);
+
+          // Update post comment count
+          await http.patch(
+            Uri.parse('$baseUrl/posts/$postId'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'commentsCount': await _getUpdatedCommentCount(postId),
+            }),
+          );
+
+          return Comment(
+            commentId: createdCommentData['id'],
+            userId: createdCommentData['userId'],
+            text: createdCommentData['content'],
+            timestamp: DateTime.parse(createdCommentData['createdAt']),
+          );
+        } else {
+          throw FeedException('Failed to add comment: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error adding comment: $e');
+    }
+  }
+
+  /// Delete a comment
+  Future<bool> deleteComment(String commentId, String postId) async {
+    try {
+      if (ApiConfig.useMockData) {
+        // Remove from mock data
+        final commentIndex = MockData.comments.indexWhere((c) => c['id'] == commentId);
+        if (commentIndex != -1) {
+          MockData.comments.removeAt(commentIndex);
+
+          // Update post comment count
+          final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+          if (postIndex != -1) {
+            final currentCount = MockData.posts[postIndex]['commentsCount'] as int;
+            MockData.posts[postIndex]['commentsCount'] = currentCount > 0 ? currentCount - 1 : 0;
+          }
+
+          // Simulate API delay
+          await Future.delayed(const Duration(milliseconds: 300));
+
+          return true;
+        }
+        return false;
+      } else {
+        final response = await http.delete(
+          Uri.parse('$baseUrl/comments/$commentId'),
+        );
+
+        if (response.statusCode == 200) {
+          // Update post comment count
+          await http.patch(
+            Uri.parse('$baseUrl/posts/$postId'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'commentsCount': await _getUpdatedCommentCount(postId),
+            }),
+          );
+
+          return true;
+        } else {
+          throw FeedException('Failed to delete comment: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error deleting comment: $e');
+    }
+  }
+
+  /// Get updated comment count for a post
+  Future<int> _getUpdatedCommentCount(String postId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/comments?postId=$postId'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> comments = jsonDecode(response.body);
+        return comments.length;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      return 0;
     }
   }
 }
