@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
+import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A card displaying a post in the social feed
-class PostCard extends StatelessWidget {
+class PostCard extends ConsumerWidget {
   final Post post;
   final String username;
   final String? userProfilePictureUrl;
@@ -15,7 +17,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback? onUserTap;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.post,
     required this.username,
     this.userProfilePictureUrl,
@@ -24,10 +26,10 @@ class PostCard extends StatelessWidget {
     this.onCommentTap,
     this.onShareTap,
     this.onUserTap,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
 
     return GestureDetector(
@@ -70,7 +72,7 @@ class PostCard extends StatelessWidget {
                         Text(
                           post.location!,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.7),
+                            color: theme.colorScheme.onSurface.withAlpha(179),
                           ),
                         ),
                     ],
@@ -79,7 +81,7 @@ class PostCard extends StatelessWidget {
                   Text(
                     _formatDate(post.createdAt),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.5),
+                      color: theme.colorScheme.onSurface.withAlpha(128),
                     ),
                   ),
                 ],
@@ -148,9 +150,18 @@ class PostCard extends StatelessWidget {
                 children: [
                   _buildEngagementStat(
                     context,
-                    icon: Icons.favorite,
+                    icon: post.isLiked ? Icons.favorite : Icons.favorite_border,
                     count: post.likesCount,
-                    onTap: onLikeTap,
+                    color: post.isLiked ? Colors.red : null,
+                    onTap: () {
+                      // Toggle like
+                      ref.read(feedProvider.notifier).toggleLike(post.id);
+
+                      // Call the onLikeTap callback if provided
+                      if (onLikeTap != null) {
+                        onLikeTap!();
+                      }
+                    },
                   ),
                   const SizedBox(width: 16),
                   _buildEngagementStat(
@@ -179,9 +190,11 @@ class PostCard extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     required int count,
+    Color? color,
     VoidCallback? onTap,
   }) {
     final theme = Theme.of(context);
+    final defaultColor = theme.colorScheme.onSurface.withAlpha(179);
 
     return GestureDetector(
       onTap: onTap,
@@ -190,13 +203,13 @@ class PostCard extends StatelessWidget {
           Icon(
             icon,
             size: 18,
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: color ?? defaultColor,
           ),
           const SizedBox(width: 4),
           Text(
             count.toString(),
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: color ?? defaultColor,
             ),
           ),
         ],

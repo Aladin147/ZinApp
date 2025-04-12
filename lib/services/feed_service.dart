@@ -54,7 +54,7 @@ class FeedService {
         return postsData.map((data) => Post.fromJson(data)).toList();
       } else {
         throw FeedException(
-            'Failed to get posts by user: ${response.statusCode}');
+            'Failed to get posts by user: ${response.statusCode}',);
       }
     } catch (e) {
       if (e is FeedException) rethrow;
@@ -65,15 +65,24 @@ class FeedService {
   /// Get post by ID
   Future<Post> getPostById(String id) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/posts/$id'),
-      );
-
-      if (response.statusCode == 200) {
-        final postData = jsonDecode(response.body);
-        return Post.fromJson(postData);
+      if (ApiConfig.useMockData) {
+        // Find post in mock data
+        final postMatch = MockData.posts.where((p) => p['id'] == id).toList();
+        if (postMatch.isEmpty) {
+          throw FeedException('Post not found in mock data: $id');
+        }
+        return Post.fromJson(postMatch.first);
       } else {
-        throw FeedException('Failed to get post: ${response.statusCode}');
+        final response = await http.get(
+          Uri.parse('$baseUrl/posts/$id'),
+        );
+
+        if (response.statusCode == 200) {
+          final postData = jsonDecode(response.body);
+          return Post.fromJson(postData);
+        } else {
+          throw FeedException('Failed to get post: ${response.statusCode}');
+        }
       }
     } catch (e) {
       if (e is FeedException) rethrow;
@@ -121,32 +130,66 @@ class FeedService {
     }
   }
 
-  /// Like a post
-  Future<Post> likePost(String postId) async {
+  /// Toggle like status for a post
+  Future<Post> toggleLike(String postId, bool isLiked) async {
     try {
-      // Get current post
-      final post = await getPostById(postId);
+      if (ApiConfig.useMockData) {
+        try {
+          // Get current post
+          final post = await getPostById(postId);
 
-      // Update likes count
-      final updatedPost = {
-        'likesCount': post.likesCount + 1,
-      };
+          // Update likes count based on the action
+          final updatedLikesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
 
-      final response = await http.patch(
-        Uri.parse('$baseUrl/posts/$postId'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(updatedPost),
-      );
+          // Create updated post
+          final updatedPost = post.copyWith(
+            likesCount: updatedLikesCount >= 0 ? updatedLikesCount : 0,
+            isLiked: isLiked,
+          );
 
-      if (response.statusCode == 200) {
-        final updatedPostData = jsonDecode(response.body);
-        return Post.fromJson(updatedPostData);
+          // Simulate API delay
+          await Future.delayed(const Duration(milliseconds: 300));
+
+          // Update the mock data
+          final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+          if (postIndex != -1) {
+            MockData.posts[postIndex]['likesCount'] = updatedPost.likesCount;
+            MockData.posts[postIndex]['isLiked'] = updatedPost.isLiked;
+          }
+
+          return updatedPost;
+        } catch (e) {
+          throw FeedException('Error toggling like in mock data: $e');
+        }
       } else {
-        throw FeedException('Failed to like post: ${response.statusCode}');
+        // Get current post
+        final post = await getPostById(postId);
+
+        // Update likes count based on the action
+        final updatedLikesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+
+        // Prepare data for API
+        final updatedPostData = {
+          'likesCount': updatedLikesCount >= 0 ? updatedLikesCount : 0,
+          'isLiked': isLiked,
+        };
+
+        final response = await http.patch(
+          Uri.parse('$baseUrl/posts/$postId'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(updatedPostData),
+        );
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          return Post.fromJson(responseData);
+        } else {
+          throw FeedException('Failed to update like status: ${response.statusCode}');
+        }
       }
     } catch (e) {
       if (e is FeedException) rethrow;
-      throw FeedException('Error liking post: $e');
+      throw FeedException('Error toggling like: $e');
     }
   }
 
@@ -186,7 +229,7 @@ class FeedService {
             return UserProfile.fromJson(stylistData);
           } else {
             throw FeedException(
-                'Failed to get user for post: ${response.statusCode}');
+                'Failed to get user for post: ${response.statusCode}',);
           }
         }
       }

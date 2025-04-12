@@ -197,6 +197,7 @@ class MockData {
       "likesCount": 128,
       "commentsCount": 24,
       "sharesCount": 12,
+      "isLiked": false,
       "createdAt": "2023-06-15T14:30:00Z"
     },
     {
@@ -209,6 +210,7 @@ class MockData {
       "likesCount": 45,
       "commentsCount": 8,
       "sharesCount": 2,
+      "isLiked": false,
       "createdAt": "2023-06-16T09:45:00Z"
     },
     {
@@ -221,6 +223,7 @@ class MockData {
       "likesCount": 95,
       "commentsCount": 15,
       "sharesCount": 8,
+      "isLiked": false,
       "createdAt": "2023-06-14T16:20:00Z"
     },
     {
@@ -233,6 +236,7 @@ class MockData {
       "likesCount": 76,
       "commentsCount": 12,
       "sharesCount": 5,
+      "isLiked": false,
       "createdAt": "2023-06-15T10:15:00Z"
     }
   ];

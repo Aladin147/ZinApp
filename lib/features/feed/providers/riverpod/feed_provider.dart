@@ -123,17 +123,18 @@ class Feed extends _$Feed {
     }
   }
 
-  /// Like a post
+  /// Like a post (legacy method, use toggleLike instead)
   Future<bool> likePost(String postId) async {
     try {
-      final updatedPost = await ref.read(feedServiceProvider).likePost(postId);
+      // Find the post
+      final postIndex = state.posts.indexWhere((post) => post.id == postId);
+      if (postIndex == -1) return false; // Post not found
 
-      // Update post in list
-      final updatedPosts = [...state.posts];
-      final index = updatedPosts.indexWhere((post) => post.id == postId);
-      if (index != -1) {
-        updatedPosts[index] = updatedPost;
-        state = state.copyWith(posts: updatedPosts);
+      final post = state.posts[postIndex];
+
+      // Only like if not already liked
+      if (!post.isLiked) {
+        await toggleLike(postId);
       }
 
       return true;
@@ -170,6 +171,47 @@ class Feed extends _$Feed {
   /// Clear the current error message
   void clearError() {
     state = state.copyWith(error: null);
+  }
+
+  /// Toggle like status for a post
+  Future<void> toggleLike(String postId) async {
+    try {
+      // Find the post in the current state
+      final postIndex = state.posts.indexWhere((post) => post.id == postId);
+      if (postIndex == -1) {
+        state = state.copyWith(error: 'Post not found');
+        return; // Post not found
+      }
+
+      final post = state.posts[postIndex];
+      final isCurrentlyLiked = post.isLiked;
+
+      // Create a new list with the updated post
+      final updatedPosts = List<Post>.from(state.posts);
+      updatedPosts[postIndex] = post.copyWith(
+        isLiked: !isCurrentlyLiked,
+        likesCount: isCurrentlyLiked ? post.likesCount - 1 : post.likesCount + 1,
+      );
+
+      // Update state optimistically
+      state = state.copyWith(posts: updatedPosts, error: null);
+
+      try {
+        // Call the API to update the like status
+        await ref.read(feedServiceProvider).toggleLike(postId, !isCurrentlyLiked);
+      } catch (apiError) {
+        // If the API call fails, revert the optimistic update but keep the UI responsive
+        final revertedPosts = List<Post>.from(state.posts);
+        revertedPosts[postIndex] = post; // Revert to original post
+        state = state.copyWith(
+          posts: revertedPosts,
+          error: 'Failed to update like status: ${apiError.toString()}',
+        );
+      }
+    } catch (e) {
+      // Handle any other errors
+      state = state.copyWith(error: 'Error processing like action: ${e.toString()}');
+    }
   }
 }
 

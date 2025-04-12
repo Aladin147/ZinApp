@@ -16,6 +16,7 @@ class Post extends Equatable {
   final int commentsCount;
   final int sharesCount;
   final DateTime createdAt;
+  final bool isLiked;
 
   const Post({
     required this.id,
@@ -28,6 +29,7 @@ class Post extends Equatable {
     required this.commentsCount,
     required this.sharesCount,
     required this.createdAt,
+    this.isLiked = false,
   });
 
   /// Creates a Post from JSON data
@@ -48,5 +50,35 @@ class Post extends Equatable {
         commentsCount,
         sharesCount,
         createdAt,
+        isLiked,
       ];
+
+  /// Create a copy of this post with the given fields replaced with the new values
+  Post copyWith({
+    String? id,
+    String? userId,
+    String? content,
+    List<String>? imageUrls,
+    List<String>? tags,
+    String? location,
+    int? likesCount,
+    int? commentsCount,
+    int? sharesCount,
+    DateTime? createdAt,
+    bool? isLiked,
+  }) {
+    return Post(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+      imageUrls: imageUrls ?? this.imageUrls,
+      tags: tags ?? this.tags,
+      location: location ?? this.location,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
+      sharesCount: sharesCount ?? this.sharesCount,
+      createdAt: createdAt ?? this.createdAt,
+      isLiked: isLiked ?? this.isLiked,
+    );
+  }
 }
