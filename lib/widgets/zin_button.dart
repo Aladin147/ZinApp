@@ -73,32 +73,33 @@ class ZinButton extends StatelessWidget {
     // Determine button styling based on variant
     Color backgroundColor;
     Color foregroundColor;
-    Color? overlayColor;
+    // Overlay color is not used directly in ElevatedButton.styleFrom
+    // but we keep it for documentation purposes
     BorderSide? side;
 
     switch (variant) {
       case ZinButtonVariant.primary:
         backgroundColor = AppColors.primaryHighlight;
         foregroundColor = Colors.black;
-        overlayColor = Colors.white.withOpacity(0.2);
+        // overlayColor would be Colors.white.withAlpha(0.2);
         side = null;
         break;
       case ZinButtonVariant.secondary:
         backgroundColor = theme.colorScheme.secondary;
         foregroundColor = theme.colorScheme.onSecondary;
-        overlayColor = null;
+        // No overlay color needed
         side = null;
         break;
       case ZinButtonVariant.outline:
         backgroundColor = Colors.transparent;
         foregroundColor = AppColors.primaryHighlight;
-        overlayColor = AppColors.primaryHighlight.withOpacity(0.1);
+        // overlayColor would be AppColors.primaryHighlight.withAlpha(0.1);
         side = const BorderSide(color: AppColors.primaryHighlight);
         break;
       case ZinButtonVariant.text:
         backgroundColor = Colors.transparent;
         foregroundColor = AppColors.primaryHighlight;
-        overlayColor = AppColors.primaryHighlight.withOpacity(0.1);
+        // overlayColor would be AppColors.primaryHighlight.withAlpha(0.1);
         side = null;
         break;
     }
@@ -169,7 +170,7 @@ class ZinButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: foregroundColor,
-        disabledBackgroundColor: theme.colorScheme.surfaceVariant,
+        disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
         disabledForegroundColor: theme.colorScheme.onSurfaceVariant,
         padding: padding,
         elevation: variant == ZinButtonVariant.text ? 0 : null,

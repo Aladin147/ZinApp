@@ -337,10 +337,10 @@ class _AppButtonState extends State<AppButton> with TickerProviderStateMixin {
           // Style comes from elevatedButtonTheme in zinapp_theme.dart
           // Override minimumSize if needed based on size prop
           style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                minimumSize: MaterialStateProperty.all(Size(0, _getHeightForSize())),
-                padding: MaterialStateProperty.all(_getPaddingForSize()), // Apply dynamic padding
-                textStyle: MaterialStateProperty.all(_getTextStyleForSize(context)), // Apply dynamic text style
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)), // Apply dynamic border radius
+                minimumSize: WidgetStateProperty.all(Size(0, _getHeightForSize())),
+                padding: WidgetStateProperty.all(_getPaddingForSize()), // Apply dynamic padding
+                textStyle: WidgetStateProperty.all(_getTextStyleForSize(context)), // Apply dynamic text style
+                shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)), // Apply dynamic border radius
               ),
           child: buttonContent,
         );
@@ -351,10 +351,10 @@ class _AppButtonState extends State<AppButton> with TickerProviderStateMixin {
           onPressed: effectiveOnPressed,
           // Style comes from outlinedButtonTheme in zinapp_theme.dart
           style: Theme.of(context).outlinedButtonTheme.style?.copyWith(
-                minimumSize: MaterialStateProperty.all(Size(0, _getHeightForSize())),
-                padding: MaterialStateProperty.all(_getPaddingForSize()),
-                textStyle: MaterialStateProperty.all(_getTextStyleForSize(context)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)),
+                minimumSize: WidgetStateProperty.all(Size(0, _getHeightForSize())),
+                padding: WidgetStateProperty.all(_getPaddingForSize()),
+                textStyle: WidgetStateProperty.all(_getTextStyleForSize(context)),
+                shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)),
                 // Side is defined in the theme, no need to override here unless specific cases arise
               ),
           child: buttonContent,
@@ -366,10 +366,10 @@ class _AppButtonState extends State<AppButton> with TickerProviderStateMixin {
           onPressed: effectiveOnPressed,
           // Style comes from textButtonTheme in zinapp_theme.dart
           style: Theme.of(context).textButtonTheme.style?.copyWith(
-                minimumSize: MaterialStateProperty.all(Size(0, _getHeightForSize())),
-                padding: MaterialStateProperty.all(_getPaddingForSize()),
-                textStyle: MaterialStateProperty.all(_getTextStyleForSize(context)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)),
+                minimumSize: WidgetStateProperty.all(Size(0, _getHeightForSize())),
+                padding: WidgetStateProperty.all(_getPaddingForSize()),
+                textStyle: WidgetStateProperty.all(_getTextStyleForSize(context)),
+                shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: borderRadius)),
               ),
           child: buttonContent,
         );
