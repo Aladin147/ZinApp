@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/services/api_config.dart';
 import 'package:zinapp_v2/services/mock_data.dart';
-import 'package:zinapp_v2/features/auth/models/auth_user.dart';
+import 'package:zinapp_v2/models/auth_user.dart';
 import 'package:zinapp_v2/features/auth/services/auth_service.dart';
 
 /// Exception thrown when authentication fails
@@ -20,12 +20,12 @@ class AuthException implements Exception {
 class AuthServiceImpl implements AuthService {
   final String baseUrl = ApiConfig.baseUrl;
   final FlutterSecureStorage storage = const FlutterSecureStorage();
-  
+
   AuthUser _currentUser = AuthUser.empty();
-  
+
   @override
   AuthUser get currentUser => _currentUser;
-  
+
   @override
   Stream<AuthUser> get authStateChanges => throw UnimplementedError();
 
@@ -80,11 +80,11 @@ class AuthServiceImpl implements AuthService {
           lastSignInAt: DateTime.now(),
           isStylist: false,
         );
-        
+
         // Save auth state
         await _saveAuthState(authUser);
         _currentUser = authUser;
-        
+
         return authUser;
       } else {
         // Use real API
@@ -130,11 +130,11 @@ class AuthServiceImpl implements AuthService {
           lastSignInAt: DateTime.now(),
           isStylist: userData['userType'] == 'stylist',
         );
-        
+
         // Save auth state
         await _saveAuthState(authUser);
         _currentUser = authUser;
-        
+
         return authUser;
       } else {
         // Use real API
