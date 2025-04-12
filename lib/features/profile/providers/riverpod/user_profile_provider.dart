@@ -15,7 +15,7 @@ UserProfileService userProfileService(UserProfileServiceRef ref) {
 
 /// Provider for user profile state
 @riverpod
-class UserProfile extends _$UserProfile {
+class UserProfileProvider extends _$UserProfileProvider {
   @override
   UserProfileState build() {
     return UserProfileState.initial();

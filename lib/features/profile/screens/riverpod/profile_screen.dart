@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/models/token_transaction.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/user.dart';
+import 'package:zinapp_v2/models/user_profile.dart' as models;
 import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
@@ -21,7 +22,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    
+
     // Load user profile and token history
     Future.microtask(() {
       ref.read(userProfileProvider.notifier).loadUserProfile();
@@ -87,7 +88,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                             initials: user.username.isNotEmpty ? user.username[0] : '?',
                           ),
                           const SizedBox(height: 8),
-                          
+
                           // Username and rank
                           Text(
                             user.username,
@@ -102,7 +103,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                               color: Colors.white.withOpacity(0.8),
                             ),
                           ),
-                          
+
                           // Level and XP
                           const SizedBox(height: 8),
                           Row(
@@ -123,7 +124,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                               ),
                             ],
                           ),
-                          
+
                           // XP Progress bar
                           const SizedBox(height: 4),
                           ClipRRect(
@@ -142,7 +143,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                 ),
               ),
             ),
-            
+
             // Stats
             SliverToBoxAdapter(
               child: Container(
@@ -158,7 +159,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                 ),
               ),
             ),
-            
+
             // Tab Bar
             SliverPersistentHeader(
               delegate: _SliverAppBarDelegate(
@@ -176,7 +177,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
               ),
               pinned: true,
             ),
-            
+
             // Tab Content
             SliverFillRemaining(
               child: TabBarView(
@@ -184,10 +185,10 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                 children: [
                   // About Tab
                   _buildAboutTab(context, user),
-                  
+
                   // Achievements Tab
                   _buildAchievementsTab(context, user),
-                  
+
                   // Tokens Tab
                   _buildTokensTab(context, profileState.tokenHistory),
                 ],
@@ -239,7 +240,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           ),
           const SizedBox(height: 16),
         ],
-        
+
         // Location
         if (user.location != null && user.location!.isNotEmpty) ...[
           Text(
@@ -261,7 +262,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           ),
           const SizedBox(height: 16),
         ],
-        
+
         // Favorite Styles
         if (user.favoriteStyles != null && user.favoriteStyles!.isNotEmpty) ...[
           Text(
@@ -286,7 +287,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           ),
           const SizedBox(height: 16),
         ],
-        
+
         // Stylist Profile (if applicable)
         if (user.userType == UserType.stylist && user.stylistProfile != null) ...[
           const Divider(),
@@ -322,7 +323,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           style: theme.textTheme.bodyMedium,
         ),
         const SizedBox(height: 12),
-        
+
         // Services
         Text(
           'Services',
@@ -345,7 +346,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           }).toList(),
         ),
         const SizedBox(height: 12),
-        
+
         // Rating
         Row(
           children: [
@@ -358,7 +359,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
           ],
         ),
         const SizedBox(height: 12),
-        
+
         // Business Info
         if (profile.businessName != null) ...[
           Text(
@@ -388,7 +389,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
             ),
           ],
         ],
-        
+
         // Stats
         const SizedBox(height: 16),
         Row(
@@ -397,7 +398,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
             _buildStylistStatItem(context, profile.completedBookings.toString(), 'Bookings'),
             _buildStylistStatItem(context, profile.clientCount.toString(), 'Clients'),
             _buildStylistStatItem(
-              context, 
+              context,
               profile.isAvailable ? 'Available' : 'Unavailable',
               'Status',
               color: profile.isAvailable ? Colors.green : Colors.red,
@@ -431,7 +432,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
 
   Widget _buildAchievementsTab(BuildContext context, UserProfile user) {
     final theme = Theme.of(context);
-    
+
     if (user.achievements.isEmpty) {
       return Center(
         child: Column(
@@ -461,7 +462,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
         ),
       );
     }
-    
+
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -502,7 +503,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
 
   Widget _buildTokensTab(BuildContext context, List<TokenTransaction>? transactions) {
     final theme = Theme.of(context);
-    
+
     if (transactions == null || transactions.isEmpty) {
       return Center(
         child: Column(
@@ -532,7 +533,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
         ),
       );
     }
-    
+
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: transactions.length,
@@ -570,7 +571,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
   Widget _getTransactionIcon(TokenTransactionType type) {
     IconData iconData;
     Color iconColor;
-    
+
     switch (type) {
       case TokenTransactionType.earned:
         iconData = Icons.add_circle_outline;
@@ -593,7 +594,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
         iconColor = Colors.purple;
         break;
     }
-    
+
     return CircleAvatar(
       backgroundColor: iconColor.withOpacity(0.1),
       child: Icon(iconData, color: iconColor),
