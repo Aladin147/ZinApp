@@ -17,6 +17,7 @@ import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.da
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_confirmation_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_screen.dart';
+import 'package:zinapp_v2/features/booking/screens/riverpod/booking_history_screen.dart';
 import 'package:zinapp_v2/features/rewards/screens/challenges_screen.dart';
 import 'package:zinapp_v2/features/rewards/screens/daily_rewards_screen.dart';
 import 'package:zinapp_v2/features/rewards/screens/rewards_hub_screen.dart';
@@ -195,6 +196,21 @@ GoRouter riverpodRouter(Ref ref) {
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
             authenticatedChild: BookingConfirmationScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Booking history route (protected)
+      GoRoute(
+        path: AppRoutes.bookingHistory,
+        name: AppRoutes.bookingHistory,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: MainLayout(
+              showBottomNav: true,
+              child: BookingHistoryScreen(),
+            ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },

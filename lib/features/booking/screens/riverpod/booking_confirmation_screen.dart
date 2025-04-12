@@ -122,7 +122,7 @@ class BookingConfirmationScreen extends ConsumerWidget {
               // View all bookings link
               TextButton(
                 onPressed: () {
-                  // TODO: Navigate to bookings history screen
+                  context.go(AppRoutes.bookingHistory);
                 },
                 child: const Text(
                   'View All Bookings',

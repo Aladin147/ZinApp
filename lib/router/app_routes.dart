@@ -11,6 +11,7 @@ abstract class AppRoutes {
   static const String stylistDetail = '/stylists/:id';
   static const String booking = '/booking';
   static const String bookingConfirmation = '/booking/confirmation';
+  static const String bookingHistory = '/booking/history';
   static const String messages = '/messages';
   static const String messageDetail = '/messages/:id';
 

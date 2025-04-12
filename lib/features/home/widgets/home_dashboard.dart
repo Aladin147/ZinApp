@@ -63,7 +63,7 @@ class HomeDashboard extends StatelessWidget {
           onBookingTap: (booking) {
             // TODO: Navigate to booking details
           },
-          onViewAllTap: () => context.go(AppRoutes.booking),
+          onViewAllTap: () => context.go(AppRoutes.bookingHistory),
           onBookNowTap: () => context.go(AppRoutes.booking),
         ),
 
