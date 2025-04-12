@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class GamerDashboardSection extends StatelessWidget {
   final UserProfile? user;
+  final VoidCallback? onProfileTap;
 
   const GamerDashboardSection({
     super.key,
     required this.user,
+    this.onProfileTap,
   });
 
   @override
@@ -42,35 +46,40 @@ class GamerDashboardSection extends StatelessWidget {
           Row(
             children: [
               // User avatar with level ring
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Level ring
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: SweepGradient(
-                        colors: [
-                          AppColors.primaryHighlight,
-                          AppColors.primaryHighlight.withAlpha(77), // 0.3 opacity
-                        ],
-                        stops: const [0.7, 0.7], // 70% progress
+              GestureDetector(
+                onTap: () {
+                  context.go(AppRoutes.profile);
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Level ring
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: SweepGradient(
+                          colors: [
+                            AppColors.primaryHighlight,
+                            AppColors.primaryHighlight.withAlpha(77), // 0.3 opacity
+                          ],
+                          stops: const [0.7, 0.7], // 70% progress
+                        ),
                       ),
                     ),
-                  ),
-                  // User avatar
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: user?.profilePictureUrl != null
-                        ? AssetImage(user!.profilePictureUrl!)
-                        : null,
-                    child: user?.profilePictureUrl == null
-                        ? const Icon(Icons.person)
-                        : null,
-                  ),
-                ],
+                    // User avatar
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: user?.profilePictureUrl != null
+                          ? AssetImage(user!.profilePictureUrl!)
+                          : null,
+                      child: user?.profilePictureUrl == null
+                          ? const Icon(Icons.person)
+                          : null,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(width: 12),
               // User info

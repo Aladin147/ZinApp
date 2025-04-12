@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/feed/widgets/post_card.dart';
 import 'package:zinapp_v2/features/home/widgets/action_hub_section.dart';
 import 'package:zinapp_v2/features/home/widgets/gamer_dashboard_section.dart';
@@ -7,6 +8,7 @@ import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class EnhancedHomeScreen extends ConsumerStatefulWidget {
@@ -128,6 +130,18 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
                 child: const Icon(Icons.arrow_upward, color: AppColors.baseDark),
               ),
             ),
+          // Profile button
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: FloatingActionButton.small(
+              onPressed: () {
+                context.go(AppRoutes.profile);
+              },
+              backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
+              heroTag: 'profile',
+              child: const Icon(Icons.person, color: AppColors.baseDark),
+            ),
+          ),
           // Logout button (temporary for testing)
           FloatingActionButton(
             onPressed: () {

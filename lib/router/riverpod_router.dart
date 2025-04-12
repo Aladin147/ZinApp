@@ -10,7 +10,7 @@ import 'package:zinapp_v2/features/auth/screens/riverpod/forgot_password_screen.
 import 'package:zinapp_v2/features/feed/screens/riverpod/feed_screen.dart';
 import 'package:zinapp_v2/features/home/screens/riverpod/enhanced_home_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
-import 'package:zinapp_v2/features/profile/screens/riverpod/profile_screen.dart';
+import 'package:zinapp_v2/features/profile/screens/riverpod/game_profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_confirmation_screen.dart';
@@ -92,7 +92,7 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.profile,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: RiverpodProfileScreen(),
+            authenticatedChild: GameProfileScreen(),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
