@@ -46,7 +46,15 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Used a tab-based layout for the profile screen to organize user information.
 *   **Challenge:** Managing complex user profile data with proper state management.
 *   **Solution:** Created a dedicated state class that handles loading, error states, and token history.
-*   **Next:** Begin migrating the Feed feature to Riverpod and continue testing the profile screens.
+
+*   **Entry:** Created Riverpod-based Feed provider with code generation.
+*   **Entry:** Implemented FeedState class to manage feed state with post and user caching.
+*   **Entry:** Created Riverpod-based feed screen and post card components.
+*   **Entry:** Updated the Riverpod router to include feed routes.
+*   **Decision:** Implemented a caching mechanism for user profiles in the feed to reduce API calls.
+*   **Challenge:** Managing relationships between posts and user profiles efficiently.
+*   **Solution:** Created a map-based cache in the FeedState to store user profiles by user ID.
+*   **Next:** Begin migrating the Stylist feature to Riverpod and continue testing the feed screens.
 
 
 ## 2025-04-12

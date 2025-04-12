@@ -5,6 +5,7 @@ import 'package:zinapp_v2/error_screen.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/auth_screen.dart';
 import 'package:zinapp_v2/features/auth/widgets/riverpod/auth_wrapper.dart';
+import 'package:zinapp_v2/features/feed/screens/riverpod/feed_screen.dart';
 import 'package:zinapp_v2/features/home/screens/enhanced_home_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_screen.dart';
@@ -90,6 +91,31 @@ GoRouter riverpodRouter(RiverpodRouterRef ref) {
           return const RiverpodAuthWrapper(
             authenticatedChild: RiverpodProfileEditScreen(),
             unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Feed route (protected)
+      GoRoute(
+        path: AppRoutes.feed,
+        name: AppRoutes.feed,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: RiverpodFeedScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Post Detail route (protected)
+      GoRoute(
+        path: AppRoutes.postDetail,
+        name: AppRoutes.postDetail,
+        builder: (BuildContext context, GoRouterState state) {
+          final postId = state.pathParameters['id'] ?? '';
+          return RiverpodAuthWrapper(
+            authenticatedChild: PlaceholderScreen(title: 'Post Detail: $postId'),
+            unauthenticatedChild: const RiverpodAuthScreen(),
           );
         },
       ),

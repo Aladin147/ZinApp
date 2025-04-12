@@ -27,10 +27,11 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 - [x] Profile edit screen
 
 ### Feed Feature
-- [ ] Feed service provider
-- [ ] Feed state provider
-- [ ] Feed screen
-- [ ] Post components
+
+- [x] Feed service provider
+- [x] Feed state provider
+- [x] Feed screen
+- [x] Post components
 
 ### Stylist Feature
 - [ ] Stylist service provider
@@ -52,6 +53,7 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 | Maintaining compatibility | Created parallel implementations in separate directories | 2025-04-13 |
 | Testing Riverpod components | Created a test screen in the component showcase | 2025-04-13 |
 | Profile state management | Created UserProfileState class to manage profile state | 2025-04-13 |
+| Feed state management | Created FeedState class with post and user caching | 2025-04-13 |
 
 ## References
 - [ADR-001: Migrating from Provider to Riverpod](docs/architecture/decisions/ADR-001-migrating-to-riverpod.md)
