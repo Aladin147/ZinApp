@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
@@ -15,21 +16,31 @@ class ZinBottomNavBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentIndex = ref.watch(bottomNavIndexProvider);
     final theme = Theme.of(context);
-    
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.scaffoldBackgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
+
+    return FrostedGlassContainer(
+      blurAmount: 15,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundOpacity: 0.7,
+      padding: EdgeInsets.zero,
+      margin: EdgeInsets.zero,
+      borderRadius: const BorderRadius.only(
+        topLeft: Radius.circular(24),
+        topRight: Radius.circular(24),
       ),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.2),
+        width: 1.5,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 20,
+          offset: const Offset(0, -5),
+        ),
+      ],
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
+          padding: const EdgeInsets.symmetric(vertical: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -72,7 +83,7 @@ class ZinBottomNavBar extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildNavItem(
     BuildContext context,
     WidgetRef ref, {
@@ -84,7 +95,7 @@ class ZinBottomNavBar extends ConsumerWidget {
     final currentIndex = ref.watch(bottomNavIndexProvider);
     final isSelected = currentIndex == index;
     final theme = Theme.of(context);
-    
+
     return InkWell(
       onTap: () {
         ref.read(bottomNavIndexProvider.notifier).state = index;
@@ -114,7 +125,7 @@ class ZinBottomNavBar extends ConsumerWidget {
       ),
     );
   }
-  
+
   Widget _buildCreateButton(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
@@ -127,8 +138,8 @@ class ZinBottomNavBar extends ConsumerWidget {
         );
       },
       child: Container(
-        width: 56,
-        height: 56,
+        width: 60,
+        height: 60,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
@@ -142,10 +153,15 @@ class ZinBottomNavBar extends ConsumerWidget {
           boxShadow: [
             BoxShadow(
               color: AppColors.primaryHighlight.withOpacity(0.3),
-              blurRadius: 8,
+              blurRadius: 12,
+              spreadRadius: 2,
               offset: const Offset(0, 4),
             ),
           ],
+          border: Border.all(
+            color: Colors.white.withOpacity(0.3),
+            width: 2,
+          ),
         ),
         child: const Icon(
           Icons.add_rounded,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
+import 'package:zinapp_v2/common/widgets/gradient_background_container.dart';
 import 'package:zinapp_v2/features/feed/widgets/post_card.dart';
 import 'package:zinapp_v2/features/home/widgets/action_hub_section.dart';
 import 'package:zinapp_v2/features/home/widgets/gamer_dashboard_section.dart';
@@ -68,60 +70,89 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     // final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            // Refresh all data
-            await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
-            await ref.read(feedProvider.notifier).loadPosts();
-            await ref.read(stylistProviderProvider.notifier).loadInitialData();
-          },
-          child: CustomScrollView(
-            controller: _scrollController,
-            slivers: [
-              // Gamer Dashboard
-              SliverToBoxAdapter(
-                child: GamerDashboardSection(
-                  user: user,
+      body: GradientBackgroundContainer.soft(
+        colors: [
+          const Color(0xFFF8F9FA),
+          const Color(0xFFE9ECEF),
+        ],
+        padding: EdgeInsets.zero,
+        child: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              // Refresh all data
+              await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+              await ref.read(feedProvider.notifier).loadPosts();
+              await ref.read(stylistProviderProvider.notifier).loadInitialData();
+            },
+            child: CustomScrollView(
+              controller: _scrollController,
+              slivers: [
+                // Gamer Dashboard
+                SliverToBoxAdapter(
+                  child: GamerDashboardSection(
+                    user: user,
+                  ),
                 ),
-              ),
 
-              // Action Hub
-              SliverToBoxAdapter(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final stylistState = ref.watch(stylistProviderProvider);
-                    return ActionHubSection(
-                      stylists: stylistState.featuredStylists,
-                      isLoading: stylistState.isLoading,
-                      errorMessage: stylistState.error,
-                    );
-                  },
+                // Action Hub
+                SliverToBoxAdapter(
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final stylistState = ref.watch(stylistProviderProvider);
+                      return ActionHubSection(
+                        stylists: stylistState.featuredStylists,
+                        isLoading: stylistState.isLoading,
+                        errorMessage: stylistState.error,
+                      );
+                    },
+                  ),
                 ),
-              ),
 
-              // Social Feed Header
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                sliver: SliverToBoxAdapter(
-                  child: Text(
-                    'Feed',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                // Social Feed Header
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      children: [
+                        Text(
+                          'Feed',
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.filter_list),
+                          onPressed: () {
+                            // TODO: Implement feed filtering
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Feed filtering coming soon!'),
+                                duration: Duration(seconds: 2),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
 
-              // Social Feed Content
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                sliver: _buildFeedContent(feedState),
-              ),
+                // Social Feed Content
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  sliver: SliverToBoxAdapter(
+                    child: LightFrostedGlassContainer(
+                      borderRadius: BorderRadius.circular(24),
+                      padding: const EdgeInsets.all(16),
+                      child: _buildFeedContent(feedState),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
-      ),
+      ),),
       // We'll use the bottom nav bar instead of floating action buttons
       floatingActionButton: _showScrollToTopButton ? FloatingActionButton.small(
         onPressed: _scrollToTop,
@@ -134,13 +165,15 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
 
   Widget _buildFeedContent(FeedState feedState) {
     if (feedState.isLoading) {
-      return const SliverFillRemaining(
+      return const SizedBox(
+        height: 300,
         child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (feedState.error != null) {
-      return SliverFillRemaining(
+      return SizedBox(
+        height: 300,
         child: Center(
           child: Text(
             'Error: ${feedState.error}',
@@ -151,14 +184,18 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     }
 
     if (feedState.posts.isEmpty) {
-      return const SliverFillRemaining(
+      return const SizedBox(
+        height: 300,
         child: Center(child: Text('No posts available')),
       );
     }
 
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: feedState.posts.length,
+        itemBuilder: (context, index) {
           final post = feedState.posts[index];
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
@@ -168,7 +205,6 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
             ),
           );
         },
-        childCount: feedState.posts.length,
       ),
     );
   }

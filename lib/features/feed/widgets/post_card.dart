@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
@@ -31,19 +32,10 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: LightFrostedGlassContainer(
         margin: const EdgeInsets.only(bottom: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
+        borderRadius: BorderRadius.circular(16),
+        padding: EdgeInsets.zero,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
