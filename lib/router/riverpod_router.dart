@@ -3,15 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:zinapp_v2/error_screen.dart';
+import 'package:zinapp_v2/router/custom_go_router.dart';
+import 'package:zinapp_v2/router/custom_page_route.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/auth_screen.dart';
 import 'package:zinapp_v2/features/auth/widgets/riverpod/auth_wrapper.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/forgot_password_screen.dart';
 import 'package:zinapp_v2/features/feed/screens/riverpod/feed_screen.dart';
-import 'package:zinapp_v2/features/home/screens/riverpod/enhanced_home_screen.dart';
 import 'package:zinapp_v2/features/home/screens/riverpod/dashboard_home_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
-import 'package:zinapp_v2/features/profile/screens/riverpod/game_profile_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/dashboard_profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
@@ -53,19 +53,25 @@ GoRouter riverpodRouter(Ref ref) {
     initialLocation: AppRoutes.home,
     // Add error handling
     errorBuilder: (context, state) => ErrorScreen(error: state.error!),
+    // Use custom page transitions
+    // Default error page builder is already set above
 
     routes: <RouteBase>[
       // Main route with auth wrapper
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.home,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: MainLayout(
-              showBottomNav: true,
-              child: DashboardHomeScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: MainLayout(
+                showBottomNav: true,
+                child: DashboardHomeScreen(),
+              ),
+              unauthenticatedChild: RiverpodAuthScreen(),
             ),
-            unauthenticatedChild: RiverpodAuthScreen(),
+            name: AppRoutes.home,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -74,8 +80,12 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.showcase,
         name: AppRoutes.showcase,
-        builder: (BuildContext context, GoRouterState state) {
-          return const ComponentShowcaseScreen();
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const ComponentShowcaseScreen(),
+            name: AppRoutes.showcase,
+            transitionType: TransitionType.dealCard,
+          );
         },
       ),
 
@@ -83,8 +93,12 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.riverpodTest,
         name: AppRoutes.riverpodTest,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodTestScreen();
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodTestScreen(),
+            name: AppRoutes.riverpodTest,
+            transitionType: TransitionType.portal,
+          );
         },
       ),
 
@@ -92,8 +106,12 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.forgotPassword,
         name: AppRoutes.forgotPassword,
-        builder: (BuildContext context, GoRouterState state) {
-          return const ForgotPasswordScreen();
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const ForgotPasswordScreen(),
+            name: AppRoutes.forgotPassword,
+            transitionType: TransitionType.fadeSlide,
+          );
         },
       ),
 
@@ -101,13 +119,17 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.profile,
         name: AppRoutes.profile,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: MainLayout(
-              showBottomNav: true,
-              child: DashboardProfileScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: MainLayout(
+                showBottomNav: true,
+                child: DashboardProfileScreen(),
+              ),
+              unauthenticatedChild: RiverpodAuthScreen(),
             ),
-            unauthenticatedChild: RiverpodAuthScreen(),
+            name: AppRoutes.profile,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -116,10 +138,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.profileEdit,
         name: AppRoutes.profileEdit,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: RiverpodProfileEditScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: RiverpodProfileEditScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.profileEdit,
+            transitionType: TransitionType.fadeSlide,
           );
         },
       ),
@@ -128,10 +154,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.feed,
         name: AppRoutes.feed,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: RiverpodFeedScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: RiverpodFeedScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.feed,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -140,11 +170,15 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.postDetail,
         name: AppRoutes.postDetail,
-        builder: (BuildContext context, GoRouterState state) {
+        pageBuilder: (BuildContext context, GoRouterState state) {
           final postId = state.pathParameters['id'] ?? '';
-          return RiverpodAuthWrapper(
-            authenticatedChild: PlaceholderScreen(title: 'Post Detail: $postId'),
-            unauthenticatedChild: const RiverpodAuthScreen(),
+          return CustomGoRouter.customPage(
+            child: RiverpodAuthWrapper(
+              authenticatedChild: PlaceholderScreen(title: 'Post Detail: $postId'),
+              unauthenticatedChild: const RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.postDetail,
+            transitionType: TransitionType.fadeSlide,
           );
         },
       ),
@@ -153,13 +187,17 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.stylistList,
         name: AppRoutes.stylistList,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: MainLayout(
-              showBottomNav: true,
-              child: StylistDiscoveryScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: MainLayout(
+                showBottomNav: true,
+                child: StylistDiscoveryScreen(),
+              ),
+              unauthenticatedChild: RiverpodAuthScreen(),
             ),
-            unauthenticatedChild: RiverpodAuthScreen(),
+            name: AppRoutes.stylistList,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -168,11 +206,15 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.stylistDetail,
         name: AppRoutes.stylistDetail,
-        builder: (BuildContext context, GoRouterState state) {
+        pageBuilder: (BuildContext context, GoRouterState state) {
           final stylistId = state.pathParameters['id'] ?? '';
-          return RiverpodAuthWrapper(
-            authenticatedChild: StylistProfileScreen(stylistId: stylistId),
-            unauthenticatedChild: const RiverpodAuthScreen(),
+          return CustomGoRouter.customPage(
+            child: RiverpodAuthWrapper(
+              authenticatedChild: StylistProfileScreen(stylistId: stylistId),
+              unauthenticatedChild: const RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.stylistDetail,
+            transitionType: TransitionType.dealCard,
           );
         },
       ),
@@ -181,10 +223,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.booking,
         name: AppRoutes.booking,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: BookingScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: BookingScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.booking,
+            transitionType: TransitionType.game,
           );
         },
       ),
@@ -193,10 +239,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.bookingConfirmation,
         name: AppRoutes.bookingConfirmation,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: BookingConfirmationScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: BookingConfirmationScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.bookingConfirmation,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -205,13 +255,17 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.bookingHistory,
         name: AppRoutes.bookingHistory,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: MainLayout(
-              showBottomNav: true,
-              child: BookingHistoryScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: MainLayout(
+                showBottomNav: true,
+                child: BookingHistoryScreen(),
+              ),
+              unauthenticatedChild: RiverpodAuthScreen(),
             ),
-            unauthenticatedChild: RiverpodAuthScreen(),
+            name: AppRoutes.bookingHistory,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -220,13 +274,17 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.rewardsHub,
         name: AppRoutes.rewardsHub,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: MainLayout(
-              showBottomNav: true,
-              child: RewardsHubScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: MainLayout(
+                showBottomNav: true,
+                child: RewardsHubScreen(),
+              ),
+              unauthenticatedChild: RiverpodAuthScreen(),
             ),
-            unauthenticatedChild: RiverpodAuthScreen(),
+            name: AppRoutes.rewardsHub,
+            transitionType: TransitionType.fadeScale,
           );
         },
       ),
@@ -235,10 +293,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.dailyRewards,
         name: AppRoutes.dailyRewards,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: DailyRewardsScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: DailyRewardsScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.dailyRewards,
+            transitionType: TransitionType.dealCard,
           );
         },
       ),
@@ -247,10 +309,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.challenges,
         name: AppRoutes.challenges,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: ChallengesScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: ChallengesScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.challenges,
+            transitionType: TransitionType.game,
           );
         },
       ),
@@ -259,10 +325,14 @@ GoRouter riverpodRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.tokenShop,
         name: AppRoutes.tokenShop,
-        builder: (BuildContext context, GoRouterState state) {
-          return const RiverpodAuthWrapper(
-            authenticatedChild: TokenShopScreen(),
-            unauthenticatedChild: RiverpodAuthScreen(),
+        pageBuilder: (BuildContext context, GoRouterState state) {
+          return CustomGoRouter.customPage(
+            child: const RiverpodAuthWrapper(
+              authenticatedChild: TokenShopScreen(),
+              unauthenticatedChild: RiverpodAuthScreen(),
+            ),
+            name: AppRoutes.tokenShop,
+            transitionType: TransitionType.portal,
           );
         },
       ),

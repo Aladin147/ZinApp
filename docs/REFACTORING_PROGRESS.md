@@ -4,6 +4,22 @@ This document tracks the progress of refactoring the ZinApp V2 codebase to align
 
 ## Completed Refactoring Tasks
 
+### 2025-04-20
+
+1. **Animations and Transitions Implementation**
+   - ✅ Created a comprehensive animation system:
+     - `AppAnimations`: Standardized durations and curves
+     - `AnimationBuilders`: Reusable animation patterns
+     - Specialized animation widgets (PressableAnimationWidget, PulseAnimationWidget, etc.)
+   - ✅ Implemented custom page transitions:
+     - Basic transitions (fade, slide, scale)
+     - Combined transitions (fade+slide, fade+scale)
+     - Game-like transitions (portal, deal card)
+   - ✅ Integrated with the router system:
+     - Created `CustomPageRoute` for direct navigation
+     - Added `CustomGoRouter` for GoRouter integration
+     - Applied different transition types to different routes
+
 ### 2025-04-19
 
 1. **Booking History Dashboard Implementation**
