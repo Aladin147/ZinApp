@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
-import 'package:zinapp_v2/app/theme/color_zones.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_zones.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/widgets/accessibility_aware_text.dart';
 import 'package:zinapp_v2/widgets/animated_card.dart';

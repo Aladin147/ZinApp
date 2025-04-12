@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// Logo variants for different contexts
 enum ZinLogoVariant {

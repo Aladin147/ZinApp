@@ -4,6 +4,27 @@ This document tracks the progress of refactoring the ZinApp V2 codebase to align
 
 ## Completed Refactoring Tasks
 
+### 2025-04-16
+
+1. **Dashboard UI Implementation**
+   - ✅ Created reusable dashboard components:
+     - `DashboardContainer`: Container for organizing dashboard cards
+     - `ExpandableDashboardCard`: Generic expandable card for dashboards
+     - `OrganicContainer`: Container with organic styling
+   - ✅ Implemented dashboard approach for Home Screen
+   - ✅ Created specialized cards for the Home Screen:
+     - `UserStatusCard`: Shows level, tokens, and quick stats
+     - `UpcomingBookingsCard`: Shows next appointments
+     - `TrendingStylesCard`: Shows popular styles
+     - `RecommendedStylistsCard`: Shows personalized recommendations
+   - ✅ Fixed critical ScrollView issues in dashboard components
+
+2. **Legacy File Cleanup**
+   - ✅ Removed unused model files from `lib/app/models`
+   - ✅ Removed unused transition files from `lib/app/transitions`
+   - ✅ Updated import paths across the codebase
+   - ✅ Fixed theme references to use the new file structure
+
 ### 2025-04-13
 
 1. **Directory Structure Reorganization**
@@ -65,6 +86,13 @@ This document tracks the progress of refactoring the ZinApp V2 codebase to align
    - Some components may still reference old provider paths
    - Need comprehensive testing to ensure all provider references are updated
 
-3. **Theme References**
-   - Some components may still reference old theme paths
-   - Need to verify all theme imports are updated
+3. **Deprecated Method Warnings**
+   - Several components use deprecated methods:
+     - `withOpacity()` should be replaced with `withValues()`
+     - `MaterialStateProperty` should be replaced with `WidgetStateProperty`
+     - `surfaceVariant` should be replaced with `surfaceContainerHighest`
+   - These should be addressed in a future update
+
+4. **Missing Page Transitions**
+   - Custom page transitions were removed during refactoring
+   - Need to implement new page transitions in the theme system

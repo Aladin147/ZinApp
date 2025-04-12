@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// Button sizes for the ZinButton widget
 enum ZinButtonSize {
   /// Small button size
   small,
-  
+
   /// Medium button size (default)
   medium,
-  
+
   /// Large button size
   large,
 }
@@ -17,13 +17,13 @@ enum ZinButtonSize {
 enum ZinButtonVariant {
   /// Primary button variant (default)
   primary,
-  
+
   /// Secondary button variant
   secondary,
-  
+
   /// Outline button variant
   outline,
-  
+
   /// Text button variant
   text,
 }
@@ -32,25 +32,25 @@ enum ZinButtonVariant {
 class ZinButton extends StatelessWidget {
   /// Function called when the button is pressed
   final VoidCallback? onPressed;
-  
+
   /// Text displayed on the button
   final String text;
-  
+
   /// Icon displayed before the text
   final IconData? icon;
-  
+
   /// Size of the button
   final ZinButtonSize size;
-  
+
   /// Variant of the button
   final ZinButtonVariant variant;
-  
+
   /// Whether the button is in a loading state
   final bool isLoading;
-  
+
   /// Whether the button takes the full width of its parent
   final bool fullWidth;
-  
+
   /// Border radius of the button
   final double borderRadius;
 
@@ -69,13 +69,13 @@ class ZinButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Determine button styling based on variant
     Color backgroundColor;
     Color foregroundColor;
     Color? overlayColor;
     BorderSide? side;
-    
+
     switch (variant) {
       case ZinButtonVariant.primary:
         backgroundColor = AppColors.primaryHighlight;
@@ -102,12 +102,12 @@ class ZinButton extends StatelessWidget {
         side = null;
         break;
     }
-    
+
     // Determine padding based on size
     EdgeInsetsGeometry padding;
     double? height;
     TextStyle? textStyle;
-    
+
     switch (size) {
       case ZinButtonSize.small:
         padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
@@ -134,10 +134,10 @@ class ZinButton extends StatelessWidget {
         );
         break;
     }
-    
+
     // Build the button content
     Widget buttonContent;
-    
+
     if (isLoading) {
       // Loading indicator
       buttonContent = SizedBox(
@@ -162,7 +162,7 @@ class ZinButton extends StatelessWidget {
       // Text only
       buttonContent = Text(text, style: textStyle);
     }
-    
+
     // Build the button
     final button = ElevatedButton(
       onPressed: isLoading ? null : onPressed,
@@ -182,7 +182,7 @@ class ZinButton extends StatelessWidget {
       ),
       child: buttonContent,
     );
-    
+
     // Apply full width if needed
     return fullWidth
         ? SizedBox(width: double.infinity, child: button)

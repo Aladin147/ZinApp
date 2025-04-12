@@ -30,7 +30,7 @@ class Feed extends _$Feed {
       final posts = await ref.read(feedServiceProvider).getAllPosts();
 
       // Sort by creation date (newest first)
-      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
       // Load user profiles for posts
       final postUsers = await _loadUsersForPosts(posts);
@@ -57,7 +57,7 @@ class Feed extends _$Feed {
       final posts = await ref.read(feedServiceProvider).getPostsByUserId(userId);
 
       // Sort by creation date (newest first)
-      posts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
       // Load user profiles for posts
       final postUsers = await _loadUsersForPosts(posts);
@@ -263,7 +263,7 @@ class Feed extends _$Feed {
       final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
       if (postIndex != -1) {
         updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
-          commentsCount: updatedPosts[postIndex].commentsCount + 1,
+          comments: updatedPosts[postIndex].comments + 1,
         );
       }
 
@@ -307,9 +307,9 @@ class Feed extends _$Feed {
         final updatedPosts = List<Post>.from(state.posts);
         final postIndex = updatedPosts.indexWhere((post) => post.id == postId);
         if (postIndex != -1) {
-          final currentCount = updatedPosts[postIndex].commentsCount;
+          final currentCount = updatedPosts[postIndex].comments;
           updatedPosts[postIndex] = updatedPosts[postIndex].copyWith(
-            commentsCount: currentCount > 0 ? currentCount - 1 : 0,
+            comments: currentCount > 0 ? currentCount - 1 : 0,
           );
         }
 
@@ -365,7 +365,7 @@ class Feed extends _$Feed {
       final updatedPosts = List<Post>.from(state.posts);
       updatedPosts[postIndex] = post.copyWith(
         isLiked: !isCurrentlyLiked,
-        likesCount: isCurrentlyLiked ? post.likesCount - 1 : post.likesCount + 1,
+        likes: isCurrentlyLiked ? post.likes - 1 : post.likes + 1,
       );
 
       // Update state optimistically

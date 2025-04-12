@@ -49,7 +49,7 @@ class _PostCommentsScreenState extends ConsumerState<PostCommentsScreen> {
     final currentUser = ref.watch(authProvider).user;
     final theme = Theme.of(context);
     final feedState = ref.watch(feedProvider);
-    final commentsCount = widget.post.commentsCount;
+    final commentsCount = widget.post.comments;
 
     return Scaffold(
       appBar: AppBar(

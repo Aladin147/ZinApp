@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 import 'package:zinapp_v2/widgets/zin_button.dart';
@@ -30,13 +30,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-    
+
     // Simple email validation
     final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
     if (!emailRegex.hasMatch(value)) {
       return 'Please enter a valid email';
     }
-    
+
     return null;
   }
 
@@ -45,7 +45,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       final success = await ref.read(authProvider.notifier).sendPasswordResetEmail(
         email: _emailController.text.trim(),
       );
-      
+
       if (success && mounted) {
         setState(() {
           _emailSent = true;
@@ -62,7 +62,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final authState = ref.watch(authProvider);
-    
+
     return ZinBackground(
       variant: ZinBackgroundVariant.featured,
       animated: true,
@@ -99,7 +99,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Title
                   Text(
                     'Forgot Password',
@@ -109,7 +109,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  
+
                   // Subtitle
                   Text(
                     _emailSent
@@ -121,7 +121,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // Error message
                   if (authState.error != null) ...[
                     Container(
@@ -140,7 +140,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                     const SizedBox(height: 16),
                   ],
-                  
+
                   // Success message
                   if (_emailSent) ...[
                     Container(
@@ -177,7 +177,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
+
                     // Return to login button
                     ZinButton(
                       onPressed: _navigateToLogin,
@@ -202,7 +202,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             enabled: !authState.isLoading,
                           ),
                           const SizedBox(height: 24),
-                          
+
                           // Send reset email button
                           ZinButton(
                             onPressed: authState.isLoading ? null : _sendResetEmail,
@@ -210,7 +210,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             isLoading: authState.isLoading,
                           ),
                           const SizedBox(height: 16),
-                          
+
                           // Return to login
                           TextButton(
                             onPressed: authState.isLoading ? null : _navigateToLogin,

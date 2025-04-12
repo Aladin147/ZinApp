@@ -1,65 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A custom text field widget for the ZinApp application
 class ZinTextField extends StatelessWidget {
   /// Controller for the text field
   final TextEditingController? controller;
-  
+
   /// Label text displayed above the text field
   final String? labelText;
-  
+
   /// Hint text displayed inside the text field when empty
   final String? hintText;
-  
+
   /// Icon displayed at the start of the text field
   final Widget? prefixIcon;
-  
+
   /// Icon displayed at the end of the text field
   final Widget? suffixIcon;
-  
+
   /// Whether to obscure the text (for passwords)
   final bool obscureText;
-  
+
   /// Keyboard type for the text field
   final TextInputType? keyboardType;
-  
+
   /// Action to perform when the text field is submitted
   final TextInputAction? textInputAction;
-  
+
   /// Function to validate the text field input
   final String? Function(String?)? validator;
-  
+
   /// Function called when the text field is submitted
   final void Function(String)? onSubmitted;
-  
+
   /// Function called when the text field value changes
   final void Function(String)? onChanged;
-  
+
   /// Whether the text field is enabled
   final bool enabled;
-  
+
   /// Maximum number of lines for the text field
   final int? maxLines;
-  
+
   /// Minimum number of lines for the text field
   final int? minLines;
-  
+
   /// Maximum length of text in the text field
   final int? maxLength;
-  
+
   /// Whether to show the counter for character count
   final bool? showCounter;
-  
+
   /// Whether to auto-focus the text field when displayed
   final bool autofocus;
-  
+
   /// Focus node for the text field
   final FocusNode? focusNode;
-  
+
   /// Text style for the input text
   final TextStyle? style;
-  
+
   /// Content padding for the text field
   final EdgeInsetsGeometry? contentPadding;
 
@@ -90,7 +90,7 @@ class ZinTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,7 +104,7 @@ class ZinTextField extends StatelessWidget {
           ),
           const SizedBox(height: 8),
         ],
-        
+
         // Text field
         TextFormField(
           controller: controller,

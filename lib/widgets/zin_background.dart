@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
 
 /// Background pattern variants for ZinApp

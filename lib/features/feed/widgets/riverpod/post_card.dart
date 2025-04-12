@@ -41,17 +41,17 @@ class RiverpodPostCard extends ConsumerWidget {
           _buildPostHeader(context, user, theme),
 
           // Post content
-          if (post.content.isNotEmpty)
+          if (post.text != null && post.text!.isNotEmpty)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
               child: Text(
-                post.content,
+                post.text!,
                 style: theme.textTheme.bodyMedium,
               ),
             ),
 
           // Post images
-          if (post.imageUrls.isNotEmpty) _buildImageGallery(context),
+          if (post.imageUrl != null && post.imageUrl!.isNotEmpty) _buildImageGallery(context),
 
           // Post tags
           if (post.tags.isNotEmpty)
@@ -68,7 +68,7 @@ class RiverpodPostCard extends ConsumerWidget {
                         color: AppColors.primaryHighlight,
                       ),
                     ),
-                    backgroundColor: AppColors.primaryHighlight.withOpacity(0.1),
+                    backgroundColor: AppColors.primaryHighlight.withAlpha(26),
                     padding: EdgeInsets.zero,
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     visualDensity: VisualDensity.compact,
@@ -86,13 +86,13 @@ class RiverpodPostCard extends ConsumerWidget {
                   Icon(
                     Icons.location_on_outlined,
                     size: 16,
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withAlpha(153),
                   ),
                   const SizedBox(width: 4),
                   Text(
                     post.location!,
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      color: theme.colorScheme.onSurface.withAlpha(153),
                     ),
                   ),
                 ],
@@ -134,9 +134,9 @@ class RiverpodPostCard extends ConsumerWidget {
                   ),
                 ),
                 Text(
-                  _formatDate(post.createdAt),
+                  _formatDate(post.timestamp),
                   style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withOpacity(0.6),
+                    color: theme.colorScheme.onSurface.withAlpha(153),
                   ),
                 ),
               ],
@@ -156,55 +156,23 @@ class RiverpodPostCard extends ConsumerWidget {
   }
 
   Widget _buildImageGallery(BuildContext context) {
-    if (post.imageUrls.isEmpty) return const SizedBox.shrink();
+    if (post.imageUrl == null || post.imageUrl!.isEmpty) return const SizedBox.shrink();
 
-    // For a single image
-    if (post.imageUrls.length == 1) {
-      return Container(
-        constraints: const BoxConstraints(
-          maxHeight: 300,
-        ),
-        width: double.infinity,
-        child: Image.network(
-          post.imageUrls.first,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              height: 200,
-              color: Colors.grey.shade200,
-              child: const Center(
-                child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
-              ),
-            );
-          },
-        ),
-      );
-    }
-
-    // For multiple images
+    // We only have a single image in the new model
     return Container(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: post.imageUrls.length,
-        itemBuilder: (context, index) {
+      constraints: const BoxConstraints(
+        maxHeight: 300,
+      ),
+      width: double.infinity,
+      child: Image.network(
+        post.imageUrl!,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
           return Container(
-            width: 200,
-            margin: EdgeInsets.only(
-              left: index == 0 ? 0 : 8,
-              right: index == post.imageUrls.length - 1 ? 0 : 0,
-            ),
-            child: Image.network(
-              post.imageUrls[index],
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: Colors.grey.shade200,
-                  child: const Center(
-                    child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
-                  ),
-                );
-              },
+            height: 200,
+            color: Colors.grey.shade200,
+            child: const Center(
+              child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
             ),
           );
         },
@@ -223,17 +191,17 @@ class RiverpodPostCard extends ConsumerWidget {
             child: Row(
               children: [
                 Text(
-                  '${post.likesCount} likes',
+                  '${post.likes} likes',
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
                 Text(
-                  '${post.commentsCount} comments',
+                  '${post.comments} comments',
                   style: theme.textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
                 Text(
-                  '${post.sharesCount} shares',
+                  '${post.shares} shares',
                   style: theme.textTheme.bodySmall,
                 ),
               ],
@@ -283,7 +251,7 @@ class RiverpodPostCard extends ConsumerWidget {
       icon: Icon(icon, size: 20),
       label: Text(label),
       style: TextButton.styleFrom(
-        foregroundColor: theme.colorScheme.onSurface.withOpacity(0.8),
+        foregroundColor: theme.colorScheme.onSurface.withAlpha(204),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
     );

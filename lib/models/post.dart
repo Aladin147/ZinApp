@@ -8,28 +8,34 @@ part 'post.g.dart';
 class Post extends Equatable {
   final String id;
   final String userId;
-  final String content;
-  final List<String> imageUrls;
+  final String authorName;
+  final String? authorProfilePictureUrl;
+  final String? text;
+  final String? imageUrl;
   final List<String> tags;
   final String? location;
-  final int likesCount;
-  final int commentsCount;
-  final int sharesCount;
-  final DateTime createdAt;
+  final int likes;
+  final int comments;
+  final int shares;
+  final DateTime timestamp;
   final bool isLiked;
+  final String? type;
 
   const Post({
     required this.id,
     required this.userId,
-    required this.content,
-    required this.imageUrls,
+    required this.authorName,
+    this.authorProfilePictureUrl,
+    this.text,
+    this.imageUrl,
     required this.tags,
     this.location,
-    required this.likesCount,
-    required this.commentsCount,
-    required this.sharesCount,
-    required this.createdAt,
+    required this.likes,
+    required this.comments,
+    required this.shares,
+    required this.timestamp,
     this.isLiked = false,
+    this.type,
   });
 
   /// Creates a Post from JSON data
@@ -42,43 +48,52 @@ class Post extends Equatable {
   List<Object?> get props => [
         id,
         userId,
-        content,
-        imageUrls,
+        authorName,
+        authorProfilePictureUrl,
+        text,
+        imageUrl,
         tags,
         location,
-        likesCount,
-        commentsCount,
-        sharesCount,
-        createdAt,
+        likes,
+        comments,
+        shares,
+        timestamp,
         isLiked,
+        type,
       ];
 
   /// Create a copy of this post with the given fields replaced with the new values
   Post copyWith({
     String? id,
     String? userId,
-    String? content,
-    List<String>? imageUrls,
+    String? authorName,
+    String? authorProfilePictureUrl,
+    String? text,
+    String? imageUrl,
     List<String>? tags,
     String? location,
-    int? likesCount,
-    int? commentsCount,
-    int? sharesCount,
-    DateTime? createdAt,
+    int? likes,
+    int? comments,
+    int? shares,
+    DateTime? timestamp,
     bool? isLiked,
+    String? type,
   }) {
     return Post(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      content: content ?? this.content,
-      imageUrls: imageUrls ?? this.imageUrls,
+      authorName: authorName ?? this.authorName,
+      authorProfilePictureUrl: authorProfilePictureUrl ?? this.authorProfilePictureUrl,
+      text: text ?? this.text,
+      imageUrl: imageUrl ?? this.imageUrl,
       tags: tags ?? this.tags,
       location: location ?? this.location,
-      likesCount: likesCount ?? this.likesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
-      sharesCount: sharesCount ?? this.sharesCount,
-      createdAt: createdAt ?? this.createdAt,
+      likes: likes ?? this.likes,
+      comments: comments ?? this.comments,
+      shares: shares ?? this.shares,
+      timestamp: timestamp ?? this.timestamp,
       isLiked: isLiked ?? this.isLiked,
+      type: type ?? this.type,
     );
   }
 }

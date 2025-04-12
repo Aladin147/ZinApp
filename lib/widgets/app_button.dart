@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart'; // Keep for loading indicator color logic
+import 'package:zinapp_v2/theme/color_scheme.dart'; // Keep for loading indicator color logic
 
 /// Button variants following the ZinApp V2 design system
 enum AppButtonVariant { primary, secondary, text }

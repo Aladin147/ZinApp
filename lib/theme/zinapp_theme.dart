@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-// Assuming these files exist in the same directory or are imported correctly
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
-import 'package:zinapp_v2/app/theme/text_theme.dart';
-import 'package:zinapp_v2/app/transitions/zin_page_transitions.dart';
+// Import theme files from the correct location
+import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/text_theme.dart';
 
 // Define the main application theme
 final ThemeData zinappTheme = ThemeData(
@@ -16,8 +15,8 @@ final ThemeData zinappTheme = ThemeData(
   // Use baseDark for general card/dialog backgrounds unless overridden
   cardColor: AppColors.baseDark,
 
-  // Use custom page transitions
-  pageTransitionsTheme: const ZinPageTransitions(),
+  // Use default page transitions
+  // TODO: Implement custom page transitions
 
   // --- Component Theme Overrides (Examples) ---
 

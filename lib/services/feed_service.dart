@@ -103,14 +103,18 @@ class FeedService {
       final postData = {
         'id': 'post${DateTime.now().millisecondsSinceEpoch}',
         'userId': userId,
-        'content': content,
-        'imageUrls': imageUrls,
+        'authorName': 'User', // Default author name
+        'authorProfilePictureUrl': 'assets/images/avatars/default.png',
+        'text': content,
+        'imageUrl': imageUrls.isNotEmpty ? imageUrls.first : null,
         'tags': tags,
         'location': location,
-        'likesCount': 0,
-        'commentsCount': 0,
-        'sharesCount': 0,
-        'createdAt': DateTime.now().toIso8601String(),
+        'likes': 0,
+        'comments': 0,
+        'shares': 0,
+        'timestamp': DateTime.now().toIso8601String(),
+        'isLiked': false,
+        'type': 'general',
       };
 
       final response = await http.post(
@@ -140,11 +144,11 @@ class FeedService {
           final post = await getPostById(postId);
 
           // Update likes count based on the action
-          final updatedLikesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+          final updatedLikesCount = isLiked ? post.likes + 1 : post.likes - 1;
 
           // Create updated post
           final updatedPost = post.copyWith(
-            likesCount: updatedLikesCount >= 0 ? updatedLikesCount : 0,
+            likes: updatedLikesCount >= 0 ? updatedLikesCount : 0,
             isLiked: isLiked,
           );
 
@@ -154,7 +158,7 @@ class FeedService {
           // Update the mock data
           final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
           if (postIndex != -1) {
-            MockData.posts[postIndex]['likesCount'] = updatedPost.likesCount;
+            MockData.posts[postIndex]['likes'] = updatedPost.likes;
             MockData.posts[postIndex]['isLiked'] = updatedPost.isLiked;
           }
 
@@ -167,7 +171,7 @@ class FeedService {
         final post = await getPostById(postId);
 
         // Update likes count based on the action
-        final updatedLikesCount = isLiked ? post.likesCount + 1 : post.likesCount - 1;
+        final updatedLikesCount = isLiked ? post.likes + 1 : post.likes - 1;
 
         // Prepare data for API
         final updatedPostData = {
@@ -313,8 +317,8 @@ class FeedService {
         // Update post comment count
         final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
         if (postIndex != -1) {
-          MockData.posts[postIndex]['commentsCount'] =
-              (MockData.posts[postIndex]['commentsCount'] as int) + 1;
+          MockData.posts[postIndex]['comments'] =
+              (MockData.posts[postIndex]['comments'] as int) + 1;
         }
 
         // Simulate API delay
@@ -341,7 +345,7 @@ class FeedService {
             Uri.parse('$baseUrl/posts/$postId'),
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              'commentsCount': await _getUpdatedCommentCount(postId),
+              'comments': await _getUpdatedCommentCount(postId),
             }),
           );
 

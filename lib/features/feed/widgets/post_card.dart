@@ -80,7 +80,7 @@ class PostCard extends ConsumerWidget {
                   ),
                   const Spacer(),
                   Text(
-                    _formatDate(post.createdAt),
+                    _formatDate(post.timestamp),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurface.withAlpha(128),
                     ),
@@ -89,24 +89,24 @@ class PostCard extends ConsumerWidget {
               ),
             ),
             // Post content
-            if (post.content.isNotEmpty)
+            if (post.text != null && post.text!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  post.content,
+                  post.text!,
                   style: theme.textTheme.bodyMedium,
                 ),
               ),
             // Post images
-            if (post.imageUrls.isNotEmpty) ...[
+            if (post.imageUrl != null && post.imageUrl!.isNotEmpty) ...[
               const SizedBox(height: 12),
               SizedBox(
                 height: 240,
                 child: PageView.builder(
-                  itemCount: post.imageUrls.length,
+                  itemCount: 1,
                   itemBuilder: (context, index) {
-                    return Image.asset(
-                      post.imageUrls[index],
+                    return Image.network(
+                      post.imageUrl!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
@@ -145,7 +145,7 @@ class PostCard extends ConsumerWidget {
               ),
             ],
             // Comment preview (if there are comments)
-            if (post.commentsCount > 0)
+            if (post.comments > 0)
               InkWell(
                 onTap: () {
                   Navigator.of(context).push(
@@ -166,9 +166,9 @@ class PostCard extends ConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        post.commentsCount == 1
+                        post.comments == 1
                             ? 'View 1 comment'
-                            : 'View all ${post.commentsCount} comments',
+                            : 'View all ${post.comments} comments',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -186,7 +186,7 @@ class PostCard extends ConsumerWidget {
                   _buildEngagementStat(
                     context,
                     icon: post.isLiked ? Icons.favorite : Icons.favorite_border,
-                    count: post.likesCount,
+                    count: post.likes,
                     color: post.isLiked ? Colors.red : null,
                     onTap: () {
                       // Toggle like
@@ -202,7 +202,7 @@ class PostCard extends ConsumerWidget {
                   _buildEngagementStat(
                     context,
                     icon: Icons.comment,
-                    count: post.commentsCount,
+                    count: post.comments,
                     onTap: () {
                       // Navigate to comments screen
                       Navigator.of(context).push(
@@ -221,7 +221,7 @@ class PostCard extends ConsumerWidget {
                   _buildEngagementStat(
                     context,
                     icon: Icons.share,
-                    count: post.sharesCount,
+                    count: post.shares,
                     onTap: onShareTap,
                   ),
                 ],

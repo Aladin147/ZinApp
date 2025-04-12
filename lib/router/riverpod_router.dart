@@ -9,8 +9,10 @@ import 'package:zinapp_v2/features/auth/widgets/riverpod/auth_wrapper.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/forgot_password_screen.dart';
 import 'package:zinapp_v2/features/feed/screens/riverpod/feed_screen.dart';
 import 'package:zinapp_v2/features/home/screens/riverpod/enhanced_home_screen.dart';
+import 'package:zinapp_v2/features/home/screens/riverpod/dashboard_home_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/game_profile_screen.dart';
+import 'package:zinapp_v2/features/profile/screens/riverpod/dashboard_profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_confirmation_screen.dart';
@@ -60,7 +62,7 @@ GoRouter riverpodRouter(Ref ref) {
           return const RiverpodAuthWrapper(
             authenticatedChild: MainLayout(
               showBottomNav: true,
-              child: EnhancedHomeScreen(),
+              child: DashboardHomeScreen(),
             ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
@@ -102,7 +104,7 @@ GoRouter riverpodRouter(Ref ref) {
           return const RiverpodAuthWrapper(
             authenticatedChild: MainLayout(
               showBottomNav: true,
-              child: GameProfileScreen(),
+              child: DashboardProfileScreen(),
             ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
