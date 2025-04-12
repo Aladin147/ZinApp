@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/providers.dart';
 import 'package:zinapp_v2/router.dart'; // Import the router
 import 'package:zinapp_v2/theme/zinapp_theme.dart';
 
 void main() {
-  // Run the app with providers
+  // Run the app with providers wrapped in ProviderScope for Riverpod
   runApp(
-    AppProviders(
-      child: const MyApp(),
+    ProviderScope(
+      child: AppProviders(
+        child: const MyApp(),
+      ),
     ),
   );
 }

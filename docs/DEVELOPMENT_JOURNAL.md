@@ -17,7 +17,14 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Kept feature-specific models in their respective feature directories when they're only used within that feature.
 *   **Challenge:** After refactoring, the app was stuck on the loading screen due to provider reference issues.
 *   **Solution:** Systematically updated import paths in all affected files, particularly focusing on the auth components that were causing the loading issue.
-*   **Next:** Continue implementing the remaining features according to the new file structure, focusing on the enhanced home screen and gamification elements.
+*   **Next:** Begin migration from Provider to Riverpod for improved state management.
+
+*   **Entry:** Created Architecture Decision Record (ADR-001) for migrating from Provider to Riverpod.
+*   **Entry:** Created Riverpod migration tracking document to monitor progress.
+*   **Decision:** Adopted a feature-by-feature migration approach to maintain a working application throughout the process.
+*   **Decision:** Selected code generation approach with @riverpod annotations for better type safety and reduced boilerplate.
+*   **Decision:** Established migration order: Auth → Profile → Feed → Stylist features.
+*   **Next:** Configure ProviderScope in main.dart and begin implementing Riverpod providers for the Auth feature.
 
 
 ## 2025-04-12
