@@ -20,8 +20,8 @@ class AchievementsCard extends ConsumerWidget {
     return ExpandableDashboardCard(
       title: 'Achievements',
       icon: Icons.military_tech,
-      iconColor: Colors.green,
-      onTap: () {
+      accentColor: Colors.green,
+      onViewAllTap: () {
         // Navigate to achievements screen or profile
       },
       collapsedChild: _buildCollapsedContent(context),
@@ -31,11 +31,11 @@ class AchievementsCard extends ConsumerWidget {
 
   Widget _buildCollapsedContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock data - in a real app, this would come from a provider
     const unlockedAchievements = 5;
     const totalAchievements = 20;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -54,7 +54,7 @@ class AchievementsCard extends ConsumerWidget {
 
   Widget _buildExpandedContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock achievement data
     final recentAchievements = [
       {
@@ -90,7 +90,7 @@ class AchievementsCard extends ConsumerWidget {
         'maxProgress': 10,
       },
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -101,7 +101,7 @@ class AchievementsCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // Recent achievements list
         ...recentAchievements.map((achievement) => _buildAchievementItem(
           context,
@@ -116,9 +116,9 @@ class AchievementsCard extends ConsumerWidget {
           progress: achievement['progress'] as int?,
           maxProgress: achievement['maxProgress'] as int?,
         )).toList(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Achievement stats
         Container(
           padding: const EdgeInsets.all(12),
@@ -170,7 +170,7 @@ class AchievementsCard extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
         Center(
           child: TextButton.icon(
@@ -200,7 +200,7 @@ class AchievementsCard extends ConsumerWidget {
   }) {
     final theme = Theme.of(context);
     final hasProgress = progress != null && maxProgress != null;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -281,7 +281,7 @@ class AchievementsCard extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 8),
-          
+
           // Rewards
           Row(
             children: [
@@ -314,7 +314,7 @@ class AchievementsCard extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           // Progress bar (if applicable)
           if (hasProgress) ...[
             const SizedBox(height: 8),
@@ -354,7 +354,7 @@ class AchievementsCard extends ConsumerWidget {
     required Color color,
   }) {
     final theme = Theme.of(context);
-    
+
     return Row(
       children: [
         SizedBox(

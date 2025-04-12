@@ -21,8 +21,8 @@ class TokenShopCard extends ConsumerWidget {
     return ExpandableDashboardCard(
       title: 'Token Shop',
       icon: Icons.shopping_bag,
-      iconColor: Colors.amber,
-      onTap: () {
+      accentColor: Colors.amber,
+      onViewAllTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -37,7 +37,7 @@ class TokenShopCard extends ConsumerWidget {
 
   Widget _buildCollapsedContent(BuildContext context, int userTokens) {
     final theme = Theme.of(context);
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -66,7 +66,7 @@ class TokenShopCard extends ConsumerWidget {
 
   Widget _buildExpandedContent(BuildContext context, int userTokens) {
     final theme = Theme.of(context);
-    
+
     // Featured items
     final featuredItems = [
       {
@@ -94,7 +94,7 @@ class TokenShopCard extends ConsumerWidget {
         'color': Colors.blue,
       },
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -105,7 +105,7 @@ class TokenShopCard extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        
+
         // Featured items list
         ...featuredItems.map((item) => _buildShopItemPreview(
           context,
@@ -117,7 +117,7 @@ class TokenShopCard extends ConsumerWidget {
           color: item['color'] as Color,
           userTokens: userTokens,
         )).toList(),
-        
+
         const SizedBox(height: 16),
         Center(
           child: TextButton.icon(
@@ -144,7 +144,7 @@ class TokenShopCard extends ConsumerWidget {
   }) {
     final theme = Theme.of(context);
     final canAfford = userTokens >= price;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -172,7 +172,7 @@ class TokenShopCard extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Content
           Expanded(
             child: Column(

@@ -43,9 +43,8 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
     return ExpandableDashboardCard(
       title: 'Daily Rewards',
       icon: Icons.calendar_today,
-      iconColor: Colors.blue,
-      isLoading: gamificationState.isLoading,
-      onTap: () {
+      accentColor: Colors.blue,
+      onViewAllTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -60,10 +59,10 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
 
   Widget _buildCollapsedContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock streak data
     const currentStreak = 3;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -96,11 +95,11 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
 
   Widget _buildExpandedContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock streak data
     const currentStreak = 3;
     const longestStreak = 7;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -111,11 +110,11 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
           ),
         ),
         const SizedBox(height: 8),
-        
+
         // Daily login reward
         _buildDailyRewardSection(context),
         const SizedBox(height: 16),
-        
+
         // Streak information
         Text(
           'Your Streak',
@@ -144,7 +143,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
           ],
         ),
         const SizedBox(height: 16),
-        
+
         // Week progress
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,7 +158,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
           ],
         ),
         const SizedBox(height: 16),
-        
+
         // Streak rewards
         Container(
           padding: const EdgeInsets.all(12),
@@ -227,7 +226,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
 
   Widget _buildDailyRewardSection(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(

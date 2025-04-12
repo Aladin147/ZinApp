@@ -23,9 +23,8 @@ class ChallengesCard extends ConsumerWidget {
     return ExpandableDashboardCard(
       title: 'Challenges',
       icon: Icons.emoji_events,
-      iconColor: Colors.orange,
-      isLoading: gamificationState.isLoading,
-      onTap: () {
+      accentColor: Colors.orange,
+      onViewAllTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -40,11 +39,11 @@ class ChallengesCard extends ConsumerWidget {
 
   Widget _buildCollapsedContent(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Mock data - in a real app, this would come from a provider
     const completedChallenges = 2;
     const totalChallenges = 7;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -76,7 +75,7 @@ class ChallengesCard extends ConsumerWidget {
           icon: Icons.thumb_up,
         ),
         const SizedBox(height: 12),
-        
+
         _buildChallengeItem(
           context,
           title: 'Style Explorer',
@@ -88,7 +87,7 @@ class ChallengesCard extends ConsumerWidget {
           icon: Icons.style,
         ),
         const SizedBox(height: 12),
-        
+
         _buildChallengeItem(
           context,
           title: 'Community Contributor',
@@ -99,7 +98,7 @@ class ChallengesCard extends ConsumerWidget {
           maxProgress: 1,
           icon: Icons.comment,
         ),
-        
+
         const SizedBox(height: 16),
         Center(
           child: TextButton.icon(
