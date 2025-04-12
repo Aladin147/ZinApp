@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
-import 'package:zinapp_v2/services/providers/gamification_provider.dart';
+import 'package:zinapp_v2/providers/gamification/gamification_provider.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A screen that displays daily rewards and challenges
@@ -23,7 +23,7 @@ class _DailyRewardsScreenState extends ConsumerState<DailyRewardsScreen> {
     super.initState();
     // Initialize gamification provider
     Future.microtask(() {
-      ref.read(gamificationProvider.notifier).initialize();
+      ref.read(gamificationNotifierProvider.notifier).initialize();
     });
 
     // TODO: Check if daily reward already claimed from storage
@@ -32,7 +32,7 @@ class _DailyRewardsScreenState extends ConsumerState<DailyRewardsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationProvider);
+    final gamificationState = ref.watch(gamificationNotifierProvider);
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -527,7 +527,7 @@ class _DailyRewardsScreenState extends ConsumerState<DailyRewardsScreen> {
     }
 
     final userId = authState.user!.id;
-    final result = await ref.read(gamificationProvider.notifier).awardForAction(
+    final result = await ref.read(gamificationNotifierProvider.notifier).awardForAction(
       userId,
       'dailyLogin',
       description: 'Daily login reward',

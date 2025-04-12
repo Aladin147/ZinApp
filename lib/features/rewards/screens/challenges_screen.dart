@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
-import 'package:zinapp_v2/services/providers/gamification_provider.dart';
+import 'package:zinapp_v2/providers/gamification/gamification_provider.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A screen that displays challenges and quests for earning tokens and XP
@@ -22,7 +22,7 @@ class _ChallengesScreenState extends ConsumerState<ChallengesScreen> with Single
 
     // Initialize gamification provider
     Future.microtask(() {
-      ref.read(gamificationProvider.notifier).initialize();
+      ref.read(gamificationNotifierProvider.notifier).initialize();
     });
   }
 
@@ -35,7 +35,7 @@ class _ChallengesScreenState extends ConsumerState<ChallengesScreen> with Single
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationProvider);
+    final gamificationState = ref.watch(gamificationNotifierProvider);
     final authState = ref.watch(authProvider);
     final user = authState.user;
 

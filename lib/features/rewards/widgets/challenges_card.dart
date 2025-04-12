@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/rewards/screens/challenges_screen.dart';
-import 'package:zinapp_v2/services/providers/gamification_provider.dart';
+import 'package:zinapp_v2/providers/gamification/gamification_provider.dart';
 import 'package:zinapp_v2/widgets/dashboard/expandable_dashboard_card.dart';
 
 /// A card that displays active challenges
@@ -12,7 +12,7 @@ class ChallengesCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationProvider);
+    final gamificationState = ref.watch(gamificationNotifierProvider);
     final authState = ref.watch(authProvider);
     final user = authState.user;
 

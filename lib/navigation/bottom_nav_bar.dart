@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
+import 'package:zinapp_v2/providers/navigation/bottom_nav_provider.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
-
-/// Provider for the current navigation index
-final bottomNavIndexProvider = StateProvider<int>((ref) => 0);
 
 /// A custom bottom navigation bar for the main app navigation
 class ZinBottomNavBar extends ConsumerWidget {
@@ -14,7 +12,7 @@ class ZinBottomNavBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentIndex = ref.watch(bottomNavIndexProvider);
+    // We don't need to watch the index here as we're using it in the child widgets
     final theme = Theme.of(context);
 
     return FrostedGlassContainer(
@@ -98,7 +96,7 @@ class ZinBottomNavBar extends ConsumerWidget {
 
     return InkWell(
       onTap: () {
-        ref.read(bottomNavIndexProvider.notifier).state = index;
+        ref.read(bottomNavIndexProvider.notifier).setIndex(index);
         context.go(route);
       },
       customBorder: const CircleBorder(),

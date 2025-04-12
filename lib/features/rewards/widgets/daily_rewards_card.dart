@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/rewards/screens/daily_rewards_screen.dart';
-import 'package:zinapp_v2/services/providers/gamification_provider.dart';
+import 'package:zinapp_v2/providers/gamification/gamification_provider.dart';
 import 'package:zinapp_v2/widgets/dashboard/expandable_dashboard_card.dart';
 
 /// A card that displays daily rewards and streak information
@@ -24,7 +24,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
     super.initState();
     // Initialize gamification provider
     Future.microtask(() {
-      ref.read(gamificationProvider.notifier).initialize();
+      ref.read(gamificationNotifierProvider.notifier).initialize();
     });
     // TODO: Check if daily reward already claimed from storage
   }
@@ -32,7 +32,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationProvider);
+    final gamificationState = ref.watch(gamificationNotifierProvider);
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -362,7 +362,7 @@ class _DailyRewardsCardState extends ConsumerState<DailyRewardsCard> {
     }
 
     final userId = authState.user!.id;
-    final result = await ref.read(gamificationProvider.notifier).awardForAction(
+    final result = await ref.read(gamificationNotifierProvider.notifier).awardForAction(
       userId,
       'dailyLogin',
       description: 'Daily login reward',
