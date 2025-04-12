@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/app/router.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/features/feed/widgets/feed_header.dart';
 import 'package:zinapp_v2/features/feed/widgets/post_card.dart';
@@ -120,6 +122,10 @@ class _FeedScreenState extends State<FeedScreen> with SingleTickerProviderStateM
   void _handleProfileTap() {
     // In a real app, this would navigate to the profile screen
     print('Profile tapped');
+  }
+
+  void _navigateToComponentShowcase(BuildContext context) {
+    context.go(AppRoutes.showcase);
   }
 
   void _handleRefresh() async {

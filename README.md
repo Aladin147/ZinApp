@@ -44,23 +44,38 @@ ZinApp V2 is a complete redesign of the original ZinApp, built with Flutter to p
 
 ## Project Structure
 
-The project follows a feature-based organization with clean architecture principles:
+The project follows a feature-based organization with clean architecture principles as documented in `docs/V2_FILE_STRUCTURE.md`:
 
 ```
 lib/
-├── app/                  # Application-level configuration
-│   ├── router.dart       # Navigation/routing configuration
-│   └── theme/            # Theme configuration
 ├── features/             # Feature modules
 │   ├── auth/             # Authentication feature
+│   │   ├── providers/    # Auth-specific providers
+│   │   ├── screens/      # Auth screens (login, register)
+│   │   └── widgets/      # Auth-specific widgets
+│   ├── feed/             # Social feed feature
+│   ├── home/             # Home screen and dashboard
 │   ├── profile/          # User profile feature
 │   ├── stylist/          # Stylist-related features
 │   └── showcase/         # Component showcase (development only)
+├── models/               # Data models
 ├── services/             # Application services
+├── theme/                # Theme configuration
 ├── widgets/              # Reusable UI components
 ├── constants/            # Application constants
+├── router.dart           # Navigation/routing configuration
+├── providers.dart        # Provider setup
 └── main.dart             # Application entry point
 ```
+
+### Recent Updates
+
+- Refactored project structure to align with the documented file structure guidelines
+- Reorganized providers into feature-specific directories
+- Moved models and services to root-level directories
+- Updated import paths throughout the codebase
+
+See `docs/REFACTORING_PROGRESS.md` for detailed information on the refactoring progress.
 
 ## Design System
 

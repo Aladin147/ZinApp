@@ -1,361 +1,231 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/models/post.dart';
-import 'package:zinapp_v2/models/stylist.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
-import 'package:zinapp_v2/widgets/zin_avatar.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
-/// A card that displays a post in the feed
-class PostCard extends StatefulWidget {
-  /// The post to display
+/// A card displaying a post in the social feed
+class PostCard extends StatelessWidget {
   final Post post;
-
-  /// The user who created the post (null if created by a stylist)
-  final UserProfile? user;
-
-  /// The stylist who created the post (null if created by a user)
-  final Stylist? stylist;
-
-  /// The current user viewing the post
-  final UserProfile currentUser;
-
-  /// Callback when the like button is pressed
-  final Function(Post post)? onLike;
-
-  /// Callback when the comment button is pressed
-  final Function(Post post)? onComment;
-
-  /// Callback when the share button is pressed
-  final Function(Post post)? onShare;
-
-  /// Callback when the post is tapped
-  final Function(Post post)? onTap;
-
-  /// Callback when the user avatar is tapped
-  final Function(UserProfile user)? onUserTap;
-
-  /// Callback when the stylist avatar is tapped
-  final Function(Stylist stylist)? onStylistTap;
+  final String username;
+  final String? userProfilePictureUrl;
+  final VoidCallback? onTap;
+  final VoidCallback? onLikeTap;
+  final VoidCallback? onCommentTap;
+  final VoidCallback? onShareTap;
+  final VoidCallback? onUserTap;
 
   const PostCard({
-    super.key,
+    Key? key,
     required this.post,
-    this.user,
-    this.stylist,
-    required this.currentUser,
-    this.onLike,
-    this.onComment,
-    this.onShare,
+    required this.username,
+    this.userProfilePictureUrl,
     this.onTap,
+    this.onLikeTap,
+    this.onCommentTap,
+    this.onShareTap,
     this.onUserTap,
-    this.onStylistTap,
-  });
-
-  @override
-  State<PostCard> createState() => _PostCardState();
-}
-
-class _PostCardState extends State<PostCard> with SingleTickerProviderStateMixin {
-  late AnimationController _likeAnimationController;
-  late Animation<double> _likeAnimation;
-  bool _isLiked = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _isLiked = widget.post.isLikedBy(widget.currentUser.userId);
-
-    // Setup like animation
-    _likeAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-
-    _likeAnimation = TweenSequence<double>([
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.0, end: 1.3)
-            .chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 50,
-      ),
-      TweenSequenceItem(
-        tween: Tween<double>(begin: 1.3, end: 1.0)
-            .chain(CurveTween(curve: Curves.easeInOut)),
-        weight: 50,
-      ),
-    ]).animate(_likeAnimationController);
-  }
-
-  @override
-  void dispose() {
-    _likeAnimationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(PostCard oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Update like state if the post changes
-    if (oldWidget.post.postId != widget.post.postId ||
-        oldWidget.post.likes != widget.post.likes) {
-      _isLiked = widget.post.isLikedBy(widget.currentUser.userId);
-    }
-  }
-
-  void _handleLike() {
-    setState(() {
-      _isLiked = !_isLiked;
-    });
-
-    // Play animation
-    _likeAnimationController.forward(from: 0.0);
-
-    // Call callback
-    if (widget.onLike != null) {
-      widget.onLike!(widget.post);
-    }
-  }
-
-  String _getTimeAgo() {
-    final now = DateTime.now();
-    final difference = now.difference(widget.post.timestamp);
-
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}m';
-    } else {
-      return 'Just now';
-    }
-  }
-
-  String _getPostTypeLabel() {
-    switch (widget.post.type) {
-      case PostType.checkIn:
-        return 'Check-in';
-      case PostType.showcase:
-        return 'Showcase';
-      case PostType.general:
-        return '';
-    }
-  }
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final displayName = widget.user?.username ?? widget.stylist?.name ?? 'Unknown';
-    final avatarUrl = widget.user?.profilePictureUrl ?? widget.stylist?.profilePictureUrl ?? '';
-    final postTypeLabel = _getPostTypeLabel();
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: widget.onTap != null ? () => widget.onTap!(widget.post) : null,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
         child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header with avatar and user info
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Row(
-              children: [
-                // Avatar
-                GestureDetector(
-                  onTap: () {
-                    if (widget.user != null && widget.onUserTap != null) {
-                      widget.onUserTap!(widget.user!);
-                    } else if (widget.stylist != null && widget.onStylistTap != null) {
-                      widget.onStylistTap!(widget.stylist!);
-                    }
-                  },
-                  child: ZinAvatar(
-                    size: ZinAvatarSize.small,
-                    imageUrl: avatarUrl,
-                    initials: displayName.isNotEmpty ? displayName[0] : '?',
-                  ),
-                ),
-                const SizedBox(width: 12),
-
-                // User info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            displayName,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          if (postTypeLabel.isNotEmpty) ...[
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryHighlight.withAlpha(51), // 20% opacity
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                postTypeLabel,
-                                style: theme.textTheme.labelSmall?.copyWith(
-                                  color: AppColors.primaryHighlight,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        _getTimeAgo(),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withAlpha(153), // 60% opacity
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Image
-          // Post image (using placeholder for now)
-          AspectRatio(
-            aspectRatio: 4 / 3,
-            child: Container(
-              color: theme.colorScheme.surfaceContainerHighest,
-              child: Center(
-                child: Icon(
-                  Icons.image,
-                  color: theme.colorScheme.onSurfaceVariant,
-                  size: 48,
-                ),
-              ),
-            ),
-          ),
-
-          // Caption
-          if (widget.post.caption.isNotEmpty)
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // User info
             Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                widget.post.caption,
-                style: theme.textTheme.bodyMedium,
-              ),
-            ),
-
-          // Action buttons
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                // Like button
-                AnimatedBuilder(
-                  animation: _likeAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _isLiked ? _likeAnimation.value : 1.0,
-                      child: child,
-                    );
-                  },
-                  child: IconButton(
-                    icon: Icon(
-                      _isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: _isLiked ? AppColors.primaryHighlight : null,
-                    ),
-                    onPressed: _handleLike,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ),
-                Text(
-                  widget.post.likeCount.toString(),
-                  style: theme.textTheme.bodySmall,
-                ),
-                const SizedBox(width: 16),
-
-                // Comment button
-                IconButton(
-                  icon: const Icon(Icons.chat_bubble_outline),
-                  onPressed: widget.onComment != null
-                      ? () => widget.onComment!(widget.post)
-                      : null,
-                  visualDensity: VisualDensity.compact,
-                ),
-                Text(
-                  widget.post.commentCount.toString(),
-                  style: theme.textTheme.bodySmall,
-                ),
-                const Spacer(),
-
-                // Share button
-                IconButton(
-                  icon: const Icon(Icons.share_outlined),
-                  onPressed: widget.onShare != null
-                      ? () => widget.onShare!(widget.post)
-                      : null,
-                  visualDensity: VisualDensity.compact,
-                ),
-              ],
-            ),
-          ),
-
-          // Comments preview (first comment only)
-          if (widget.post.comments.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.all(12),
+              child: Row(
                 children: [
-                  const Divider(),
-                  Row(
+                  GestureDetector(
+                    onTap: onUserTap,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: userProfilePictureUrl != null
+                          ? AssetImage(userProfilePictureUrl!)
+                          : null,
+                      child: userProfilePictureUrl == null
+                          ? const Icon(Icons.person)
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Sofia',
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                        username,
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          widget.post.comments.first.text,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (widget.post.comments.length > 1)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: GestureDetector(
-                        onTap: widget.onComment != null
-                            ? () => widget.onComment!(widget.post)
-                            : null,
-                        child: Text(
-                          'View all ${widget.post.comments.length} comments',
+                      if (post.location != null)
+                        Text(
+                          post.location!,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withAlpha(153), // 60% opacity
+                            color: theme.colorScheme.onSurface.withOpacity(0.7),
                           ),
                         ),
-                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Text(
+                    _formatDate(post.createdAt),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withOpacity(0.5),
                     ),
+                  ),
                 ],
               ),
             ),
+            // Post content
+            if (post.content.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  post.content,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ),
+            // Post images
+            if (post.imageUrls.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 240,
+                child: PageView.builder(
+                  itemCount: post.imageUrls.length,
+                  itemBuilder: (context, index) {
+                    return Image.asset(
+                      post.imageUrls[index],
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey.shade200,
+                          child: const Center(
+                            child: Icon(
+                              Icons.image_not_supported,
+                              size: 40,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+            // Tags
+            if (post.tags.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Wrap(
+                  spacing: 8,
+                  children: post.tags.map((tag) {
+                    return Text(
+                      '#$tag',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: AppColors.primaryHighlight,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+            // Engagement stats
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Row(
+                children: [
+                  _buildEngagementStat(
+                    context,
+                    icon: Icons.favorite,
+                    count: post.likesCount,
+                    onTap: onLikeTap,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildEngagementStat(
+                    context,
+                    icon: Icons.comment,
+                    count: post.commentsCount,
+                    onTap: onCommentTap,
+                  ),
+                  const SizedBox(width: 16),
+                  _buildEngagementStat(
+                    context,
+                    icon: Icons.share,
+                    count: post.sharesCount,
+                    onTap: onShareTap,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEngagementStat(
+    BuildContext context, {
+    required IconData icon,
+    required int count,
+    VoidCallback? onTap,
+  }) {
+    final theme = Theme.of(context);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 18,
+            color: theme.colorScheme.onSurface.withOpacity(0.7),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            count.toString(),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurface.withOpacity(0.7),
+            ),
+          ),
         ],
       ),
-    ),
     );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+
+    if (difference.inDays > 7) {
+      return '${date.day}/${date.month}/${date.year}';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays}d ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours}h ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes}m ago';
+    } else {
+      return 'Just now';
+    }
   }
 }

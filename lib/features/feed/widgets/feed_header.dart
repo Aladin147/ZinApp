@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/app/router.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
@@ -53,7 +55,7 @@ class FeedHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // User info
           Expanded(
             child: Column(
@@ -74,7 +76,7 @@ class FeedHeader extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // XP indicator
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -102,7 +104,7 @@ class FeedHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Action buttons
           IconButton(
             icon: const Icon(Icons.search),
@@ -113,6 +115,13 @@ class FeedHeader extends StatelessWidget {
             icon: const Icon(Icons.notifications_outlined),
             onPressed: onNotifications,
             visualDensity: VisualDensity.compact,
+          ),
+          // Component showcase button (for development only)
+          IconButton(
+            icon: const Icon(Icons.widgets_outlined),
+            onPressed: () => context.go(AppRoutes.showcase),
+            visualDensity: VisualDensity.compact,
+            tooltip: 'Component Showcase',
           ),
         ],
       ),

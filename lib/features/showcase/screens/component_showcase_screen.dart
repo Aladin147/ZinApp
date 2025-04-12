@@ -194,15 +194,15 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
       spacing: 16,
       runSpacing: 16,
       children: [
-        ZinButton(
+        AppButton( // Renamed
           label: 'Primary Button',
           onPressed: () {},
         ),
-        ZinButton.secondary(
+        AppButton.secondary( // Renamed
           label: 'Secondary Button',
           onPressed: () {},
         ),
-        ZinButton.text(
+        AppButton.text( // Renamed
           label: 'Text Button',
           onPressed: () {},
         ),
@@ -215,19 +215,19 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
       spacing: 16,
       runSpacing: 16,
       children: [
-        ZinButton(
+        AppButton( // Renamed
           label: 'Small Button',
-          size: ZinButtonSize.small,
+          size: AppButtonSize.small, // Renamed enum
           onPressed: () {},
         ),
-        ZinButton(
+        AppButton( // Renamed
           label: 'Medium Button',
-          size: ZinButtonSize.medium,
+          size: AppButtonSize.medium, // Renamed enum
           onPressed: () {},
         ),
-        ZinButton(
+        AppButton( // Renamed
           label: 'Large Button',
-          size: ZinButtonSize.large,
+          size: AppButtonSize.large, // Renamed enum
           onPressed: () {},
         ),
       ],
@@ -242,16 +242,16 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
           spacing: 16,
           runSpacing: 16,
           children: [
-            ZinButton(
+            AppButton( // Renamed
               label: _isLoading ? 'Loading...' : 'Toggle Loading',
               isLoading: _isLoading,
               onPressed: _toggleLoading,
             ),
-            ZinButton(
+            AppButton( // Renamed
               label: 'Disabled Button',
               onPressed: null,
             ),
-            ZinButton(
+            AppButton( // Renamed
               label: 'Full Width Button',
               isFullWidth: true,
               onPressed: () {},
@@ -259,7 +259,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
           ],
         ),
         const SizedBox(height: 16),
-        ZinButton(
+        AppButton( // Renamed
           label: 'Full Width Button',
           isFullWidth: true,
           onPressed: () {},
@@ -273,24 +273,24 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
       spacing: 16,
       runSpacing: 16,
       children: [
-        ZinButton(
+        AppButton( // Renamed
           label: 'Leading Icon',
           icon: Icons.add,
           iconPosition: IconPosition.leading,
           onPressed: () {},
         ),
-        ZinButton(
+        AppButton( // Renamed
           label: 'Trailing Icon',
           icon: Icons.arrow_forward,
           iconPosition: IconPosition.trailing,
           onPressed: () {},
         ),
-        ZinButton.secondary(
+        AppButton.secondary( // Renamed
           label: 'Share',
           icon: Icons.share,
           onPressed: () {},
         ),
-        ZinButton.text(
+        AppButton.text( // Renamed
           label: 'Delete',
           icon: Icons.delete,
           onPressed: () {},
@@ -344,12 +344,12 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  ZinButton.text(
+                  AppButton.text( // Renamed
                     label: 'Cancel',
                     onPressed: () {},
                   ),
                   const SizedBox(width: 8),
-                  ZinButton(
+                  AppButton( // Renamed
                     label: 'Save',
                     onPressed: () {},
                   ),
@@ -602,7 +602,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                           ),
                     ),
                     const SizedBox(height: 16),
-                    ZinButton(
+                    AppButton( // Renamed
                       label: 'Interactive Button',
                       onPressed: () {},
                     ),
@@ -637,7 +637,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                           ),
                     ),
                     const SizedBox(height: 16),
-                    ZinButton.secondary(
+                    AppButton.secondary( // Renamed
                       label: 'Interactive Button',
                       onPressed: () {},
                     ),
@@ -807,7 +807,7 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 16),
-                ZinButton(
+                AppButton( // Renamed
                   label: 'Interactive Button',
                   onPressed: () {},
                 ),
@@ -1056,3 +1056,6 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
     );
   }
 }
+// Note: AccessibilityAwareCard and AccessibilityAwareButton are assumed to exist
+// and handle contrast logic internally. ButtonVariant might need adjustment if
+// the actual enum name differs.
