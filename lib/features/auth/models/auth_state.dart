@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:zinapp_v2/app/models/user_profile.dart';
+import 'package:zinapp_v2/models/user_profile.dart';
 
 /// Represents the current authentication state of the application
 class AuthState extends Equatable {
