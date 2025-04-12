@@ -32,7 +32,7 @@ class PostCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: LightFrostedGlassContainer(
+      child: DarkFrostedGlassContainer(
         margin: const EdgeInsets.only(bottom: 16),
         borderRadius: BorderRadius.circular(16),
         padding: EdgeInsets.zero,

@@ -20,7 +20,7 @@ class ZinBottomNavBar extends ConsumerWidget {
     return FrostedGlassContainer(
       blurAmount: 15,
       backgroundColor: theme.scaffoldBackgroundColor,
-      backgroundOpacity: 0.7,
+      backgroundOpacity: 0.85, // Increased opacity for better visibility
       padding: EdgeInsets.zero,
       margin: EdgeInsets.zero,
       borderRadius: const BorderRadius.only(

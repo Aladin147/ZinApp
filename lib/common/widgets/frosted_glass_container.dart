@@ -116,14 +116,14 @@ class LightFrostedGlassContainer extends StatelessWidget {
       borderRadius: borderRadius,
       blurAmount: 5,
       backgroundColor: Colors.white,
-      backgroundOpacity: 0.15,
+      backgroundOpacity: 0.35, // Increased opacity for better visibility
       border: Border.all(
-        color: Colors.white.withOpacity(0.2),
+        color: Colors.white.withOpacity(0.3), // Increased opacity for better visibility
         width: 1.5,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.05),
+          color: Colors.black.withOpacity(0.1), // Increased opacity for better visibility
           blurRadius: 10,
           spreadRadius: 0,
           offset: const Offset(0, 4),
@@ -164,14 +164,14 @@ class DarkFrostedGlassContainer extends StatelessWidget {
       borderRadius: borderRadius,
       blurAmount: 10,
       backgroundColor: Colors.black,
-      backgroundOpacity: 0.3,
+      backgroundOpacity: 0.45, // Increased opacity for better visibility
       border: Border.all(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.15), // Increased opacity for better visibility
         width: 1.5,
       ),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.black.withOpacity(0.25), // Increased opacity for better visibility
           blurRadius: 15,
           spreadRadius: 0,
           offset: const Offset(0, 8),

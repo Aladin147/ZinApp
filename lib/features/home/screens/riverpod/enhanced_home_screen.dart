@@ -72,8 +72,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     return Scaffold(
       body: GradientBackgroundContainer.soft(
         colors: [
-          const Color(0xFFF8F9FA),
-          const Color(0xFFE9ECEF),
+          const Color(0xFFECEFF1), // Darker background color
+          const Color(0xFFCFD8DC), // Darker background color
         ],
         padding: EdgeInsets.zero,
         child: SafeArea(
@@ -142,7 +142,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   sliver: SliverToBoxAdapter(
-                    child: LightFrostedGlassContainer(
+                    child: DarkFrostedGlassContainer(
                       borderRadius: BorderRadius.circular(24),
                       padding: const EdgeInsets.all(16),
                       child: _buildFeedContent(feedState),
