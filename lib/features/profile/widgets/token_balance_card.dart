@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A card that displays the user's token balance with visual effects.
@@ -15,7 +17,7 @@ class TokenBalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -59,7 +61,7 @@ class TokenBalanceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Token balance
           Row(
             children: [
@@ -98,12 +100,14 @@ class TokenBalanceCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Manage button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: onManagePressed,
+              onPressed: onManagePressed ?? () {
+                context.go(AppRoutes.rewardsHub);
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: AppColors.primaryHighlight,
@@ -124,7 +128,7 @@ class TokenBalanceCard extends StatelessWidget {
       ),
     );
   }
-  
+
   void _showTokenInfo(BuildContext context) {
     showDialog(
       context: context,

@@ -142,6 +142,18 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
               child: const Icon(Icons.person, color: AppColors.baseDark),
             ),
           ),
+          // Rewards button
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: FloatingActionButton.small(
+              onPressed: () {
+                context.go(AppRoutes.rewardsHub);
+              },
+              backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
+              heroTag: 'rewards',
+              child: const Icon(Icons.token, color: AppColors.baseDark),
+            ),
+          ),
           // Logout button (temporary for testing)
           FloatingActionButton(
             onPressed: () {

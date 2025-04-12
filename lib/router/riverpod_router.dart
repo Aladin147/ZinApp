@@ -15,6 +15,10 @@ import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.da
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_confirmation_screen.dart';
 import 'package:zinapp_v2/features/booking/screens/riverpod/booking_screen.dart';
+import 'package:zinapp_v2/features/rewards/screens/challenges_screen.dart';
+import 'package:zinapp_v2/features/rewards/screens/daily_rewards_screen.dart';
+import 'package:zinapp_v2/features/rewards/screens/rewards_hub_screen.dart';
+import 'package:zinapp_v2/features/rewards/screens/token_shop_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_discovery_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_profile_screen.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
@@ -179,6 +183,54 @@ GoRouter riverpodRouter(Ref ref) {
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
             authenticatedChild: BookingConfirmationScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Rewards hub route (protected)
+      GoRoute(
+        path: AppRoutes.rewardsHub,
+        name: AppRoutes.rewardsHub,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: RewardsHubScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Daily rewards route (protected)
+      GoRoute(
+        path: AppRoutes.dailyRewards,
+        name: AppRoutes.dailyRewards,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: DailyRewardsScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Challenges route (protected)
+      GoRoute(
+        path: AppRoutes.challenges,
+        name: AppRoutes.challenges,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: ChallengesScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Token shop route (protected)
+      GoRoute(
+        path: AppRoutes.tokenShop,
+        name: AppRoutes.tokenShop,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: TokenShopScreen(),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },

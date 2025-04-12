@@ -1,0 +1,44 @@
+{
+  "levels": [
+    { "name": "Bronze", "minXP": 0 },
+    { "name": "Silver", "minXP": 100 },
+    { "name": "Gold", "minXP": 500 },
+    { "name": "Prime", "minXP": 1500 },
+    { "name": "Legend", "minXP": 5000 }
+  ],
+  "actionRewards": {
+    "rateExperience": { "xp": 5 },
+    "postPhoto": { "xp": 10, "zinTokens": 5 },
+    "completeBooking": { "xp": 20, "zinTokens": 10 },
+    "commentOnPost": { "xp": 3 },
+    "tagPhoto": { "xp": 30, "zinTokens": 10 },
+    "dailyLogin": { "xp": 2, "zinTokens": 1 },
+    "weeklyStreak": { "xp": 10, "zinTokens": 5 },
+    "monthlyStreak": { "xp": 50, "zinTokens": 25 },
+    "referFriend": { "xp": 100, "zinTokens": 50 },
+    "completeProfile": { "xp": 15, "zinTokens": 10 },
+    "firstBooking": { "xp": 30, "zinTokens": 15 },
+    "sharePost": { "xp": 5, "zinTokens": 2 },
+    "followStylist": { "xp": 5 },
+    "receiveFollower": { "xp": 2, "zinTokens": 1 },
+    "likePost": { "xp": 1 },
+    "receiveLike": { "xp": 1, "zinTokens": 1 },
+    "uploadProfilePicture": { "xp": 10, "zinTokens": 5 },
+    "addBio": { "xp": 5, "zinTokens": 2 },
+    "addFavoriteStyles": { "xp": 5, "zinTokens": 2 },
+    "addLocation": { "xp": 5, "zinTokens": 2 },
+    "verifyEmail": { "xp": 20, "zinTokens": 10 },
+    "verifyPhone": { "xp": 20, "zinTokens": 10 },
+    "completeOnboarding": { "xp": 50, "zinTokens": 25 }
+  },
+  "dailyLimits": {
+    "likePost": 50,
+    "commentOnPost": 20,
+    "dailyLogin": 1,
+    "sharePost": 10
+  },
+  "tokenExpiration": {
+    "enabled": true,
+    "daysToExpire": 180
+  }
+}

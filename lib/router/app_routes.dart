@@ -14,6 +14,12 @@ abstract class AppRoutes {
   static const String messages = '/messages';
   static const String messageDetail = '/messages/:id';
 
+  // Rewards routes
+  static const String rewardsHub = '/rewards';
+  static const String dailyRewards = '/rewards/daily';
+  static const String challenges = '/rewards/challenges';
+  static const String tokenShop = '/rewards/shop';
+
   // Auth routes
   static const String forgotPassword = '/forgot-password';
 
