@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/feed/widgets/post_card.dart';
 import 'package:zinapp_v2/features/home/widgets/action_hub_section.dart';
 import 'package:zinapp_v2/features/home/widgets/gamer_dashboard_section.dart';
@@ -8,7 +7,6 @@ import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
-import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class EnhancedHomeScreen extends ConsumerStatefulWidget {
@@ -66,143 +64,112 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     final feedState = ref.watch(feedProvider);
     final user = authState.user;
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
+    // Get the current screen size
+    // final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
+        child: RefreshIndicator(
+          onRefresh: () async {
+            // Refresh all data
+            await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+            await ref.read(feedProvider.notifier).loadPosts();
+            await ref.read(stylistProviderProvider.notifier).loadInitialData();
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            slivers: [
               // Gamer Dashboard
-              GamerDashboardSection(
-                user: user,
+              SliverToBoxAdapter(
+                child: GamerDashboardSection(
+                  user: user,
+                ),
               ),
 
               // Action Hub
-              Consumer(
-                builder: (context, ref, child) {
-                  final stylistState = ref.watch(stylistProviderProvider);
-                  return ActionHubSection(
-                    stylists: stylistState.featuredStylists,
-                    isLoading: stylistState.isLoading,
-                    errorMessage: stylistState.error,
-                  );
-                },
+              SliverToBoxAdapter(
+                child: Consumer(
+                  builder: (context, ref, child) {
+                    final stylistState = ref.watch(stylistProviderProvider);
+                    return ActionHubSection(
+                      stylists: stylistState.featuredStylists,
+                      isLoading: stylistState.isLoading,
+                      errorMessage: stylistState.error,
+                    );
+                  },
+                ),
               ),
 
-              // Social Feed
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Feed',
-                      style: theme.textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+              // Social Feed Header
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                sliver: SliverToBoxAdapter(
+                  child: Text(
+                    'Feed',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 16),
-                    // Feed content
-                    SizedBox(
-                      height: size.height * 0.5, // Fixed height for feed
-                      child: _buildFeedContent(feedState),
-                    ),
-                  ],
+                  ),
                 ),
+              ),
+
+              // Social Feed Content
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                sliver: _buildFeedContent(feedState),
               ),
             ],
           ),
         ),
       ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Scroll to top button (only shown when scrolled down)
-          if (_showScrollToTopButton)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: FloatingActionButton.small(
-                onPressed: _scrollToTop,
-                backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
-                heroTag: 'scrollToTop',
-                child: const Icon(Icons.arrow_upward, color: AppColors.baseDark),
-              ),
-            ),
-          // Profile button
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: FloatingActionButton.small(
-              onPressed: () {
-                context.go(AppRoutes.profile);
-              },
-              backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
-              heroTag: 'profile',
-              child: const Icon(Icons.person, color: AppColors.baseDark),
-            ),
-          ),
-          // Rewards button
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: FloatingActionButton.small(
-              onPressed: () {
-                context.go(AppRoutes.rewardsHub);
-              },
-              backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
-              heroTag: 'rewards',
-              child: const Icon(Icons.token, color: AppColors.baseDark),
-            ),
-          ),
-          // Logout button (temporary for testing)
-          FloatingActionButton(
-            onPressed: () {
-              ref.read(authProvider.notifier).logout();
-            },
-            backgroundColor: AppColors.primaryHighlight,
-            heroTag: 'logout',
-            child: const Icon(Icons.logout, color: AppColors.baseDark),
-          ),
-        ],
-      ),
+      // We'll use the bottom nav bar instead of floating action buttons
+      floatingActionButton: _showScrollToTopButton ? FloatingActionButton.small(
+        onPressed: _scrollToTop,
+        backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
+        heroTag: 'scrollToTop',
+        child: const Icon(Icons.arrow_upward, color: AppColors.baseDark),
+      ) : null,
     );
   }
 
   Widget _buildFeedContent(FeedState feedState) {
     if (feedState.isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
+      return const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
       );
     }
 
     if (feedState.error != null) {
-      return Center(
-        child: Text(
-          'Error: ${feedState.error}',
-          style: const TextStyle(color: Colors.red),
+      return SliverFillRemaining(
+        child: Center(
+          child: Text(
+            'Error: ${feedState.error}',
+            style: const TextStyle(color: Colors.red),
+          ),
         ),
       );
     }
 
     if (feedState.posts.isEmpty) {
-      return const Center(
-        child: Text('No posts available'),
+      return const SliverFillRemaining(
+        child: Center(child: Text('No posts available')),
       );
     }
 
-    return ListView.builder(
-      controller: _scrollController,
-      itemCount: feedState.posts.length,
-      itemBuilder: (context, index) {
-        final post = feedState.posts[index];
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: PostCard(
-            post: post,
-            username: 'User ${post.userId}', // We'll implement proper user lookup later
-          ),
-        );
-      },
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          final post = feedState.posts[index];
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: PostCard(
+              post: post,
+              username: 'User ${post.userId}', // We'll implement proper user lookup later
+            ),
+          );
+        },
+        childCount: feedState.posts.length,
+      ),
     );
   }
 }

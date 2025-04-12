@@ -21,6 +21,7 @@ import 'package:zinapp_v2/features/rewards/screens/rewards_hub_screen.dart';
 import 'package:zinapp_v2/features/rewards/screens/token_shop_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_discovery_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_profile_screen.dart';
+import 'package:zinapp_v2/navigation/main_layout.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 
 // Generate the provider code
@@ -57,7 +58,10 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.home,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: EnhancedHomeScreen(),
+            authenticatedChild: MainLayout(
+              showBottomNav: true,
+              child: EnhancedHomeScreen(),
+            ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
@@ -96,7 +100,10 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.profile,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: GameProfileScreen(),
+            authenticatedChild: MainLayout(
+              showBottomNav: true,
+              child: GameProfileScreen(),
+            ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
@@ -145,7 +152,10 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.stylistList,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: StylistDiscoveryScreen(),
+            authenticatedChild: MainLayout(
+              showBottomNav: true,
+              child: StylistDiscoveryScreen(),
+            ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
@@ -194,7 +204,10 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.rewardsHub,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: RewardsHubScreen(),
+            authenticatedChild: MainLayout(
+              showBottomNav: true,
+              child: RewardsHubScreen(),
+            ),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
