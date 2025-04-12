@@ -10,12 +10,14 @@ class StylistCard extends StatelessWidget {
   final Stylist stylist;
   final Function(Stylist)? onTap;
   final bool showBookButton;
+  final bool compact;
 
   const StylistCard({
     super.key,
     required this.stylist,
     this.onTap,
     this.showBookButton = true,
+    this.compact = false,
   });
 
   @override
@@ -27,8 +29,8 @@ class StylistCard extends StatelessWidget {
         context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
       },
       child: Container(
-        width: 160,
-        height: 240,
+        width: compact ? 120 : 160,
+        height: compact ? 180 : 240,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
           color: AppColors.baseDark.withAlpha(179), // 0.7 opacity
@@ -52,7 +54,7 @@ class StylistCard extends StatelessWidget {
                 topRight: Radius.circular(16),
               ),
               child: SizedBox(
-                height: 110,
+                height: compact ? 80 : 110,
                 width: double.infinity,
                 child: stylist.profileImageUrl != null
                     ? Image.network(
@@ -93,9 +95,10 @@ class StylistCard extends StatelessWidget {
                   // Name
                   Text(
                     stylist.name,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
+                      fontSize: compact ? 12 : 14,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -105,16 +108,17 @@ class StylistCard extends StatelessWidget {
                   // Rating
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.star,
                         color: Colors.amber,
-                        size: 16,
+                        size: compact ? 12 : 16,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         '${stylist.rating.toStringAsFixed(1)} (${stylist.reviewCount})',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.white70,
+                          fontSize: compact ? 10 : 12,
                         ),
                       ),
                     ],
@@ -122,7 +126,7 @@ class StylistCard extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   // Book button
-                  if (showBookButton)
+                  if (showBookButton && !compact)
                     SizedBox(
                       width: double.infinity,
                       height: 28,
