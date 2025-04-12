@@ -71,9 +71,9 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
 
     return Scaffold(
       body: GradientBackgroundContainer.soft(
-        colors: [
-          const Color(0xFFECEFF1), // Darker background color
-          const Color(0xFFCFD8DC), // Darker background color
+        colors: const [
+          AppColors.baseDarkDeeper, // Deeper dark background
+          AppColors.baseDark, // Base dark background
         ],
         padding: EdgeInsets.zero,
         child: SafeArea(

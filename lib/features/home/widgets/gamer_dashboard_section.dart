@@ -27,16 +27,22 @@ class GamerDashboardSection extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             AppColors.baseDark,
-            AppColors.baseDark.withAlpha(230), // 0.9 opacity
+            AppColors.baseDarkDeeper,
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(26), // 0.1 opacity
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+            color: Colors.black.withAlpha(40), // 0.15 opacity
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.primaryHighlight.withAlpha(30),
+            width: 1.0,
+          ),
+        ),
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -163,64 +169,156 @@ class GamerDashboardSection extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // XP progress bar with animation
+          // XP progress bar with enhanced visualization
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'XP Progress',
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.star_rounded,
+                        color: AppColors.primaryHighlight,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'Level ${(user?.xp ?? 0) ~/ 200 + 1}',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
+                      horizontal: 10,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.primaryHighlight.withAlpha(70),
+                          AppColors.primaryHighlight.withAlpha(40),
+                        ],
+                      ),
                       borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryHighlight.withAlpha(30),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                        ),
+                      ],
                     ),
                     child: Text(
                       '${user?.xp ?? 0} / 1000 XP',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Stack(
                 children: [
-                  // Base progress bar
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: LinearProgressIndicator(
-                      value: (user?.xp ?? 0) / 1000, // Calculate progress based on XP (max 1000)
-                      backgroundColor: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                        AppColors.primaryHighlight,
+                  // Base progress bar background with glow
+                  Container(
+                    height: 16,
+                    decoration: BoxDecoration(
+                      color: AppColors.baseDarkAccent,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primaryHighlight.withAlpha(15),
+                          blurRadius: 8,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Progress fill
+                  FractionallySizedBox(
+                    widthFactor: (user?.xp ?? 0) / 1000,
+                    child: Container(
+                      height: 16,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          colors: [
+                            AppColors.primaryHighlight,
+                            Color(0xFFA0FF00), // Slightly different shade for gradient effect
+                          ],
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryHighlight.withAlpha(100),
+                            blurRadius: 12,
+                            spreadRadius: -2,
+                          ),
+                        ],
                       ),
-                      minHeight: 12,
                     ),
                   ),
                   // Milestone markers
                   SizedBox(
-                    height: 12,
+                    height: 16,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: List.generate(
                         5,
                         (index) => Container(
                           width: 2,
-                          height: 12,
-                          color: Colors.white.withAlpha(128), // 0.5 opacity
+                          height: 16,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withAlpha(100),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.white.withAlpha(80),
+                                blurRadius: 4,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Level indicators
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    child: SizedBox(
+                      height: 16,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                          6,
+                          (index) => index == 0
+                            ? const SizedBox(width: 1) // Empty space for first position
+                            : Container(
+                              width: 16,
+                              height: 16,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '$index',
+                                style: TextStyle(
+                                  color: index <= ((user?.xp ?? 0) ~/ 200 + 1)
+                                    ? Colors.black
+                                    : Colors.white.withAlpha(150),
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
                         ),
                       ),
                     ),

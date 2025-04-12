@@ -6,8 +6,12 @@ abstract class AppColors {
   static const Color primaryHighlight = Color(0xFFD2FF4D); // Highlight / CTA / Logo - Neon green
   static const Color primaryHighlightDark = Color(0xFF9EBF3B); // Darker variant for better contrast on light backgrounds
   static const Color primaryHighlightDarker = Color(0xFF6A8026); // Even darker variant for text on light backgrounds
-  static const Color baseDark = Color(0xFF232D30); // Official Background / Base Dark
-  static const Color baseDarkAlt = Color(0xFF2A363A); // Slightly lighter dark background for layering
+
+  // Dark Theme Colors
+  static const Color baseDark = Color(0xFF172335); // Official Background / Base Dark
+  static const Color baseDarkAlt = Color(0xFF1A2940); // Slightly lighter dark background for layering
+  static const Color baseDarkDeeper = Color(0xFF13192A); // Deeper dark for contrast and depth
+  static const Color baseDarkAccent = Color(0xFF1E2C42); // Accent dark for highlights and focus areas
 
   // Background Colors
   static const Color canvasLight = Color(0xFFF8F3ED); // Cream background

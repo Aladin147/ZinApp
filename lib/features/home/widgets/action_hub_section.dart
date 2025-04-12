@@ -25,14 +25,31 @@ class ActionHubSection extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.baseDark.withAlpha(230), // 0.9 opacity
-            AppColors.baseDark.withAlpha(204), // 0.8 opacity
+            AppColors.baseDarkAlt,
+            AppColors.baseDark,
           ],
         ),
+        border: Border(
+          top: BorderSide(
+            color: AppColors.primaryHighlight.withAlpha(20),
+            width: 1.0,
+          ),
+          bottom: BorderSide(
+            color: AppColors.primaryHighlight.withAlpha(20),
+            width: 1.0,
+          ),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(30),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -261,8 +278,10 @@ class ActionHubSection extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
+      splashColor: color.withAlpha(40),
+      highlightColor: color.withAlpha(20),
       child: Container(
-        width: 70,
+        width: 80,
         padding: const EdgeInsets.symmetric(
           vertical: 12,
         ),
@@ -270,30 +289,48 @@ class ActionHubSection extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withAlpha(51), // 0.2 opacity
+                gradient: RadialGradient(
+                  colors: [
+                    color.withAlpha(80),
+                    color.withAlpha(30),
+                  ],
+                  stops: const [0.4, 1.0],
+                ),
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: color.withAlpha(77), // 0.3 opacity
-                    blurRadius: 8,
-                    spreadRadius: 1,
+                    color: color.withAlpha(100),
+                    blurRadius: 12,
+                    spreadRadius: -2,
                   ),
                 ],
+                border: Border.all(
+                  color: color.withAlpha(120),
+                  width: 1.5,
+                ),
               ),
               child: Icon(
                 icon,
                 color: color,
-                size: 24,
+                size: 26,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Text(
               label,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black.withAlpha(100),
+                        blurRadius: 3,
+                        offset: const Offset(0, 1),
+                      ),
+                    ],
                   ),
             ),
           ],
