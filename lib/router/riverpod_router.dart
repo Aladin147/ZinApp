@@ -13,6 +13,8 @@ import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
+import 'package:zinapp_v2/features/booking/screens/riverpod/booking_confirmation_screen.dart';
+import 'package:zinapp_v2/features/booking/screens/riverpod/booking_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_discovery_screen.dart';
 import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_profile_screen.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
@@ -164,7 +166,31 @@ GoRouter riverpodRouter(Ref ref) {
         name: AppRoutes.booking,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: PlaceholderScreen(title: 'Booking'),
+            authenticatedChild: BookingScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Booking confirmation route (protected)
+      GoRoute(
+        path: AppRoutes.bookingConfirmation,
+        name: AppRoutes.bookingConfirmation,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: BookingConfirmationScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Messages route (protected)
+      GoRoute(
+        path: AppRoutes.messages,
+        name: AppRoutes.messages,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: PlaceholderScreen(title: 'Messages'),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },

@@ -10,7 +10,7 @@ class StylistCarousel extends StatelessWidget {
   final List<Stylist> stylists;
   final bool isLoading;
   final String? errorMessage;
-  final Function(Stylist)? onStylistTap;
+  final void Function(Stylist)? onStylistTap;
   final VoidCallback? onSeeAllTap;
   final bool showBookButton;
 
@@ -168,7 +168,7 @@ class StylistCarousel extends StatelessWidget {
         final stylist = stylists[index];
         return StylistCard(
           stylist: stylist,
-          onTap: onStylistTap != null ? () => onStylistTap!(stylist) : null,
+          onTap: onStylistTap,
           showBookButton: showBookButton,
         );
       },

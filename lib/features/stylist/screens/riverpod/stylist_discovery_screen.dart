@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart';
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
 import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_carousel.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class StylistDiscoveryScreen extends ConsumerStatefulWidget {
@@ -48,7 +50,6 @@ class _StylistDiscoveryScreenState extends ConsumerState<StylistDiscoveryScreen>
   @override
   Widget build(BuildContext context) {
     final stylistState = ref.watch(stylistProviderProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -113,10 +114,12 @@ class _StylistDiscoveryScreenState extends ConsumerState<StylistDiscoveryScreen>
             isLoading: stylistState.isLoading,
             errorMessage: stylistState.error,
             onStylistTap: (stylist) {
-              // TODO: Navigate to stylist profile
+              context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
             },
             onSeeAllTap: () {
-              // TODO: Navigate to all featured stylists
+              // Load all stylists and filter for featured ones
+              ref.read(stylistProviderProvider.notifier).loadAllStylists();
+              // We'll stay on this screen but could navigate to a filtered view in the future
             },
           ),
 
@@ -129,10 +132,12 @@ class _StylistDiscoveryScreenState extends ConsumerState<StylistDiscoveryScreen>
             isLoading: stylistState.isLoading,
             errorMessage: stylistState.error,
             onStylistTap: (stylist) {
-              // TODO: Navigate to stylist profile
+              context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
             },
             onSeeAllTap: () {
-              // TODO: Navigate to all available stylists
+              // Load all stylists and filter for available ones
+              ref.read(stylistProviderProvider.notifier).loadAvailableStylists(limit: 100);
+              // We'll stay on this screen but could navigate to a filtered view in the future
             },
           ),
 
@@ -249,7 +254,7 @@ class _StylistDiscoveryScreenState extends ConsumerState<StylistDiscoveryScreen>
             ),
             trailing: ElevatedButton(
               onPressed: () {
-                // TODO: Navigate to stylist profile
+                context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryHighlight,
@@ -258,7 +263,7 @@ class _StylistDiscoveryScreenState extends ConsumerState<StylistDiscoveryScreen>
               child: const Text('View'),
             ),
             onTap: () {
-              // TODO: Navigate to stylist profile
+              context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
             },
           ),
         );

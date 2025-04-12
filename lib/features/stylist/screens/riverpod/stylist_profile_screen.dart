@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart';
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
 import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class StylistProfileScreen extends ConsumerStatefulWidget {
@@ -35,16 +37,23 @@ class _StylistProfileScreenState extends ConsumerState<StylistProfileScreen> {
     });
 
     try {
-      final stylist = await ref.read(stylistProviderProvider.notifier).getStylistById(widget.stylistId);
-      setState(() {
-        _stylist = stylist;
-        _isLoading = false;
+      // Use Future.microtask to avoid modifying provider during build
+      Future.microtask(() async {
+        final stylist = await ref.read(stylistProviderProvider.notifier).getStylistById(widget.stylistId);
+        if (mounted) {
+          setState(() {
+            _stylist = stylist;
+            _isLoading = false;
+          });
+        }
       });
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -263,7 +272,8 @@ class _StylistProfileScreenState extends ConsumerState<StylistProfileScreen> {
                     height: 50,
                     child: ElevatedButton(
                       onPressed: () {
-                        // TODO: Implement booking functionality
+                        // Navigate to booking screen
+                        context.go(AppRoutes.booking);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primaryHighlight,

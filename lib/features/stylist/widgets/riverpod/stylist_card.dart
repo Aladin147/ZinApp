@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart';
 import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// A card displaying stylist information in the discovery section
 class StylistCard extends StatelessWidget {
   final Stylist stylist;
-  final VoidCallback? onTap;
+  final Function(Stylist)? onTap;
   final bool showBookButton;
 
   const StylistCard({
@@ -21,10 +23,12 @@ class StylistCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap != null ? () => onTap!(stylist) : () {
+        context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
+      },
       child: Container(
         width: 160,
-        height: 220,
+        height: 240,
         margin: const EdgeInsets.only(right: 12),
         decoration: BoxDecoration(
           color: AppColors.baseDark.withAlpha(179), // 0.7 opacity
@@ -38,6 +42,7 @@ class StylistCard extends StatelessWidget {
           ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Stylist image
@@ -47,7 +52,7 @@ class StylistCard extends StatelessWidget {
                 topRight: Radius.circular(16),
               ),
               child: SizedBox(
-                height: 120,
+                height: 110,
                 width: double.infinity,
                 child: stylist.profileImageUrl != null
                     ? Image.network(
@@ -81,7 +86,7 @@ class StylistCard extends StatelessWidget {
 
             // Stylist info
             Padding(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -123,7 +128,8 @@ class StylistCard extends StatelessWidget {
                       height: 28,
                       child: ElevatedButton(
                         onPressed: () {
-                          // TODO: Implement booking functionality
+                          // Navigate to booking screen
+                          context.go(AppRoutes.booking);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primaryHighlight,

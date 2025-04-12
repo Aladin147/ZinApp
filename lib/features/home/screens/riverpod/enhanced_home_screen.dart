@@ -124,6 +124,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
               child: FloatingActionButton.small(
                 onPressed: _scrollToTop,
                 backgroundColor: AppColors.primaryHighlight.withAlpha(204), // 0.8 opacity
+                heroTag: 'scrollToTop',
                 child: const Icon(Icons.arrow_upward, color: AppColors.baseDark),
               ),
             ),
@@ -133,6 +134,7 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
               ref.read(authProvider.notifier).logout();
             },
             backgroundColor: AppColors.primaryHighlight,
+            heroTag: 'logout',
             child: const Icon(Icons.logout, color: AppColors.baseDark),
           ),
         ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_card.dart';
 import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class ActionHubSection extends StatelessWidget {
@@ -46,14 +48,18 @@ class ActionHubSection extends StatelessWidget {
                   context,
                   icon: Icons.search,
                   label: 'Find',
-                  onTap: () {},
+                  onTap: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                   color: Colors.blue,
                 ),
                 _buildActionButton(
                   context,
                   icon: Icons.calendar_today,
                   label: 'Book',
-                  onTap: () {},
+                  onTap: () {
+                    context.go(AppRoutes.booking);
+                  },
                   color: Colors.green,
                 ),
                 _buildActionButton(
@@ -89,7 +95,9 @@ class ActionHubSection extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                     child: Text(
                       'See All',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -178,7 +186,9 @@ class ActionHubSection extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                     child: Text(
                       'See All',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -232,7 +242,9 @@ class ActionHubSection extends StatelessWidget {
       itemBuilder: (context, index) {
         return StylistCard(
           stylist: stylists[index],
-          onTap: () {},
+          onTap: (stylist) {
+            context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
+          },
           showBookButton: false,
         );
       },
