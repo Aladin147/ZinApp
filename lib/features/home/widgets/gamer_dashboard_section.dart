@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/widgets/shapes/wave_clipper.dart';
+import 'package:zinapp_v2/widgets/containers/organic_container.dart';
 
 class GamerDashboardSection extends StatelessWidget {
   final UserProfile? user;
@@ -18,11 +20,16 @@ class GamerDashboardSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+    return ClipPath(
+      clipper: WaveBottomClipper(
+        amplitude: 15.0,
+        frequency: 1.2,
+      ),
+      child: OrganicContainer(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        color: AppColors.baseDark,
+        gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
@@ -30,21 +37,23 @@ class GamerDashboardSection extends StatelessWidget {
             AppColors.baseDarkDeeper,
           ],
         ),
+        elevation: 4,
+        borderRadius: 0, // No border radius at top since it's at screen edge
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(40), // 0.15 opacity
+            color: Colors.black.withAlpha(40),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
-        ],
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.primaryHighlight.withAlpha(30),
-            width: 1.0,
+          BoxShadow(
+            color: AppColors.primaryHighlight.withAlpha(15),
+            blurRadius: 8,
+            spreadRadius: 0,
+            offset: const Offset(0, 2),
           ),
-        ),
-      ),
-      child: SingleChildScrollView(
+        ],
+        shape: OrganicShape.rounded, // We're using ClipPath instead of the built-in shapes
+        child: SingleChildScrollView(
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -383,6 +392,7 @@ class GamerDashboardSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
       ),
     );

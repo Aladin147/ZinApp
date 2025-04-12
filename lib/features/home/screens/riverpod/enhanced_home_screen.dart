@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
-import 'package:zinapp_v2/common/widgets/gradient_background_container.dart';
+
 import 'package:zinapp_v2/features/feed/widgets/post_card.dart';
 import 'package:zinapp_v2/features/home/widgets/action_hub_section.dart';
 import 'package:zinapp_v2/features/home/widgets/gamer_dashboard_section.dart';
@@ -10,6 +9,8 @@ import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/widgets/backgrounds/organic_background.dart';
+import 'package:zinapp_v2/widgets/containers/organic_container.dart';
 
 class EnhancedHomeScreen extends ConsumerStatefulWidget {
   const EnhancedHomeScreen({super.key});
@@ -70,12 +71,12 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     // final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: GradientBackgroundContainer.soft(
-        colors: const [
-          AppColors.baseDarkDeeper, // Deeper dark background
-          AppColors.baseDark, // Base dark background
-        ],
-        padding: EdgeInsets.zero,
+      body: OrganicBackground(
+        backgroundColor: AppColors.baseDarkDeeper,
+        shapeColor: AppColors.baseDarkAccent,
+        numberOfShapes: 5,
+        shapeOpacity: 0.1,
+        animate: true,
         child: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async {
@@ -142,8 +143,11 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   sliver: SliverToBoxAdapter(
-                    child: DarkFrostedGlassContainer(
-                      borderRadius: BorderRadius.circular(24),
+                    child: FloatingOrganicCard(
+                      color: AppColors.baseDarkAlt,
+                      borderRadius: 28,
+                      elevation: 6,
+                      enhancedShadow: true,
                       padding: const EdgeInsets.all(16),
                       child: _buildFeedContent(feedState),
                     ),

@@ -4,6 +4,9 @@ import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_card.dart';
 import 'package:zinapp_v2/models/stylist.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/widgets/containers/organic_container.dart';
+import 'package:zinapp_v2/widgets/buttons/organic_action_button.dart';
+
 
 class ActionHubSection extends StatelessWidget {
   final List<Stylist> stylists;
@@ -21,36 +24,35 @@ class ActionHubSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Container(
+    return OrganicContainer(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.baseDarkAlt,
-            AppColors.baseDark,
-          ],
-        ),
-        border: Border(
-          top: BorderSide(
-            color: AppColors.primaryHighlight.withAlpha(20),
-            width: 1.0,
-          ),
-          bottom: BorderSide(
-            color: AppColors.primaryHighlight.withAlpha(20),
-            width: 1.0,
-          ),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(30),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
+      color: AppColors.baseDark,
+      gradient: const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          AppColors.baseDarkAlt,
+          AppColors.baseDark,
         ],
       ),
+      shape: OrganicShape.curvedBottom,
+      curveHeight: 20,
+      elevation: 2,
+      borderRadius: 0,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withAlpha(30),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+        BoxShadow(
+          color: AppColors.primaryHighlight.withAlpha(10),
+          blurRadius: 8,
+          spreadRadius: 0,
+          offset: const Offset(0, 2),
+        ),
+      ],
       child: SingleChildScrollView(
         child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,11 +60,9 @@ class ActionHubSection extends StatelessWidget {
           // Quick action buttons
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildActionButton(
-                  context,
+            child: OrganicActionButtonRow(
+              buttons: [
+                OrganicActionButtonData(
                   icon: Icons.search,
                   label: 'Find',
                   onTap: () {
@@ -70,8 +70,7 @@ class ActionHubSection extends StatelessWidget {
                   },
                   color: Colors.blue,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.calendar_today,
                   label: 'Book',
                   onTap: () {
@@ -79,21 +78,23 @@ class ActionHubSection extends StatelessWidget {
                   },
                   color: Colors.green,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.camera_alt,
                   label: 'Share',
                   onTap: () {},
                   color: Colors.purple,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.star,
                   label: 'Quests',
                   onTap: () {},
                   color: Colors.orange,
                 ),
               ],
+              usePillShape: true,
+              enhancedEffects: true,
+              buttonSize: 60,
+              iconSize: 26,
             ),
           ),
 
@@ -268,74 +269,5 @@ class ActionHubSection extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    required Color color,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      splashColor: color.withAlpha(40),
-      highlightColor: color.withAlpha(20),
-      child: Container(
-        width: 80,
-        padding: const EdgeInsets.symmetric(
-          vertical: 12,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  colors: [
-                    color.withAlpha(80),
-                    color.withAlpha(30),
-                  ],
-                  stops: const [0.4, 1.0],
-                ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withAlpha(100),
-                    blurRadius: 12,
-                    spreadRadius: -2,
-                  ),
-                ],
-                border: Border.all(
-                  color: color.withAlpha(120),
-                  width: 1.5,
-                ),
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 26,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withAlpha(100),
-                        blurRadius: 3,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }
