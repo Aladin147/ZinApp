@@ -14,6 +14,9 @@ abstract class AppRoutes {
   static const String messages = '/messages';
   static const String messageDetail = '/messages/:id';
 
+  // Auth routes
+  static const String forgotPassword = '/forgot-password';
+
   // Development routes
   static const String showcase = '/showcase'; // Component showcase
   static const String riverpodTest = '/riverpod-test'; // Riverpod test screen

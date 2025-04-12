@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:zinapp_v2/error_screen.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/auth_screen.dart';
 import 'package:zinapp_v2/features/auth/widgets/riverpod/auth_wrapper.dart';
+import 'package:zinapp_v2/features/auth/screens/riverpod/forgot_password_screen.dart';
 import 'package:zinapp_v2/features/feed/screens/riverpod/feed_screen.dart';
-import 'package:zinapp_v2/features/home/screens/enhanced_home_screen.dart';
+import 'package:zinapp_v2/features/home/screens/riverpod/enhanced_home_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
 import 'package:zinapp_v2/features/profile/screens/riverpod/profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
+import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_discovery_screen.dart';
+import 'package:zinapp_v2/features/stylist/screens/riverpod/stylist_profile_screen.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 
 // Generate the provider code
@@ -32,7 +36,7 @@ class PlaceholderScreen extends StatelessWidget {
 
 /// Provider for the router configuration
 @riverpod
-GoRouter riverpodRouter(RiverpodRouterRef ref) {
+GoRouter riverpodRouter(Ref ref) {
   final authState = ref.watch(authProvider);
 
   return GoRouter(
@@ -68,6 +72,15 @@ GoRouter riverpodRouter(RiverpodRouterRef ref) {
         name: AppRoutes.riverpodTest,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodTestScreen();
+        },
+      ),
+
+      // Forgot Password Screen
+      GoRoute(
+        path: AppRoutes.forgotPassword,
+        name: AppRoutes.forgotPassword,
+        builder: (BuildContext context, GoRouterState state) {
+          return const ForgotPasswordScreen();
         },
       ),
 
@@ -126,7 +139,7 @@ GoRouter riverpodRouter(RiverpodRouterRef ref) {
         name: AppRoutes.stylistList,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: PlaceholderScreen(title: 'Stylists'),
+            authenticatedChild: StylistDiscoveryScreen(),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },
@@ -139,7 +152,7 @@ GoRouter riverpodRouter(RiverpodRouterRef ref) {
         builder: (BuildContext context, GoRouterState state) {
           final stylistId = state.pathParameters['id'] ?? '';
           return RiverpodAuthWrapper(
-            authenticatedChild: PlaceholderScreen(title: 'Stylist $stylistId'),
+            authenticatedChild: StylistProfileScreen(stylistId: stylistId),
             unauthenticatedChild: const RiverpodAuthScreen(),
           );
         },

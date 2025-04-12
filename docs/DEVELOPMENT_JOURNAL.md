@@ -54,7 +54,17 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Implemented a caching mechanism for user profiles in the feed to reduce API calls.
 *   **Challenge:** Managing relationships between posts and user profiles efficiently.
 *   **Solution:** Created a map-based cache in the FeedState to store user profiles by user ID.
-*   **Next:** Begin migrating the Stylist feature to Riverpod and continue testing the feed screens.
+
+## 2025-04-14
+
+*   **Entry:** Committed to full Riverpod migration by creating a dedicated branch.
+*   **Entry:** Updated main.dart to use Riverpod exclusively.
+*   **Entry:** Fixed naming conflicts in UserProfile provider to avoid collisions with model classes.
+*   **Entry:** Enhanced the Riverpod test screen to include all migrated providers.
+*   **Decision:** Abandoned the dual Provider/Riverpod approach in favor of a clean Riverpod implementation.
+*   **Challenge:** Naming conflicts between provider classes and model classes.
+*   **Solution:** Used namespaces (import aliases) to disambiguate between provider and model classes.
+*   **Next:** Complete the migration by implementing the Stylist feature with Riverpod and removing Provider dependencies.
 
 
 ## 2025-04-12

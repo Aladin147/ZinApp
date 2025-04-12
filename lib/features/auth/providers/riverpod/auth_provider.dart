@@ -1,6 +1,7 @@
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:zinapp_v2/models/auth_state.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/user_profile.dart' as models;
 import 'package:zinapp_v2/services/auth_service.dart';
 
 // Generate the provider code
@@ -8,7 +9,7 @@ part 'auth_provider.g.dart';
 
 /// Provider for the AuthService
 @riverpod
-AuthService authService(AuthServiceRef ref) {
+AuthService authService(Ref ref) {
   return AuthService();
 }
 
@@ -23,11 +24,14 @@ class Auth extends _$Auth {
 
   /// Initialize provider and check for existing session
   Future<void> initialize() async {
+    // Set loading state
     state = AuthState.loading();
 
     try {
+      // Get current user from auth service
       final user = await ref.read(authServiceProvider).getCurrentUser();
 
+      // Update state based on user existence
       if (user != null) {
         state = AuthState.authenticated(user);
       } else {
@@ -102,9 +106,24 @@ class Auth extends _$Auth {
   }
 
   /// Update the current user profile
-  void updateUser(UserProfile user) {
+  void updateUser(models.UserProfile user) {
     if (state.isAuthenticated) {
       state = AuthState.authenticated(user);
+    }
+  }
+
+  /// Send a password reset email
+  Future<bool> sendPasswordResetEmail({required String email}) async {
+    state = state.copyWith(isLoading: true, error: null);
+
+    try {
+      // In a real app, this would call the auth service
+      await Future.delayed(const Duration(seconds: 1));
+      state = state.copyWith(isLoading: false);
+      return true;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
     }
   }
 }

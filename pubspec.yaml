@@ -37,11 +37,15 @@ dependencies:
 
   # Core Dependencies for V2
   flutter_riverpod: ^2.5.1 # State management (check for latest version)
+  riverpod: ^2.5.1 # Base Riverpod package
   riverpod_annotation: ^2.3.5 # Code generation for Riverpod (check for latest)
-  provider: ^6.1.2 # Provider pattern for state management
+  # Removed provider package as part of migration to Riverpod
   go_router: ^14.8.1 # Routing (Using suggested version)
   http: ^1.2.2 # HTTP client (check for latest version)
-  # flutter_secure_storage: ^9.2.2 # Secure storage - Commented out for Windows testing
+  flutter_secure_storage: ^9.2.2 # Secure storage for auth tokens
+  shared_preferences: ^2.2.2 # Local storage for app preferences
+  json_annotation: ^4.8.1 # JSON serialization
+  equatable: ^2.0.5 # Value equality
   flutter_svg: ^2.0.10+1 # SVG rendering (check for latest version)
   google_fonts: ^6.1.0 # Google Fonts for typography
   cached_network_image: ^3.3.1 # Image caching
@@ -61,9 +65,10 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^5.0.0 # Use the version specified in V2_DEV_SETUP.md or latest
 
-  # Build runner dependencies for code generation (e.g., Riverpod)
+  # Build runner dependencies for code generation
   build_runner: ^2.4.11 # Check for latest version
   riverpod_generator: ^2.4.1 # Check for latest version
+  json_serializable: ^6.7.1 # JSON serialization code generation
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -165,11 +165,11 @@ class _ZinSplashScreenState extends State<ZinSplashScreen> with TickerProviderSt
                 padding: const EdgeInsets.only(bottom: 48.0),
                 child: FadeTransition(
                   opacity: _fadeInAnimation,
-                  child: ZinButton(
+                  child: AppButton( // Use AppButton
                     label: 'Get Started',
                     onPressed: widget.onGetStarted,
-                    variant: ZinButtonVariant.primary,
-                    size: ZinButtonSize.large,
+                    variant: AppButtonVariant.primary, // Use AppButtonVariant
+                    size: AppButtonSize.large, // Use AppButtonSize
                     isFullWidth: false,
                   ),
                 ),

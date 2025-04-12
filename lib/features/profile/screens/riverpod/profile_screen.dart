@@ -25,8 +25,8 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
 
     // Load user profile and token history
     Future.microtask(() {
-      ref.read(userProfileProvider.notifier).loadUserProfile();
-      ref.read(userProfileProvider.notifier).loadTokenHistory();
+      ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+      ref.read(userProfileProviderProvider.notifier).loadTokenHistory();
     });
   }
 
@@ -39,7 +39,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final profileState = ref.watch(userProfileProvider);
+    final profileState = ref.watch(userProfileProviderProvider);
     final user = authState.user;
     final theme = Theme.of(context);
 
@@ -54,8 +54,8 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(userProfileProvider.notifier).loadUserProfile();
-          await ref.read(userProfileProvider.notifier).loadTokenHistory();
+          await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+          await ref.read(userProfileProviderProvider.notifier).loadTokenHistory();
         },
         child: CustomScrollView(
           slivers: [
@@ -220,7 +220,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
     );
   }
 
-  Widget _buildAboutTab(BuildContext context, UserProfile user) {
+  Widget _buildAboutTab(BuildContext context, models.UserProfile user) {
     final theme = Theme.of(context);
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -305,7 +305,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
     );
   }
 
-  Widget _buildStylistProfileSection(BuildContext context, StylistProfile profile) {
+  Widget _buildStylistProfileSection(BuildContext context, models.StylistProfile profile) {
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -430,7 +430,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
     );
   }
 
-  Widget _buildAchievementsTab(BuildContext context, UserProfile user) {
+  Widget _buildAchievementsTab(BuildContext context, models.UserProfile user) {
     final theme = Theme.of(context);
 
     if (user.achievements.isEmpty) {

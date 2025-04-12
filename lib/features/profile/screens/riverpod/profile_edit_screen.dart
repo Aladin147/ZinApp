@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/models/user.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/user_profile.dart' as models;
 import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
@@ -31,11 +31,11 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
   void initState() {
     super.initState();
     final user = ref.read(authProvider).user;
-    
+
     _usernameController = TextEditingController(text: user?.username ?? '');
     _bioController = TextEditingController(text: user?.bio ?? '');
     _locationController = TextEditingController(text: user?.location ?? '');
-    
+
     if (user?.favoriteStyles != null) {
       _selectedStyles = List.from(user!.favoriteStyles!);
     }
@@ -58,7 +58,7 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
         'favoriteStyles': _selectedStyles,
       };
 
-      final success = await ref.read(userProfileProvider.notifier).updateProfile(updates);
+      final success = await ref.read(userProfileProviderProvider.notifier).updateProfile(updates);
 
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +69,7 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
         );
         Navigator.pop(context);
       } else if (mounted) {
-        final error = ref.read(userProfileProvider).error;
+        final error = ref.read(userProfileProviderProvider).error;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(error ?? 'Failed to update profile'),
@@ -93,7 +93,7 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final profileState = ref.watch(userProfileProvider);
+    final profileState = ref.watch(userProfileProviderProvider);
     final user = authState.user;
     final theme = Theme.of(context);
 

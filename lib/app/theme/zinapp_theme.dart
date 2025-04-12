@@ -9,7 +9,7 @@ final ThemeData zinappTheme = ThemeData(
   brightness: Brightness.dark, // Base theme brightness
   colorScheme: zinappColorScheme, // Use the defined V2 color scheme
   textTheme: zinappTextTheme, // Use the defined V2 text theme
-  fontFamily: 'Roboto', // Use system default font
+  fontFamily: 'Urbanist', // Use Urbanist font (ensure google_fonts is imported/setup)
 
   // Apply base background color globally
   scaffoldBackgroundColor: AppColors.baseDark,

@@ -18,27 +18,45 @@ class RiverpodAuthWrapper extends ConsumerStatefulWidget {
 }
 
 class _RiverpodAuthWrapperState extends ConsumerState<RiverpodAuthWrapper> {
-  bool _initializing = true;
+  static bool _hasInitialized = false;
+  bool _localInitializing = true;
 
   @override
   void initState() {
     super.initState();
-    // Use Future.microtask to avoid calling setState during build
-    Future.microtask(() => _initializeAuth());
+    // Only initialize once across all instances
+    if (!_hasInitialized) {
+      print('AuthWrapper: First initialization');
+      _hasInitialized = true;
+      // Use Future.microtask to avoid calling setState during build
+      Future.microtask(() => _initializeAuth());
+    } else {
+      print('AuthWrapper: Skipping initialization, already done');
+      _localInitializing = false;
+    }
   }
 
   Future<void> _initializeAuth() async {
-    await ref.read(authProvider.notifier).initialize();
+    print('AuthWrapper: Starting initialization');
+    try {
+      await ref.read(authProvider.notifier).initialize();
+      print('AuthWrapper: Initialization completed');
+    } catch (e) {
+      print('AuthWrapper: Error during initialization: $e');
+    }
     if (mounted) {
       setState(() {
-        _initializing = false;
+        _localInitializing = false;
+        print('AuthWrapper: Set _localInitializing to false');
       });
+    } else {
+      print('AuthWrapper: Widget not mounted after initialization');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_initializing) {
+    if (_localInitializing) {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -47,6 +65,7 @@ class _RiverpodAuthWrapperState extends ConsumerState<RiverpodAuthWrapper> {
     }
 
     final authState = ref.watch(authProvider);
+    print('AuthWrapper: Building with auth state: ${authState.isAuthenticated ? "Authenticated" : "Not authenticated"}');
 
     if (authState.isAuthenticated) {
       return widget.authenticatedChild;

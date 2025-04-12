@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/user_profile.dart' as models;
 
 /// Represents the current authentication state of the application
 class AuthState extends Equatable {
   final bool isAuthenticated;
-  final UserProfile? user;
+  final models.UserProfile? user;
   final bool isLoading;
   final String? error;
 
@@ -22,7 +22,7 @@ class AuthState extends Equatable {
   factory AuthState.loading() => const AuthState(isLoading: true);
 
   /// Authenticated state with user data
-  factory AuthState.authenticated(UserProfile user) => AuthState(
+  factory AuthState.authenticated(models.UserProfile user) => AuthState(
         isAuthenticated: true,
         user: user,
       );
@@ -38,7 +38,7 @@ class AuthState extends Equatable {
   /// Creates a copy of this AuthState with the given fields replaced with new values
   AuthState copyWith({
     bool? isAuthenticated,
-    UserProfile? user,
+    models.UserProfile? user,
     bool? isLoading,
     String? error,
   }) {

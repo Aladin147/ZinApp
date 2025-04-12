@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/features/stylist/widgets/stylist_card.dart';
+import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_card.dart';
 import 'package:zinapp_v2/models/stylist.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
@@ -9,16 +9,15 @@ class ActionHubSection extends StatelessWidget {
   final String? errorMessage;
 
   const ActionHubSection({
-    Key? key,
+    super.key,
     required this.stylists,
     required this.isLoading,
     this.errorMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
     return Container(
       width: double.infinity,
@@ -28,8 +27,8 @@ class ActionHubSection extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.baseDark.withOpacity(0.9),
-            AppColors.baseDark.withOpacity(0.8),
+            AppColors.baseDark.withAlpha(230), // 0.9 opacity
+            AppColors.baseDark.withAlpha(204), // 0.8 opacity
           ],
         ),
       ),
@@ -114,7 +113,7 @@ class ActionHubSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withAlpha(26), // 0.1 opacity
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -131,11 +130,11 @@ class ActionHubSection extends StatelessWidget {
                             ),
                             child: Container(
                               height: 80,
-                              color: Colors.grey.withOpacity(0.2),
+                              color: Colors.grey.withAlpha(51), // 0.2 opacity
                               child: Center(
                                 child: Icon(
                                   Icons.style,
-                                  color: Colors.grey.withOpacity(0.5),
+                                  color: Colors.grey.withAlpha(128), // 0.5 opacity
                                 ),
                               ),
                             ),
@@ -220,7 +219,7 @@ class ActionHubSection extends StatelessWidget {
       return Center(
         child: Text(
           'No stylists found',
-          style: TextStyle(color: Colors.white.withOpacity(0.7)),
+          style: TextStyle(color: Colors.white.withAlpha(179)), // 0.7 opacity
         ),
       );
     }
@@ -259,11 +258,11 @@ class ActionHubSection extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
+                color: color.withAlpha(51), // 0.2 opacity
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: color.withOpacity(0.3),
+                    color: color.withAlpha(77), // 0.3 opacity
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
