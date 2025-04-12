@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/router/page_transitions.dart';
-import 'package:zinapp_v2/theme/animations.dart';
 
 /// Enum defining the types of transitions available
 enum TransitionType {
@@ -20,8 +19,8 @@ class CustomPageRoute<T> extends PageRoute<T> {
   final TransitionType transitionType;
   final Duration duration;
   final Curve curve;
-  final bool maintainState;
-  final bool fullscreenDialog;
+  final bool maintainStateValue;
+  final bool fullscreenDialogValue;
   final Offset? slideOffset;
 
   CustomPageRoute({
@@ -29,14 +28,11 @@ class CustomPageRoute<T> extends PageRoute<T> {
     this.transitionType = TransitionType.fadeSlide,
     this.duration = const Duration(milliseconds: 300),
     this.curve = Curves.easeInOut,
-    this.maintainState = true,
-    this.fullscreenDialog = false,
+    this.maintainStateValue = true,
+    this.fullscreenDialogValue = false,
     this.slideOffset,
-    RouteSettings? settings,
-  }) : super(
-          settings: settings,
-          fullscreenDialog: fullscreenDialog,
-        );
+    super.settings,
+  });
 
   @override
   Color? get barrierColor => null;
@@ -45,7 +41,10 @@ class CustomPageRoute<T> extends PageRoute<T> {
   String? get barrierLabel => null;
 
   @override
-  bool get maintainState => this.maintainState;
+  bool get maintainState => maintainStateValue;
+
+  @override
+  bool get fullscreenDialog => fullscreenDialogValue;
 
   @override
   Duration get transitionDuration => this.duration;
@@ -155,8 +154,8 @@ extension CustomNavigationExtension on BuildContext {
         transitionType: transitionType,
         duration: duration,
         curve: curve,
-        maintainState: maintainState,
-        fullscreenDialog: fullscreenDialog,
+        maintainStateValue: maintainState,
+        fullscreenDialogValue: fullscreenDialog,
         slideOffset: slideOffset,
         settings: routeName != null ? RouteSettings(name: routeName) : null,
       ),
@@ -181,8 +180,8 @@ extension CustomNavigationExtension on BuildContext {
         transitionType: transitionType,
         duration: duration,
         curve: curve,
-        maintainState: maintainState,
-        fullscreenDialog: fullscreenDialog,
+        maintainStateValue: maintainState,
+        fullscreenDialogValue: fullscreenDialog,
         slideOffset: slideOffset,
         settings: routeName != null ? RouteSettings(name: routeName) : null,
       ),
@@ -208,8 +207,8 @@ extension CustomNavigationExtension on BuildContext {
         transitionType: transitionType,
         duration: duration,
         curve: curve,
-        maintainState: maintainState,
-        fullscreenDialog: fullscreenDialog,
+        maintainStateValue: maintainState,
+        fullscreenDialogValue: fullscreenDialog,
         slideOffset: slideOffset,
         settings: routeName != null ? RouteSettings(name: routeName) : null,
       ),

@@ -32,7 +32,7 @@ class StylistDiscoveryDashboard extends ConsumerWidget {
       children: [
         // Search bar
         _buildSearchBar(context),
-        
+
         // If searching, show search results, otherwise show dashboard cards
         if (isSearching)
           _buildSearchResults(context, stylistState)
@@ -49,7 +49,7 @@ class StylistDiscoveryDashboard extends ConsumerWidget {
               ref.read(stylistProviderProvider.notifier).loadAllStylists();
             },
           ),
-          
+
           // Recommended stylists card
           RecommendedStylistsCard(
             stylists: stylistState.availableStylists,
@@ -62,10 +62,10 @@ class StylistDiscoveryDashboard extends ConsumerWidget {
               ref.read(stylistProviderProvider.notifier).loadAvailableStylists(limit: 100);
             },
           ),
-          
+
           // Style categories card
           const StyleCategoriesCard(),
-          
+
           // Nearby styles card
           const NearbyStylesCard(),
         ],
@@ -181,15 +181,15 @@ class StylistDiscoveryDashboard extends ConsumerWidget {
             contentPadding: const EdgeInsets.all(12),
             leading: CircleAvatar(
               radius: 30,
-              backgroundImage: stylist.profileImageUrl != null
-                  ? NetworkImage(stylist.profileImageUrl!)
+              backgroundImage: stylist.profilePictureUrl != null
+                  ? NetworkImage(stylist.profilePictureUrl!)
                   : null,
-              child: stylist.profileImageUrl == null
+              child: stylist.profilePictureUrl == null
                   ? const Icon(Icons.person)
                   : null,
             ),
             title: Text(
-              stylist.name,
+              stylist.username,
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -207,13 +207,13 @@ class StylistDiscoveryDashboard extends ConsumerWidget {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${stylist.rating.toStringAsFixed(1)} (${stylist.reviewCount})',
+                      '${stylist.stylistProfile.rating.toStringAsFixed(1)} (${stylist.stylistProfile.reviewCount})',
                     ),
                   ],
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  stylist.specialties.join(', '),
+                  stylist.stylistProfile.services.join(', '),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
