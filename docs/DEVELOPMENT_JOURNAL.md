@@ -24,7 +24,14 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Adopted a feature-by-feature migration approach to maintain a working application throughout the process.
 *   **Decision:** Selected code generation approach with @riverpod annotations for better type safety and reduced boilerplate.
 *   **Decision:** Established migration order: Auth → Profile → Feed → Stylist features.
-*   **Next:** Configure ProviderScope in main.dart and begin implementing Riverpod providers for the Auth feature.
+
+*   **Entry:** Configured ProviderScope in main.dart to enable Riverpod.
+*   **Entry:** Created Riverpod-based Auth provider with code generation.
+*   **Entry:** Implemented Riverpod versions of login, registration, and auth wrapper components.
+*   **Decision:** Created parallel implementations in separate directories to maintain compatibility during migration.
+*   **Challenge:** Managing state consistently between Provider and Riverpod implementations during the transition.
+*   **Solution:** Created separate component hierarchies that can coexist during the migration process.
+*   **Next:** Integrate Riverpod-based auth components into the router and test the authentication flow.
 
 
 ## 2025-04-12

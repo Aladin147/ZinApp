@@ -15,9 +15,9 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 
 - [x] Auth service provider
 - [x] Auth state provider
-- [ ] Login screen
-- [ ] Registration screen
-- [ ] Auth wrapper
+- [x] Login screen
+- [x] Registration screen
+- [x] Auth wrapper
 
 ### User Profile Feature
 - [ ] Profile service provider
@@ -48,6 +48,7 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 | Challenge | Solution | Date |
 |-----------|----------|------|
 | Code generation setup | Used build_runner with riverpod_generator | 2025-04-13 |
+| Maintaining compatibility | Created parallel implementations in separate directories | 2025-04-13 |
 
 ## References
 - [ADR-001: Migrating from Provider to Riverpod](docs/architecture/decisions/ADR-001-migrating-to-riverpod.md)
