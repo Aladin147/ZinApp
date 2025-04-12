@@ -38,7 +38,15 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Prepared a dual-mode main entry point that can switch between Provider and Riverpod implementations.
 *   **Challenge:** Testing Riverpod components while maintaining the existing app functionality.
 *   **Solution:** Created a dedicated test screen that can be accessed from the component showcase.
-*   **Next:** Begin migrating the User Profile feature to Riverpod and continue testing the auth flow.
+
+*   **Entry:** Created Riverpod-based UserProfile provider with code generation.
+*   **Entry:** Implemented UserProfileState class to manage profile state.
+*   **Entry:** Created Riverpod-based profile and profile edit screens.
+*   **Entry:** Updated the Riverpod router to include profile routes.
+*   **Decision:** Used a tab-based layout for the profile screen to organize user information.
+*   **Challenge:** Managing complex user profile data with proper state management.
+*   **Solution:** Created a dedicated state class that handles loading, error states, and token history.
+*   **Next:** Begin migrating the Feed feature to Riverpod and continue testing the profile screens.
 
 
 ## 2025-04-12

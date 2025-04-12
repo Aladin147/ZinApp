@@ -20,10 +20,11 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 - [x] Auth wrapper
 
 ### User Profile Feature
-- [ ] Profile service provider
-- [ ] Profile state provider
-- [ ] Profile screen
-- [ ] Profile edit screen
+
+- [x] Profile service provider
+- [x] Profile state provider
+- [x] Profile screen
+- [x] Profile edit screen
 
 ### Feed Feature
 - [ ] Feed service provider
@@ -50,6 +51,7 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 | Code generation setup | Used build_runner with riverpod_generator | 2025-04-13 |
 | Maintaining compatibility | Created parallel implementations in separate directories | 2025-04-13 |
 | Testing Riverpod components | Created a test screen in the component showcase | 2025-04-13 |
+| Profile state management | Created UserProfileState class to manage profile state | 2025-04-13 |
 
 ## References
 - [ADR-001: Migrating from Provider to Riverpod](docs/architecture/decisions/ADR-001-migrating-to-riverpod.md)

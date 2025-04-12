@@ -6,7 +6,10 @@ import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/auth/screens/riverpod/auth_screen.dart';
 import 'package:zinapp_v2/features/auth/widgets/riverpod/auth_wrapper.dart';
 import 'package:zinapp_v2/features/home/screens/enhanced_home_screen.dart';
+import 'package:zinapp_v2/features/profile/screens/riverpod/profile_edit_screen.dart';
+import 'package:zinapp_v2/features/profile/screens/riverpod/profile_screen.dart';
 import 'package:zinapp_v2/features/showcase/screens/component_showcase_screen.dart';
+import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 
 // Generate the provider code
@@ -58,13 +61,34 @@ GoRouter riverpodRouter(RiverpodRouterRef ref) {
         },
       ),
 
+      // Riverpod Test Screen (Development Only)
+      GoRoute(
+        path: AppRoutes.riverpodTest,
+        name: AppRoutes.riverpodTest,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodTestScreen();
+        },
+      ),
+
       // Profile route (protected)
       GoRoute(
         path: AppRoutes.profile,
         name: AppRoutes.profile,
         builder: (BuildContext context, GoRouterState state) {
           return const RiverpodAuthWrapper(
-            authenticatedChild: PlaceholderScreen(title: 'Profile'),
+            authenticatedChild: RiverpodProfileScreen(),
+            unauthenticatedChild: RiverpodAuthScreen(),
+          );
+        },
+      ),
+
+      // Profile Edit route (protected)
+      GoRoute(
+        path: AppRoutes.profileEdit,
+        name: AppRoutes.profileEdit,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RiverpodAuthWrapper(
+            authenticatedChild: RiverpodProfileEditScreen(),
             unauthenticatedChild: RiverpodAuthScreen(),
           );
         },

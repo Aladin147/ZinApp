@@ -3,6 +3,7 @@ abstract class AppRoutes {
   // Main app routes
   static const String home = '/';
   static const String profile = '/profile';
+  static const String profileEdit = '/profile/edit';
   static const String stylistList = '/stylists';
   static const String stylistDetail = '/stylists/:id';
   static const String booking = '/booking';
@@ -12,4 +13,5 @@ abstract class AppRoutes {
 
   // Development routes
   static const String showcase = '/showcase'; // Component showcase
+  static const String riverpodTest = '/riverpod-test'; // Riverpod test screen
 }
