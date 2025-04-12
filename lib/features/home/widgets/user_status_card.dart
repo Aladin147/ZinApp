@@ -8,13 +8,13 @@ import 'package:zinapp_v2/widgets/dashboard/expandable_dashboard_card.dart';
 class UserStatusCard extends StatelessWidget {
   /// The user profile to display
   final UserProfile user;
-  
+
   /// Callback when the user taps on the level section
   final VoidCallback? onLevelTap;
-  
+
   /// Callback when the user taps on the tokens section
   final VoidCallback? onTokensTap;
-  
+
   /// Callback when the user taps on the view all button
   final VoidCallback? onViewAllTap;
 
@@ -30,11 +30,11 @@ class UserStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Calculate XP progress
     final xpProgress = user.xp % 1000; // Simple calculation assuming 1000 XP per level
     final progressPercentage = xpProgress / 1000;
-    
+
     return ExpandableDashboardCard(
       title: 'Your Status',
       subtitle: 'Level ${user.level} • ${user.rank}',
@@ -43,9 +43,10 @@ class UserStatusCard extends StatelessWidget {
       backgroundColor: AppColors.baseDarkAlt,
       expandable: false, // This card doesn't need to expand
       showViewAll: false,
-      
+
       // Collapsed view - level, tokens, and quick stats
       collapsedChild: Column(
+        mainAxisSize: MainAxisSize.min, // Prevent overflow
         children: [
           // Level and tokens row
           Row(
@@ -94,7 +95,7 @@ class UserStatusCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
-                          
+
                           // Progress fill
                           FractionallySizedBox(
                             widthFactor: progressPercentage,
@@ -133,9 +134,9 @@ class UserStatusCard extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Tokens section
               Expanded(
                 child: InkWell(
@@ -188,9 +189,9 @@ class UserStatusCard extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Stats row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -223,12 +224,12 @@ class UserStatusCard extends StatelessWidget {
           ),
         ],
       ),
-      
+
       // This card doesn't expand, but we need to provide an expanded child
       expandedChild: const SizedBox(),
     );
   }
-  
+
   Widget _buildStatItem(
     BuildContext context, {
     required IconData icon,

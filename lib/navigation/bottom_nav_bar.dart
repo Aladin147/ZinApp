@@ -65,9 +65,9 @@ class ZinBottomNavBar extends ConsumerWidget {
                 context,
                 ref,
                 index: 3,
-                icon: Icons.notifications_rounded,
-                label: 'Alerts',
-                route: AppRoutes.home, // TODO: Create notifications route
+                icon: Icons.emoji_events_rounded,
+                label: 'Rewards',
+                route: AppRoutes.rewardsHub,
               ),
               _buildNavItem(
                 context,
