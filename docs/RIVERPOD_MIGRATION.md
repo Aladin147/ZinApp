@@ -49,6 +49,7 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 |-----------|----------|------|
 | Code generation setup | Used build_runner with riverpod_generator | 2025-04-13 |
 | Maintaining compatibility | Created parallel implementations in separate directories | 2025-04-13 |
+| Testing Riverpod components | Created a test screen in the component showcase | 2025-04-13 |
 
 ## References
 - [ADR-001: Migrating from Provider to Riverpod](docs/architecture/decisions/ADR-001-migrating-to-riverpod.md)

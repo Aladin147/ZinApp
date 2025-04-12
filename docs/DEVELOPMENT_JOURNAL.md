@@ -31,7 +31,14 @@ This journal provides a chronological log of development activities, significant
 *   **Decision:** Created parallel implementations in separate directories to maintain compatibility during migration.
 *   **Challenge:** Managing state consistently between Provider and Riverpod implementations during the transition.
 *   **Solution:** Created separate component hierarchies that can coexist during the migration process.
-*   **Next:** Integrate Riverpod-based auth components into the router and test the authentication flow.
+
+*   **Entry:** Created Riverpod-based router configuration using go_router.
+*   **Entry:** Implemented a test screen to verify Riverpod integration.
+*   **Entry:** Added the test screen to the component showcase for easy access.
+*   **Decision:** Prepared a dual-mode main entry point that can switch between Provider and Riverpod implementations.
+*   **Challenge:** Testing Riverpod components while maintaining the existing app functionality.
+*   **Solution:** Created a dedicated test screen that can be accessed from the component showcase.
+*   **Next:** Begin migrating the User Profile feature to Riverpod and continue testing the auth flow.
 
 
 ## 2025-04-12

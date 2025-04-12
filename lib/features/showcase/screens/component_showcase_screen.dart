@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/app/theme/color_scheme.dart';
 import 'package:zinapp_v2/app/theme/color_zones.dart';
+import 'package:zinapp_v2/features/showcase/screens/riverpod_test_screen.dart';
 import 'package:zinapp_v2/widgets/accessibility_aware_text.dart';
 import 'package:zinapp_v2/widgets/animated_card.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
@@ -44,6 +45,27 @@ class _ComponentShowcaseScreenState extends State<ComponentShowcaseScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Riverpod Test Button
+            Padding(
+              padding: const EdgeInsets.only(bottom: 24.0),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const RiverpodTestScreen(),
+                    ),
+                  );
+                },
+                child: const Text('Open Riverpod Test Screen'),
+              ),
+            ),
+
             _buildSectionTitle('Logo Variants'),
             _buildLogoShowcase(),
 
