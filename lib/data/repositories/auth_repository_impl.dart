@@ -91,18 +91,46 @@ class AuthRepositoryImpl implements AuthRepository {
         // Removed fields not present in User model:
         // xp, level, tokens, achievements, badges, rank, counts, streak etc.
         // These likely belong in a UserProfile model fetched separately.
+        // Note: Password is not part of the User model, but db.json expects it.
+        // We need a way to pass it for creation, perhaps a separate DTO or adding it temporarily.
+        // For now, we'll create a map including the password for the POST request.
       );
 
-      // TODO: Implement POST request to create user via UserRemoteDataSource
-      // This would likely involve creating both a User and a UserProfile record.
-      // For now, just return the locally created user for simulation
-      // final createdUser = await _remoteDataSource.createUser(newUser); // Assuming createUser exists
+      // Create a map including password for the POST request (MOCK ONLY)
+      final Map<String, dynamic> userDataForCreation = newUser.toJson();
+      userDataForCreation['password'] = password; // Add password for mock server
+      // Add other fields expected by db.json but not in User model
+      userDataForCreation['xp'] = 0;
+      userDataForCreation['level'] = 1;
+      userDataForCreation['tokens'] = 0;
+      userDataForCreation['achievements'] = [];
+      userDataForCreation['badges'] = [];
+      userDataForCreation['rank'] = "Style Novice";
+      userDataForCreation['postsCount'] = 0;
+      userDataForCreation['bookingsCount'] = 0;
+      userDataForCreation['followersCount'] = 0;
+      userDataForCreation['followingCount'] = 0;
+      userDataForCreation['currentStreak'] = 0;
+      userDataForCreation['lastStreakCheckIn'] = null;
 
-      // Simulate saving session after registration
-      await _localStorageService.saveMockUserId(newUser.id);
-      // await _localStorageService.saveMockSessionToken('mock-token-${newUser.id}');
 
-      return newUser; // Return the locally created user for now
+      // Call the remote data source to create the user on the mock server
+      // We pass the map, but createUser expects a User object.
+      // Let's adjust createUser signature or handle map conversion there.
+      // --- ADJUSTMENT NEEDED in UserRemoteDataSource.createUser ---
+      // For now, assuming createUser can handle this or is adjusted.
+      // A better approach would be a dedicated registration DTO.
+
+      // Let's assume createUser is updated to accept the map or we adjust here.
+      // We'll call createUser with the original newUser object and the password.
+      // The createUser implementation now handles constructing the full payload.
+      final createdUser = await _remoteDataSource.createUser(newUser, password);
+
+      // Save session for the *actually* created user (with server-assigned ID)
+      await _localStorageService.saveMockUserId(createdUser.id);
+      // await _localStorageService.saveMockSessionToken('mock-token-${createdUser.id}');
+
+      return createdUser; // Return the user object returned by the server
     } catch (e) {
       print('Registration error in repository: $e');
       rethrow;

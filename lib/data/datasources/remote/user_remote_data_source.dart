@@ -14,7 +14,11 @@ abstract class UserRemoteDataSource {
   Future<User> updateUser(User user);
 
   /// Fetches a user by email (useful for login simulation).
+  /// Fetches a user by email (useful for login simulation).
   Future<User?> getUserByEmail(String email);
+
+  /// Creates a new user. Requires password and potentially other initial fields.
+  Future<User> createUser(User user, String password);
 }
 
 /// Implementation of [UserRemoteDataSource] using Dio.
@@ -113,6 +117,54 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     } catch (e) {
       print('Error querying user by email $email: $e');
       throw Exception('Failed to query user data.');
+    }
+  }
+
+  @override
+  Future<User> createUser(User user, String password) async {
+     try {
+      // Construct the full payload expected by db.json
+      final Map<String, dynamic> userData = user.toJson();
+      // Add fields expected by db.json but not in the base User model
+      userData['password'] = password; // Add password (MOCK ONLY)
+      userData['xp'] = 0;
+      userData['level'] = 1;
+      userData['tokens'] = 0; // Initial tokens
+      userData['achievements'] = [];
+      userData['badges'] = [];
+      userData['rank'] = "Style Novice";
+      userData['postsCount'] = 0;
+      userData['bookingsCount'] = 0;
+      userData['followersCount'] = 0;
+      userData['followingCount'] = 0;
+      userData['currentStreak'] = 0;
+      userData['lastStreakCheckIn'] = null;
+      // Add default preferences if needed, or let them be null/handled by backend
+      // userData['preferences'] = { ... default preferences ... };
+
+      final response = await _dio.post(
+        '$_baseUrl/users',
+        data: userData, // Send the constructed map
+      );
+
+      if (response.statusCode == 201) { // 201 Created
+        // The response body contains the created user object with the server-assigned ID
+        return User.fromJson(response.data as Map<String, dynamic>);
+      } else {
+        throw DioException(
+          requestOptions: response.requestOptions,
+          response: response,
+          error: 'Failed to create user: Status code ${response.statusCode}',
+          type: DioExceptionType.badResponse,
+        );
+      }
+    } on DioException catch (e) {
+      print('DioError creating user: $e');
+      // Handle specific errors like email already exists if the mock server supported it
+      throw Exception('Network error creating user: ${e.message}');
+    } catch (e) {
+      print('Error creating user: $e');
+      throw Exception('Failed to create user.');
     }
   }
 }
