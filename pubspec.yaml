@@ -52,11 +52,14 @@ dependencies:
   shimmer: ^3.0.0 # Loading effects
   lottie: ^3.0.0 # Lottie animations
   intl: ^0.19.0 # Internationalization
+  dio: ^5.5.0+1 # HTTP client for API calls
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  mockito: ^5.4.4 # Or latest compatible version for mocking
+  # build_runner: ^2.4.11 # Removed duplicate entry
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
