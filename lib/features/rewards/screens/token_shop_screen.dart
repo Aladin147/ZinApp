@@ -33,7 +33,8 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
     final theme = Theme.of(context);
     final authState = ref.watch(authProvider);
     final user = authState.user;
-    
+    // final userId = userProfile?.id; // Removed unused variable
+
     if (user == null) {
       return const Scaffold(
         body: Center(
@@ -57,10 +58,11 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           ],
         ),
       ),
-      body: Column(
-        children: [
-          // Token balance
-          Container(
+      body: SafeArea( // Wrap the main Column with SafeArea
+        child: Column(
+          children: [
+            // Token balance
+            Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: theme.cardColor,
@@ -116,6 +118,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           ),
         ],
       ),
+     ), // Close SafeArea
     );
   }
   

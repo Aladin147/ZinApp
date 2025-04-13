@@ -11,8 +11,8 @@ class ChallengesCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final gamificationState = ref.watch(gamificationNotifierProvider);
+    // final theme = Theme.of(context); // Unused variable
+    // final gamificationState = ref.watch(gamificationNotifierProvider); // Unused variable
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -61,10 +61,12 @@ class ChallengesCard extends ConsumerWidget {
   }
 
   Widget _buildExpandedContent(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildChallengeItem(
+    // Wrap the content in SingleChildScrollView to prevent overflow when expanded
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildChallengeItem(
           context,
           title: 'Social Butterfly',
           description: 'Like 5 posts from stylists you follow',
@@ -109,7 +111,8 @@ class ChallengesCard extends ConsumerWidget {
             label: const Text('View All Challenges'),
           ),
         ),
-      ],
+       ],
+      ),
     );
   }
 

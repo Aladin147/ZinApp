@@ -28,7 +28,7 @@ class TrendingStylesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context); // Removed unused variable
     
     return ExpandableDashboardCard(
       title: 'Trending Styles',
@@ -165,10 +165,13 @@ class TrendingStylesCard extends StatelessWidget {
                   return Container(
                     width: 100,
                     height: 80,
-                    color: Colors.grey.withOpacity(0.2),
-                    child: Icon(
-                      Icons.image_not_supported,
-                      color: Colors.white.withOpacity(0.5),
+                    color: AppColors.baseDarkAccent.withOpacity(0.5), // Use theme color
+                    child: Center( // Center the icon
+                      child: Icon(
+                        Icons.style, // Use a more relevant icon
+                        color: Colors.white.withOpacity(0.5),
+                        size: 32, // Slightly larger icon
+                      ),
                     ),
                   );
                 },
@@ -251,11 +254,12 @@ class TrendingStylesCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: Colors.grey.withOpacity(0.2),
-                      child: Center(
+                      color: AppColors.baseDarkAccent.withOpacity(0.5), // Use theme color
+                      child: Center( // Center the icon
                         child: Icon(
-                          Icons.image_not_supported,
+                          Icons.style, // Use a more relevant icon
                           color: Colors.white.withOpacity(0.5),
+                          size: 48, // Larger icon for grid
                         ),
                       ),
                     );

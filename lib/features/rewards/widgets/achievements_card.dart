@@ -9,7 +9,7 @@ class AchievementsCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context); // Removed unused variable
     final authState = ref.watch(authProvider);
     final user = authState.user;
 
@@ -91,10 +91,12 @@ class AchievementsCard extends ConsumerWidget {
       },
     ];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
+    // Wrap the content in SingleChildScrollView to prevent overflow when expanded
+    return SingleChildScrollView( 
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
           'Recent Achievements',
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
@@ -181,7 +183,8 @@ class AchievementsCard extends ConsumerWidget {
             label: const Text('View All Achievements'),
           ),
         ),
-      ],
+       ],
+      ),
     );
   }
 
