@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart'; // Keep for loading indicator color logic
+import 'package:zinapp_v2/ui/components/zin_button.dart' as consolidated;
 
 /// Button variants following the ZinApp V2 design system
 enum AppButtonVariant { primary, secondary, text }
@@ -13,6 +14,9 @@ enum AppButtonSize { small, medium, large }
 enum IconPosition { leading, trailing }
 
 /// A standardized button component for the ZinApp V2 application.
+///
+/// @deprecated Use [consolidated.ZinButton] from 'package:zinapp_v2/ui/components/zin_button.dart' instead.
+/// This implementation will be removed in a future release.
 ///
 /// ZinButton provides consistent styling and behavior for all interactive buttons
 /// in the application, following the ZinApp V2 design system.

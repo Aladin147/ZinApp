@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/ui/components/zin_button.dart' as consolidated;
 
 /// Button sizes for the ZinButton widget
 enum ZinButtonSize {
@@ -29,6 +30,9 @@ enum ZinButtonVariant {
 }
 
 /// A custom button widget for the ZinApp application
+///
+/// @deprecated Use [consolidated.ZinButton] from 'package:zinapp_v2/ui/components/zin_button.dart' instead.
+/// This implementation will be removed in a future release.
 class ZinButton extends StatelessWidget {
   /// Function called when the button is pressed
   final VoidCallback? onPressed;
