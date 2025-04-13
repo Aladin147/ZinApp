@@ -36,12 +36,12 @@ This file tracks pending tasks, features, refactoring items, and other actionabl
 ### Build & Generation
 - [x] **Code Generation:** Run `build_runner` to generate `.g.dart` files for new models and providers. (Ref: `b7f6ee6`)
 
-## Sprint 2: Gamification Engine & Refinement (Next Steps)
+## Sprint 2: Gamification Engine & Refinement (In Progress)
 *Goal: Implement core gamification logic, expand testing, implement basic error handling, and enhance component showcase.*
 
 ### Gamification Engine
-- [ ] **Logic Implementation:** Build core engine logic in Simulation layer (XP rules, token transactions, level-up, achievements, challenges, streaks).
-- [ ] **Repository Integration:** Connect Gamification logic to repositories (using `json-server` for now).
+- [ ] **Logic Implementation:** Build core engine logic in Simulation layer (XP rules, token transactions, level-up, achievements, challenges, streaks). *(Partially done: Basic structure, XP/Level/Token/Streak/Achievement methods created)*
+- [ ] **Repository Integration:** Connect Gamification logic to repositories (using `json-server` for now). *(Deferred)*
 - [ ] **State Management:** Refine providers (`UserProfileProvider`?) to manage detailed profile/gamification state separately from core `AuthState`.
 - [ ] **Refactor AuthState:** Update `AuthState` and `AuthProvider` to correctly handle `UserProfile` fetching after authentication.
 
