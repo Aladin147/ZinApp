@@ -1,3 +1,4 @@
+import 'dart:ui'; // Import dart:ui for ImageFilter
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zinapp_v2/common/widgets/frosted_glass_container.dart';
@@ -73,7 +74,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: FrostedGlassContainer.light(
+            // Use the correct widget name
+            body: LightFrostedGlassContainer(
               child: const Text(childText),
             ),
           ),
@@ -82,6 +84,8 @@ void main() {
 
       // Assert
       expect(find.text(childText), findsOneWidget);
+      // Check for the specific type and the base type it renders
+      expect(find.byType(LightFrostedGlassContainer), findsOneWidget);
       expect(find.byType(FrostedGlassContainer), findsOneWidget);
     });
 
@@ -93,7 +97,8 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: FrostedGlassContainer.dark(
+            // Use the correct widget name
+            body: DarkFrostedGlassContainer(
               child: const Text(childText),
             ),
           ),
@@ -102,6 +107,8 @@ void main() {
 
       // Assert
       expect(find.text(childText), findsOneWidget);
+      // Check for the specific type and the base type it renders
+      expect(find.byType(DarkFrostedGlassContainer), findsOneWidget);
       expect(find.byType(FrostedGlassContainer), findsOneWidget);
     });
 

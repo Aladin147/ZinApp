@@ -23,70 +23,57 @@ ZinApp follows a layered architecture based on Clean Architecture principles, wi
    - DTOs (Data Transfer Objects)
 
 ## Directory Structure
+The project follows a feature-first directory structure, promoting modularity and separation of concerns.
+
 ```
 lib/
-├── app/                  # App-wide configurations
-│   ├── router.dart       # Navigation routing
-│   ├── theme/            # App theming
-│   └── constants/        # App constants
+├── common/               # Common utilities, widgets, or constants used across features
 │
-├── features/             # Feature modules
-│   ├── auth/             # Authentication feature
-│   │   ├── screens/      # UI screens
-│   │   ├── widgets/      # Feature-specific widgets
-│   │   ├── services/     # Feature-specific services
-│   │   └── models/       # Feature-specific models
-│   │
-│   ├── profile/          # Profile management feature
-│   ├── discovery/        # Stylist discovery feature
-│   ├── booking/          # Booking system feature
-│   ├── feed/             # Social feed feature
-│   └── messaging/        # Messaging feature
+├── config/               # Application configuration (e.g., themes, environment settings)
+│   └── themes/           # Theme definitions (extracted from lib/theme)
 │
-├── models/               # Shared data models
-│   ├── user_profile.dart
-│   ├── stylist.dart
-│   ├── post.dart
-│   └── ...
+├── constants/            # Application-wide constants (e.g., API keys, route names)
 │
-├── services/             # Shared services
-│   ├── api_service.dart  # API communication
-│   ├── auth_service.dart # Authentication service
-│   ├── storage_service.dart # Storage service
-│   └── ...
+├── features/             # Core feature modules (e.g., auth, feed, profile)
+│   └── [feature_name]/
+│       ├── data/         # Data layer: repositories, data sources, DTOs
+│       ├── domain/       # Domain layer: entities, use cases
+│       ├── presentation/ # Presentation layer: screens, widgets, providers/controllers
+│       │   ├── providers/  # Riverpod providers specific to the feature
+│       │   ├── screens/
+│       │   └── widgets/
+│       └── feature_name_exports.dart # Exports for the feature module
 │
-├── repositories/         # Data repositories
-│   ├── user_repository.dart
-│   ├── stylist_repository.dart
-│   └── ...
+├── models/               # Shared data models/entities (if any not specific to a feature)
 │
-├── widgets/              # Shared UI components
-│   ├── buttons/
-│   ├── cards/
-│   ├── inputs/
-│   └── ...
+├── navigation/           # Navigation logic (potentially GoRouter setup) - Replaced router/
 │
-├── utils/                # Utility functions and helpers
-│   ├── validators.dart
-│   ├── formatters.dart
-│   └── ...
+├── providers/            # Global Riverpod providers (app-wide state, services)
 │
-└── main.dart             # Application entry point
+├── router/               # Routing configuration (likely using GoRouter)
+│
+├── services/             # Shared application services (e.g., API, Auth, Storage)
+│
+├── theme/                # App theming (Consider moving fully into config/themes)
+│
+├── utils/                # General utility functions
+│
+├── widgets/              # Common shared widgets used across multiple features
+│
+├── error_screen.dart     # Generic error screen
+├── main.dart             # Application entry point
+└── riverpod_app.dart     # Root application widget integrating Riverpod
 ```
+*Note: This structure is inferred from the `list_files` output and standard Flutter practices. Further refinement might be needed based on deeper inspection.*
 
 ## State Management
-ZinApp uses a combination of state management approaches:
+ZinApp has standardized on **Riverpod** for state management and dependency injection across the entire application. This ensures consistency and leverages Riverpod's capabilities for managing state immutably, handling asynchronous operations, and providing dependencies efficiently.
 
-1. **Provider/Riverpod**
-   - For app-wide state management
-   - For dependency injection
+- **Providers (`lib/providers/`, `lib/features/*/presentation/providers/`)**: Define the application's state and dependencies. StateNotifierProvider, FutureProvider, StreamProvider, and Provider are used based on the specific state management needs.
+- **ConsumerWidget/Consumer**: Used within the UI layer to listen to provider changes and rebuild widgets accordingly.
+- **Ref**: Used within providers and widgets to read other providers or perform actions.
 
-2. **ChangeNotifier/StateNotifier**
-   - For complex widget state
-   - For feature-specific state
-
-3. **StatefulWidget**
-   - For simple, localized UI state
+While `StatefulWidget` might still be used for purely local, ephemeral UI state (e.g., animation controllers, text field focus), all application state and business logic interaction is managed through Riverpod. The previous usage of Provider and ChangeNotifier has been fully migrated.
 
 ## Data Flow
 1. **UI Layer**
@@ -164,10 +151,13 @@ ZinApp uses a combination of state management approaches:
 - Regular security audits
 
 ## Performance Optimization
-- Lazy loading of resources
-- Image caching and optimization
-- Minimizing rebuilds
-- Memory management
+Significant focus has been placed on performance:
+- **Image Optimization**: Implemented `CachedNetworkImage` (or similar) for efficient loading, caching, and placeholder/error handling for network images (Phase 6).
+- **List Virtualization**: Employed techniques like lazy loading and pagination for long lists (e.g., feeds) to improve initial load times and reduce memory consumption (Phase 6).
+- **Data Loading**: Optimized data fetching patterns, potentially including caching strategies for API responses and minimizing unnecessary data requests (Phase 6).
+- **Build Time Optimization**: Addressed analyzer issues and deprecated APIs, contributing to potentially faster build times (Phase 1, 4).
+- **State Management Efficiency**: Riverpod helps minimize unnecessary widget rebuilds compared to older patterns.
+- **Code Splitting**: Dart's deferred loading can be used if needed for large features.
 
 ## Accessibility
 - Semantic labels for screen readers

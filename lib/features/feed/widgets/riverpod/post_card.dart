@@ -5,6 +5,7 @@ import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/utils/image_utils.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
 class RiverpodPostCard extends ConsumerWidget {
@@ -164,18 +165,16 @@ class RiverpodPostCard extends ConsumerWidget {
         maxHeight: 300,
       ),
       width: double.infinity,
-      child: Image.network(
-        post.imageUrl!,
+      child: ImageUtils.loadNetworkImage(
+        imageUrl: post.imageUrl,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            height: 200,
-            color: Colors.grey.shade200,
-            child: const Center(
-              child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
-            ),
-          );
-        },
+        errorWidget: Container(
+          height: 200,
+          color: Colors.grey.shade200,
+          child: const Center(
+            child: Icon(Icons.broken_image, size: 48, color: Colors.grey),
+          ),
+        ),
       ),
     );
   }

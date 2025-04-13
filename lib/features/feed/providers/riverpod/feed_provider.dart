@@ -22,12 +22,21 @@ class Feed extends _$Feed {
     return FeedState.initial();
   }
 
-  /// Load all posts
+  /// Load initial posts (first page)
   Future<void> loadPosts() async {
-    state = state.copyWith(isLoading: true);
+    // Reset to initial page
+    state = state.copyWith(
+      isLoading: true,
+      currentPage: 1,
+      hasMorePages: true,
+      posts: [], // Clear existing posts
+    );
 
     try {
-      final posts = await ref.read(feedServiceProvider).getAllPosts();
+      final posts = await ref.read(feedServiceProvider).getAllPosts(
+        page: 1,
+        limit: 10, // Load 10 posts per page
+      );
 
       // Sort by creation date (newest first)
       posts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
@@ -39,6 +48,47 @@ class Feed extends _$Feed {
         posts: posts,
         postUsers: postUsers,
         isLoading: false,
+        currentPage: 2, // Next page to load
+        hasMorePages: posts.length >= 10, // If we got a full page, there might be more
+        error: null,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoading: false,
+        error: e.toString(),
+      );
+    }
+  }
+
+  /// Load more posts (next page)
+  Future<void> loadMorePosts() async {
+    // Don't load more if already loading or no more pages
+    if (state.isLoading || !state.hasMorePages) return;
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final newPosts = await ref.read(feedServiceProvider).getAllPosts(
+        page: state.currentPage,
+        limit: 10, // Load 10 posts per page
+      );
+
+      // Sort by creation date (newest first)
+      newPosts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+      // Load user profiles for new posts
+      final newPostUsers = await _loadUsersForPosts(newPosts);
+
+      // Merge with existing posts and users
+      final allPosts = [...state.posts, ...newPosts];
+      final allPostUsers = {...state.postUsers, ...newPostUsers};
+
+      state = state.copyWith(
+        posts: allPosts,
+        postUsers: allPostUsers,
+        isLoading: false,
+        currentPage: state.currentPage + 1,
+        hasMorePages: newPosts.length >= 10, // If we got a full page, there might be more
         error: null,
       );
     } catch (e) {
@@ -399,6 +449,8 @@ class FeedState {
   final bool isLoading;
   final bool isLoadingComments;
   final String? error;
+  final int currentPage;
+  final bool hasMorePages;
 
   const FeedState({
     required this.posts,
@@ -408,6 +460,8 @@ class FeedState {
     required this.isLoading,
     required this.isLoadingComments,
     this.error,
+    required this.currentPage,
+    required this.hasMorePages,
   });
 
   /// Initial state
@@ -419,6 +473,8 @@ class FeedState {
       activePostId: null,
       isLoading: false,
       isLoadingComments: false,
+      currentPage: 1,
+      hasMorePages: true,
     );
   }
 
@@ -431,6 +487,8 @@ class FeedState {
     bool? isLoading,
     bool? isLoadingComments,
     String? error,
+    int? currentPage,
+    bool? hasMorePages,
   }) {
     return FeedState(
       posts: posts ?? this.posts,
@@ -440,6 +498,8 @@ class FeedState {
       isLoading: isLoading ?? this.isLoading,
       isLoadingComments: isLoadingComments ?? this.isLoadingComments,
       error: error,
+      currentPage: currentPage ?? this.currentPage,
+      hasMorePages: hasMorePages ?? this.hasMorePages,
     );
   }
 }

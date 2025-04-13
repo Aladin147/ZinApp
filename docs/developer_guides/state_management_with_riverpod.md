@@ -25,9 +25,9 @@ Key advantages of Riverpod include:
 - **No context required**: Providers can be accessed without a BuildContext.
 - **Testability**: Providers can be easily overridden for testing.
 - **Automatic dependency tracking**: Providers automatically track their dependencies.
-- **Code generation**: The riverpod_generator package provides code generation for providers.
+- **Code generation**: The riverpod_generator package provides code generation for providers, which is the standard approach used in this project.
 
-In ZinApp V2, we use Riverpod as our primary state management solution, following a consistent pattern across the application.
+In ZinApp V2, Riverpod is the **sole and standard** state management solution, ensuring consistency across the application. The migration from previous solutions (like Provider) is complete.
 
 ## Provider Types
 
@@ -399,6 +399,7 @@ When working with Riverpod in ZinApp V2, follow these best practices:
 9. **Document your providers**: Add documentation comments to your providers to explain their purpose and usage.
 
 10. **Follow naming conventions**: Use consistent naming conventions for providers, state classes, and notifiers.
+11. **Provider Placement**: Place global providers (e.g., for shared services, app settings) in `lib/providers/`. Place feature-specific providers within the corresponding feature's presentation layer (`lib/features/[feature_name]/presentation/providers/`). This maintains modularity and separation of concerns.
 
 ## Common Patterns
 

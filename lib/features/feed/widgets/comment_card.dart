@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
 import 'package:zinapp_v2/models/comment.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+// import 'package:zinapp_v2/models/user_profile.dart'; // Unused import removed
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
 /// A card displaying a comment on a post

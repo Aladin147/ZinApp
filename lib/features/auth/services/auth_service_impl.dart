@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:http/http.dart' as http;
-import 'package:zinapp_v2/models/user_profile.dart';
+// import 'package:http/http.dart' as http; // Unused import removed
+// import 'package:zinapp_v2/models/user_profile.dart'; // Unused import removed
 import 'package:zinapp_v2/services/api_config.dart';
 import 'package:zinapp_v2/services/mock_data.dart';
 import 'package:zinapp_v2/models/auth_user.dart';

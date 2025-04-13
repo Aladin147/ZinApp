@@ -12,14 +12,14 @@ Rebuild ZinApp as a Flutter application adhering to the V2 Brand Identity, Archi
 **Key Tasks / Deliverables:**
 *   [x] Flutter Project Setup (`zinapp_v2`)
 *   [x] Documentation Setup (V2 Specs + Living Docs)
-*   [ ] **Core Dependencies:** Add `riverpod`, `go_router`, `http`/`dio`, `flutter_secure_storage`, `flutter_svg` etc. to `pubspec.yaml`.
-*   [ ] **API Service:** Implement `ApiService` abstraction & basic `MockApiService` (read-only JSON loading). Implement provider/swap logic.
-*   [ ] **Core Helpers:** Implement `AppTypography`, `ScreenWrapper`, `app_animations.dart`.
-*   [ ] **Core Components:** Implement `AppButton`, `AppCard`, `Avatar`, `AppTextField` adhering to theme.
-*   [ ] **Routing:** Basic `go_router` setup with initial routes (e.g., `/landing`).
+*   [x] **Core Dependencies:** Add `riverpod`, `go_router`, `http`/`dio`, `flutter_secure_storage`, `flutter_svg` etc. to `pubspec.yaml`. (Completed during setup/Phase 3)
+*   [x] **API Service:** Implement `ApiService` abstraction & basic `MockApiService` (read-only JSON loading). Implement provider/swap logic. (Completed during setup/Phase 1)
+*   [x] **Core Helpers:** Implement `AppTypography`, `ScreenWrapper`, `app_animations.dart`. (Completed during setup/Phase 1)
+*   [x] **Core Components:** Implement `AppButton`, `AppCard`, `Avatar`, `AppTextField` adhering to theme. (Completed during setup/Phase 1)
+*   [x] **Routing:** Basic `go_router` setup with initial routes (e.g., `/landing`). (Completed during setup/Phase 1)
 *   [ ] **Landing Screen:** Implement `LandingScreen` UI using established components and theme. Integrate basic assets (logo).
-*   [ ] **Unit/Widget Tests:** Initial tests for core components and services.
-*   [ ] **Documentation:** Update Journal, TODO, Known Issues.
+*   [ ] **Unit/Widget Tests:** Initial tests for core components and services. (Partially done, ongoing)
+*   [x] **Documentation:** Update Journal, TODO, Known Issues. (Completed as part of Phase 7)
 
 **Success Criteria:** App runs, displays themed Landing Screen with core components, basic navigation works, core services are injectable (using mock).
 
@@ -111,5 +111,5 @@ Rebuild ZinApp as a Flutter application adhering to the V2 Brand Identity, Archi
 *   Payment Integration
 *   CI/CD Setup
 *   Advanced Testing (E2E Automation)
-*   Performance Optimization
+*   [x] Performance Optimization (Addressed in Phase 6 of Tech Debt Plan)
 *   iOS Build Setup (Requires macOS)

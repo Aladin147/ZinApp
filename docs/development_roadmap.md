@@ -97,7 +97,7 @@ ZinApp is a platform connecting users with hair stylists, featuring booking, soc
 
 ## Technical Stack
 - Frontend: Flutter
-- State Management: Provider/Riverpod
+- State Management: **Riverpod** (Standardized)
 - Backend: Firebase (planned)
 - Authentication: Firebase Auth (planned)
 - Database: Firestore (planned)

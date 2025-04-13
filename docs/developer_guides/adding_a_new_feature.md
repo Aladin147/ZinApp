@@ -28,35 +28,41 @@ Before implementing a new feature, it's important to plan it thoroughly. This in
 
 ## Directory Structure
 
-ZinApp V2 follows a feature-first directory structure. When adding a new feature, create a new directory in the `lib/features` directory with the following structure:
+ZinApp V2 follows a feature-first directory structure with internal layering based on Clean Architecture principles. When adding a new feature, create a new directory in `lib/features/` with the following internal structure:
 
 ```
-lib/features/feature_name/
-├── models/            # Feature-specific models
-├── providers/         # Feature-specific providers
-│   └── riverpod/      # Riverpod providers
-├── repositories/      # Feature-specific repositories
-├── screens/           # Feature-specific screens
-│   └── riverpod/      # Screens using Riverpod
-├── services/          # Feature-specific services
-└── widgets/           # Feature-specific widgets
+lib/features/[feature_name]/
+├── data/         # Data layer implementation
+│   ├── datasources/ # API client calls, local storage access (e.g., notification_remote_datasource.dart)
+│   ├── models/      # Data Transfer Objects (DTOs), request/response models (e.g., notification_dto.dart)
+│   └── repositories/ # Implementation of domain repositories (e.g., notification_repository_impl.dart)
+├── domain/       # Business logic and rules (independent of UI and data sources)
+│   ├── entities/    # Core business objects/models (e.g., notification.dart)
+│   ├── repositories/ # Abstract repository interfaces (e.g., notification_repository.dart)
+│   └── usecases/    # Feature-specific operations/interactions (e.g., get_notifications.dart, mark_notification_read.dart)
+├── presentation/ # UI and State Management (Riverpod)
+│   ├── providers/  # Riverpod providers (.dart & .g.dart files) (e.g., notification_provider.dart)
+│   ├── screens/    # Widgets representing full screens/pages (e.g., notifications_screen.dart)
+│   └── widgets/    # Reusable widgets specific to this feature (e.g., notification_card.dart)
+└── feature_name_exports.dart # Optional: Exports public API of the feature
 ```
+*Refer to `docs/V2_FILE_STRUCTURE.md` for the complete project structure.*
 
-## Models
+## Domain Layer (Entities, Repositories, Use Cases)
 
-Models represent the data structures used in the feature. They should be immutable and use the `freezed` package for code generation.
+Start by defining the core business logic and data structures, independent of implementation details.
 
-1. Create a new file in the `lib/features/feature_name/models` directory or in the `lib/models` directory if the model is shared across features.
-2. Define the model class using the `freezed` package.
-3. Implement `fromJson` and `toJson` methods if the model will be serialized/deserialized.
+1.  **Entities**: Define the core data structures for the feature in `lib/features/[feature_name]/domain/entities/`. Use `freezed` for immutable objects. These represent the pure business model.
+2.  **Repository Interface**: Define an abstract interface for data operations required by the feature in `lib/features/[feature_name]/domain/repositories/`. This defines *what* data operations are needed, not *how* they are done.
+3.  **Use Cases**: Create classes in `lib/features/[feature_name]/domain/usecases/` that encapsulate specific business operations or interactions. Use cases typically depend on one or more repository interfaces.
 
-Example:
+Example (Domain Layer):
 
 ```dart
+// lib/features/notification/domain/entities/notification.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'notification.freezed.dart';
-part 'notification.g.dart';
 
 @freezed
 class Notification with _$Notification {
@@ -69,39 +75,88 @@ class Notification with _$Notification {
     String? imageUrl,
     String? actionUrl,
   }) = _Notification;
-
-  factory Notification.fromJson(Map<String, dynamic> json) =>
-      _$NotificationFromJson(json);
 }
+
+// lib/features/notification/domain/repositories/notification_repository.dart
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+
+abstract class NotificationRepository {
+  Future<List<Notification>> getNotifications(String userId);
+  Future<void> markNotificationAsRead(String notificationId);
+  Future<void> deleteNotification(String notificationId);
+}
+
+// lib/features/notification/domain/usecases/get_notifications.dart
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+import 'package:zinapp_v2/features/notification/domain/repositories/notification_repository.dart';
+
+class GetNotifications {
+  final NotificationRepository repository;
+  GetNotifications(this.repository);
+
+  Future<List<Notification>> call(String userId) async {
+    return repository.getNotifications(userId);
+  }
+}
+// Similar use cases for MarkNotificationRead, DeleteNotification...
 ```
 
-## Services
+## Data Layer (DataSources, Models/DTOs, Repository Implementation)
 
-Services handle the business logic and external interactions for the feature.
+Implement the details of how data is fetched and stored.
 
-1. Create a new file in the `lib/features/feature_name/services` directory or in the `lib/services` directory if the service is shared across features.
-2. Define the service interface.
-3. Implement the service.
+1.  **DataSources**: Create classes in `lib/features/[feature_name]/data/datasources/` responsible for interacting with specific data sources (e.g., remote API, local database). These often depend on shared services like `ApiService` from `lib/services/`.
+2.  **Models/DTOs**: Define Data Transfer Objects in `lib/features/[feature_name]/data/models/` if the data structure from the source differs from the domain entity. Include `fromJson`/`toJson` methods here. Often, DTOs extend domain entities.
+3.  **Repository Implementation**: Create a concrete implementation of the domain repository interface in `lib/features/[feature_name]/data/repositories/`. This class depends on one or more DataSources and handles mapping between DTOs and domain entities if necessary.
 
-Example:
+Example (Data Layer):
 
 ```dart
-abstract class NotificationService {
-  Future<List<Notification>> getNotifications(String userId);
+// lib/features/notification/data/models/notification_dto.dart
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+
+part 'notification_dto.freezed.dart';
+part 'notification_dto.g.dart';
+
+@freezed
+class NotificationDto extends Notification with _$NotificationDto {
+  const factory NotificationDto({
+    required String id,
+    required String title,
+    required String message,
+    required DateTime timestamp,
+    required bool isRead,
+    String? imageUrl,
+    String? actionUrl,
+  }) = _NotificationDto;
+
+  factory NotificationDto.fromJson(Map<String, dynamic> json) =>
+      _$NotificationDtoFromJson(json);
+}
+
+
+// lib/features/notification/data/datasources/notification_remote_datasource.dart
+import 'package:zinapp_v2/services/api_service.dart'; // Shared service
+import 'package:zinapp_v2/features/notification/data/models/notification_dto.dart';
+
+abstract class NotificationRemoteDataSource {
+  Future<List<NotificationDto>> getNotifications(String userId);
   Future<void> markAsRead(String notificationId);
   Future<void> deleteNotification(String notificationId);
 }
 
-class NotificationServiceImpl implements NotificationService {
-  final ApiService _apiService;
+class NotificationRemoteDataSourceImpl implements NotificationRemoteDataSource {
+  final ApiService _apiService; // Injected via Riverpod
 
-  NotificationServiceImpl(this._apiService);
+  NotificationRemoteDataSourceImpl(this._apiService);
 
   @override
-  Future<List<Notification>> getNotifications(String userId) async {
+  Future<List<NotificationDto>> getNotifications(String userId) async {
     final response = await _apiService.get('/notifications/$userId');
+    // Assuming response.data is List<Map<String, dynamic>>
     return (response.data as List)
-        .map((json) => Notification.fromJson(json))
+        .map((json) => NotificationDto.fromJson(json))
         .toList();
   }
 
@@ -115,650 +170,182 @@ class NotificationServiceImpl implements NotificationService {
     await _apiService.delete('/notifications/$notificationId');
   }
 }
+
+// lib/features/notification/data/repositories/notification_repository_impl.dart
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+import 'package:zinapp_v2/features/notification/domain/repositories/notification_repository.dart';
+import 'package:zinapp_v2/features/notification/data/datasources/notification_remote_datasource.dart';
+
+class NotificationRepositoryImpl implements NotificationRepository {
+  final NotificationRemoteDataSource remoteDataSource;
+
+  NotificationRepositoryImpl(this.remoteDataSource);
+
+  @override
+  Future<List<Notification>> getNotifications(String userId) async {
+    // DTOs extend Entities, so direct return is possible here
+    // Add mapping logic if DTOs and Entities differ significantly
+    return remoteDataSource.getNotifications(userId);
+  }
+
+  @override
+  Future<void> markNotificationAsRead(String notificationId) async {
+    return remoteDataSource.markAsRead(notificationId);
+  }
+
+  @override
+  Future<void> deleteNotification(String notificationId) async {
+    return remoteDataSource.deleteNotification(notificationId);
+  }
+}
 ```
 
-## State Management
+## Presentation Layer (State Management, UI Components)
 
-ZinApp V2 uses Riverpod for state management. When adding a new feature, create the necessary providers and notifiers.
+Connect the UI to the business logic using Riverpod.
 
-1. Create a new file in the `lib/features/feature_name/providers/riverpod` directory.
-2. Define the state class using the `freezed` package.
-3. Define the notifier class using the `@riverpod` annotation.
-4. Implement the necessary methods to update the state.
+1.  **State Management (Providers)**: Create Riverpod providers in `lib/features/[feature_name]/presentation/providers/`.
+    *   Define state class(es) using `freezed`.
+    *   Define `Notifier` class(es) using `@riverpod`. Notifiers typically depend on Use Cases from the domain layer.
+    *   Inject dependencies (Use Cases, other providers) using `ref.watch` or `ref.read`.
+    *   Implement methods in the Notifier that call Use Cases and update the state accordingly.
+2.  **UI Components (Screens, Widgets)**: Build the UI in `lib/features/[feature_name]/presentation/screens/` and `lib/features/[feature_name]/presentation/widgets/`.
+    *   Use `ConsumerWidget` or `ConsumerStatefulWidget`.
+    *   Use `ref.watch` to listen to provider state changes and rebuild the UI.
+    *   Use `ref.read` in callbacks (e.g., `onPressed`) to call methods on Notifiers.
 
-Example:
+Example (Presentation Layer):
 
 ```dart
+// lib/features/notification/presentation/providers/notification_provider.dart
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-import 'package:zinapp_v2/features/notification/services/notification_service.dart';
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+// Import Use Cases and Repository interfaces/providers
+import 'package:zinapp_v2/features/notification/domain/usecases/get_notifications.dart';
+import 'package:zinapp_v2/features/notification/domain/usecases/mark_notification_read.dart';
+import 'package:zinapp_v2/features/notification/domain/usecases/delete_notification.dart';
+// Import provider for repository implementation
+import 'package:zinapp_v2/features/notification/presentation/providers/notification_repository_provider.dart';
+
 
 part 'notification_provider.freezed.dart';
 part 'notification_provider.g.dart';
 
+// --- State Definition ---
 @freezed
 class NotificationState with _$NotificationState {
-  const factory NotificationState({
-    required bool isLoading,
-    required List<Notification> notifications,
-    String? errorMessage,
-  }) = _NotificationState;
-
-  factory NotificationState.initial() => const NotificationState(
-        isLoading: false,
-        notifications: [],
-      );
+  const factory NotificationState.initial() = _Initial;
+  const factory NotificationState.loading() = _Loading;
+  const factory NotificationState.loaded({required List<Notification> notifications}) = _Loaded;
+  const factory NotificationState.error({required String message}) = _Error;
 }
 
+// --- Notifier ---
 @riverpod
 class NotificationNotifier extends _$NotificationNotifier {
-  late final NotificationService _notificationService;
+  // Depend on Use Cases
+  late final GetNotifications _getNotifications;
+  late final MarkNotificationRead _markNotificationRead;
+  late final DeleteNotification _deleteNotification;
 
   @override
   NotificationState build() {
-    _notificationService = ref.watch(notificationServiceProvider);
-    return NotificationState.initial();
+    // Initialize dependencies from providers
+    final repository = ref.watch(notificationRepositoryProvider); // Assumes this provider exists
+    _getNotifications = GetNotifications(repository);
+    _markNotificationRead = MarkNotificationRead(repository);
+    _deleteNotification = DeleteNotification(repository);
+    return const NotificationState.initial();
   }
 
   Future<void> fetchNotifications(String userId) async {
-    state = state.copyWith(isLoading: true);
+    state = const NotificationState.loading();
     try {
-      final notifications = await _notificationService.getNotifications(userId);
-      state = state.copyWith(
-        isLoading: false,
-        notifications: notifications,
-        errorMessage: null,
-      );
+      final notifications = await _getNotifications(userId);
+      state = NotificationState.loaded(notifications: notifications);
     } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
+      state = NotificationState.error(message: e.toString());
     }
   }
 
   Future<void> markAsRead(String notificationId) async {
     try {
-      await _notificationService.markAsRead(notificationId);
-      state = state.copyWith(
-        notifications: state.notifications.map((notification) {
-          if (notification.id == notificationId) {
-            return notification.copyWith(isRead: true);
-          }
-          return notification;
-        }).toList(),
+      await _markNotificationRead(notificationId);
+      // Optimistically update UI or refetch
+      state = state.maybeWhen(
+        loaded: (notifications) => NotificationState.loaded(
+          notifications: notifications.map((n) {
+            return n.id == notificationId ? n.copyWith(isRead: true) : n;
+          }).toList(),
+        ),
+        orElse: () => state, // Keep current state if not loaded
       );
     } catch (e) {
-      state = state.copyWith(
-        errorMessage: e.toString(),
-      );
+      // Handle error - maybe revert optimistic update or show message
+      print("Error marking notification as read: $e");
+      // Optionally update state to show error: state = NotificationState.error(message: 'Failed to mark as read');
     }
   }
 
   Future<void> deleteNotification(String notificationId) async {
     try {
-      await _notificationService.deleteNotification(notificationId);
-      state = state.copyWith(
-        notifications: state.notifications
-            .where((notification) => notification.id != notificationId)
-            .toList(),
+      await _deleteNotification(notificationId);
+      // Optimistically update UI or refetch
+       state = state.maybeWhen(
+        loaded: (notifications) => NotificationState.loaded(
+          notifications: notifications.where((n) => n.id != notificationId).toList(),
+        ),
+        orElse: () => state, // Keep current state if not loaded
       );
     } catch (e) {
-      state = state.copyWith(
-        errorMessage: e.toString(),
-      );
+       // Handle error - maybe revert optimistic update or show message
+       print("Error deleting notification: $e");
+       // Optionally update state to show error: state = NotificationState.error(message: 'Failed to delete');
     }
   }
 }
 
+// --- Provider for Repository Implementation (Example) ---
+// This would typically live in its own file, e.g., notification_repository_provider.dart
+// It connects the abstract repository to its concrete implementation
+
 @riverpod
-NotificationService notificationService(NotificationServiceRef ref) {
-  final apiService = ref.watch(apiServiceProvider);
-  return NotificationServiceImpl(apiService);
+NotificationRemoteDataSource notificationRemoteDataSource(NotificationRemoteDataSourceRef ref) {
+  // Depends on the shared ApiService provider
+  return NotificationRemoteDataSourceImpl(ref.watch(apiServiceProvider));
 }
+
+@riverpod
+NotificationRepository notificationRepository(NotificationRepositoryRef ref) {
+  // Depends on the remote data source provider
+  return NotificationRepositoryImpl(ref.watch(notificationRemoteDataSourceProvider));
+}
+
 ```
 
 ## UI Components
 
-UI components are the building blocks of the feature's user interface. They include screens and widgets.
+Build the UI components within the feature's `presentation` layer.
 
-1. Create a new file in the `lib/features/feature_name/screens/riverpod` directory for screens.
-2. Create a new file in the `lib/features/feature_name/widgets` directory for widgets.
-3. Implement the UI components using Flutter widgets and Riverpod providers.
+1.  Create screen widgets in `lib/features/[feature_name]/presentation/screens/`.
+2.  Create reusable widgets specific to this feature in `lib/features/[feature_name]/presentation/widgets/`.
+3.  Use `ConsumerWidget` or `ConsumerStatefulWidget` to interact with Riverpod providers.
 
-Example:
+Example (Screen):
 
 ```dart
+// lib/features/notification/presentation/screens/notifications_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zinapp_v2/features/notification/providers/riverpod/notification_provider.dart';
-import 'package:zinapp_v2/features/notification/widgets/notification_card.dart';
-
-class NotificationsScreen extends ConsumerWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final notificationState = ref.watch(notificationNotifierProvider);
-    final userId = ref.watch(userIdProvider);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Notifications'),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () => ref
-            .read(notificationNotifierProvider.notifier)
-            .fetchNotifications(userId),
-        child: Builder(
-          builder: (context) {
-            if (notificationState.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            if (notificationState.errorMessage != null) {
-              return Center(
-                child: Text(notificationState.errorMessage!),
-              );
-            }
-
-            if (notificationState.notifications.isEmpty) {
-              return const Center(
-                child: Text('No notifications'),
-              );
-            }
-
-            return ListView.builder(
-              itemCount: notificationState.notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notificationState.notifications[index];
-                return NotificationCard(
-                  notification: notification,
-                  onTap: () {
-                    ref
-                        .read(notificationNotifierProvider.notifier)
-                        .markAsRead(notification.id);
-                    // Navigate to the notification's action URL if available
-                    if (notification.actionUrl != null) {
-                      // Navigate to the action URL
-                    }
-                  },
-                  onDismiss: () {
-                    ref
-                        .read(notificationNotifierProvider.notifier)
-                        .deleteNotification(notification.id);
-                  },
-                );
-              },
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-```
-
-## Navigation
-
-Navigation is handled using GoRouter. When adding a new feature, update the router configuration to include the new screens.
-
-1. Open the `lib/router/app_routes.dart` file.
-2. Add a new route for the feature's main screen.
-3. Add any additional routes for sub-screens.
-
-Example:
-
-```dart
-final router = GoRouter(
-  initialLocation: '/home',
-  routes: [
-    // Existing routes...
-    
-    GoRoute(
-      path: '/notifications',
-      name: AppRoutes.notifications,
-      builder: (context, state) => const NotificationsScreen(),
-    ),
-  ],
-);
-```
-
-## Testing
-
-ZinApp V2 follows a comprehensive testing strategy that includes unit tests, widget tests, and integration tests.
-
-1. Create unit tests for models, services, and providers in the `test/unit` directory.
-2. Create widget tests for UI components in the `test/widget` directory.
-3. Create integration tests for feature flows in the `test/integration` directory.
-
-Example:
-
-```dart
-// Unit test for NotificationService
-void main() {
-  group('NotificationService', () {
-    late MockApiService mockApiService;
-    late NotificationService notificationService;
-
-    setUp(() {
-      mockApiService = MockApiService();
-      notificationService = NotificationServiceImpl(mockApiService);
-    });
-
-    test('getNotifications returns a list of notifications', () async {
-      // Arrange
-      when(mockApiService.get('/notifications/user123')).thenAnswer(
-        (_) async => ApiResponse(
-          data: [
-            {
-              'id': 'notification1',
-              'title': 'Test Notification',
-              'message': 'This is a test notification',
-              'timestamp': '2023-01-01T00:00:00.000Z',
-              'isRead': false,
-            },
-          ],
-        ),
-      );
-
-      // Act
-      final notifications = await notificationService.getNotifications('user123');
-
-      // Assert
-      expect(notifications, isA<List<Notification>>());
-      expect(notifications.length, 1);
-      expect(notifications[0].id, 'notification1');
-      expect(notifications[0].title, 'Test Notification');
-      expect(notifications[0].message, 'This is a test notification');
-      expect(notifications[0].timestamp, DateTime.parse('2023-01-01T00:00:00.000Z'));
-      expect(notifications[0].isRead, false);
-    });
-  });
-}
-```
-
-## Documentation
-
-Document the new feature to help other developers understand how it works.
-
-1. Update the architecture documentation to include the new feature.
-2. Create a feature-specific documentation file if necessary.
-3. Add comments to the code to explain complex logic.
-
-Example:
-
-```markdown
-# Notification Feature
-
-The notification feature allows users to receive and manage notifications within the application.
-
-## Components
-
-- **NotificationService**: Handles fetching, marking as read, and deleting notifications.
-- **NotificationNotifier**: Manages the state of notifications and provides methods to update them.
-- **NotificationsScreen**: Displays a list of notifications to the user.
-- **NotificationCard**: Displays a single notification with options to mark as read and delete.
-
-## Usage
-
-To display the notifications screen, navigate to the `/notifications` route:
-
-```dart
-context.go('/notifications');
-```
-
-To fetch notifications for a user:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).fetchNotifications(userId);
-```
-
-To mark a notification as read:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).markAsRead(notificationId);
-```
-
-To delete a notification:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).deleteNotification(notificationId);
-```
-```
-
-## Example: Adding a Notification Feature
-
-Let's walk through the process of adding a notification feature to the ZinApp V2 application.
-
-### 1. Planning
-
-**Feature Requirements:**
-- Users should be able to view a list of notifications.
-- Users should be able to mark notifications as read.
-- Users should be able to delete notifications.
-- Notifications should include a title, message, timestamp, and read status.
-- Some notifications may include an image and an action URL.
-
-**UI Design:**
-- A notifications screen that displays a list of notifications.
-- Each notification is displayed as a card with the title, message, timestamp, and read status.
-- Notifications can be swiped to delete.
-- Tapping a notification marks it as read and navigates to the action URL if available.
-
-**Data Model:**
-- Notification model with id, title, message, timestamp, isRead, imageUrl, and actionUrl fields.
-
-**API Integration:**
-- GET /notifications/{userId} to fetch notifications.
-- POST /notifications/{notificationId}/read to mark a notification as read.
-- DELETE /notifications/{notificationId} to delete a notification.
-
-**State Management:**
-- NotificationState to track the loading state, notifications list, and error message.
-- NotificationNotifier to handle fetching, marking as read, and deleting notifications.
-
-**Navigation:**
-- A route to the notifications screen.
-
-### 2. Directory Structure
-
-Create the following directory structure:
-
-```
-lib/features/notification/
-├── models/
-├── providers/
-│   └── riverpod/
-├── screens/
-│   └── riverpod/
-├── services/
-└── widgets/
-```
-
-### 3. Models
-
-Create the notification model:
-
-```dart
-// lib/features/notification/models/notification.dart
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part 'notification.freezed.dart';
-part 'notification.g.dart';
-
-@freezed
-class Notification with _$Notification {
-  const factory Notification({
-    required String id,
-    required String title,
-    required String message,
-    required DateTime timestamp,
-    required bool isRead,
-    String? imageUrl,
-    String? actionUrl,
-  }) = _Notification;
-
-  factory Notification.fromJson(Map<String, dynamic> json) =>
-      _$NotificationFromJson(json);
-}
-```
-
-### 4. Services
-
-Create the notification service:
-
-```dart
-// lib/features/notification/services/notification_service.dart
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-import 'package:zinapp_v2/services/api_service.dart';
-
-abstract class NotificationService {
-  Future<List<Notification>> getNotifications(String userId);
-  Future<void> markAsRead(String notificationId);
-  Future<void> deleteNotification(String notificationId);
-}
-
-class NotificationServiceImpl implements NotificationService {
-  final ApiService _apiService;
-
-  NotificationServiceImpl(this._apiService);
-
-  @override
-  Future<List<Notification>> getNotifications(String userId) async {
-    final response = await _apiService.get('/notifications/$userId');
-    return (response.data as List)
-        .map((json) => Notification.fromJson(json))
-        .toList();
-  }
-
-  @override
-  Future<void> markAsRead(String notificationId) async {
-    await _apiService.post('/notifications/$notificationId/read');
-  }
-
-  @override
-  Future<void> deleteNotification(String notificationId) async {
-    await _apiService.delete('/notifications/$notificationId');
-  }
-}
-```
-
-### 5. State Management
-
-Create the notification provider:
-
-```dart
-// lib/features/notification/providers/riverpod/notification_provider.dart
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-import 'package:zinapp_v2/features/notification/services/notification_service.dart';
-import 'package:zinapp_v2/providers/api/api_provider.dart';
-
-part 'notification_provider.freezed.dart';
-part 'notification_provider.g.dart';
-
-@freezed
-class NotificationState with _$NotificationState {
-  const factory NotificationState({
-    required bool isLoading,
-    required List<Notification> notifications,
-    String? errorMessage,
-  }) = _NotificationState;
-
-  factory NotificationState.initial() => const NotificationState(
-        isLoading: false,
-        notifications: [],
-      );
-}
-
-@riverpod
-class NotificationNotifier extends _$NotificationNotifier {
-  late final NotificationService _notificationService;
-
-  @override
-  NotificationState build() {
-    _notificationService = ref.watch(notificationServiceProvider);
-    return NotificationState.initial();
-  }
-
-  Future<void> fetchNotifications(String userId) async {
-    state = state.copyWith(isLoading: true);
-    try {
-      final notifications = await _notificationService.getNotifications(userId);
-      state = state.copyWith(
-        isLoading: false,
-        notifications: notifications,
-        errorMessage: null,
-      );
-    } catch (e) {
-      state = state.copyWith(
-        isLoading: false,
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  Future<void> markAsRead(String notificationId) async {
-    try {
-      await _notificationService.markAsRead(notificationId);
-      state = state.copyWith(
-        notifications: state.notifications.map((notification) {
-          if (notification.id == notificationId) {
-            return notification.copyWith(isRead: true);
-          }
-          return notification;
-        }).toList(),
-      );
-    } catch (e) {
-      state = state.copyWith(
-        errorMessage: e.toString(),
-      );
-    }
-  }
-
-  Future<void> deleteNotification(String notificationId) async {
-    try {
-      await _notificationService.deleteNotification(notificationId);
-      state = state.copyWith(
-        notifications: state.notifications
-            .where((notification) => notification.id != notificationId)
-            .toList(),
-      );
-    } catch (e) {
-      state = state.copyWith(
-        errorMessage: e.toString(),
-      );
-    }
-  }
-}
-
-@riverpod
-NotificationService notificationService(NotificationServiceRef ref) {
-  final apiService = ref.watch(apiServiceProvider);
-  return NotificationServiceImpl(apiService);
-}
-```
-
-### 6. UI Components
-
-Create the notification card widget:
-
-```dart
-// lib/features/notification/widgets/notification_card.dart
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-
-class NotificationCard extends StatelessWidget {
-  final Notification notification;
-  final VoidCallback onTap;
-  final VoidCallback onDismiss;
-
-  const NotificationCard({
-    Key? key,
-    required this.notification,
-    required this.onTap,
-    required this.onDismiss,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final dateFormat = DateFormat.yMMMd().add_jm();
-
-    return Dismissible(
-      key: Key(notification.id),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) => onDismiss(),
-      background: Container(
-        color: Colors.red,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 16),
-        child: const Icon(
-          Icons.delete,
-          color: Colors.white,
-        ),
-      ),
-      child: Card(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: InkWell(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        notification.title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight:
-                              notification.isRead ? FontWeight.normal : FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    if (!notification.isRead)
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  notification.message,
-                  style: theme.textTheme.bodyMedium,
-                ),
-                if (notification.imageUrl != null) ...[
-                  const SizedBox(height: 8),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.network(
-                      notification.imageUrl!,
-                      width: double.infinity,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ],
-                const SizedBox(height: 8),
-                Text(
-                  dateFormat.format(notification.timestamp),
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-
-Create the notifications screen:
-
-```dart
-// lib/features/notification/screens/riverpod/notifications_screen.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
-import 'package:zinapp_v2/features/notification/providers/riverpod/notification_provider.dart';
-import 'package:zinapp_v2/features/notification/widgets/notification_card.dart';
+// Import providers and widgets
+import 'package:zinapp_v2/features/notification/presentation/providers/notification_provider.dart';
+import 'package:zinapp_v2/features/notification/presentation/widgets/notification_card.dart';
+// Import global auth provider to get user ID
+import 'package:zinapp_v2/features/auth/presentation/providers/auth_provider.dart'; // Adjust path as needed
 
 class NotificationsScreen extends ConsumerStatefulWidget {
-  const NotificationsScreen({Key? key}) : super(key: key);
+  const NotificationsScreen({super.key});
 
   @override
   ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -768,65 +355,60 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
+    // Fetch initial data after the first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userId = ref.read(authStateProvider).userProfile?.id;
-      if (userId != null) {
-        ref.read(notificationNotifierProvider.notifier).fetchNotifications(userId);
-      }
+      _fetchNotifications();
     });
+  }
+
+  void _fetchNotifications() {
+    // Read user ID from global auth provider
+    final userId = ref.read(authNotifierProvider).maybeWhen(
+          authenticated: (user) => user.id,
+          orElse: () => null,
+        );
+    if (userId != null) {
+      // Call the notifier method
+      ref.read(notificationNotifierProvider.notifier).fetchNotifications(userId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch the notification state
     final notificationState = ref.watch(notificationNotifierProvider);
-    final userId = ref.watch(authStateProvider).userProfile?.id;
+    final userId = ref.watch(authNotifierProvider).maybeWhen(
+          authenticated: (user) => user.id,
+          orElse: () => null,
+        );
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
       ),
       body: userId == null
-          ? const Center(
-              child: Text('Please sign in to view notifications'),
-            )
+          ? const Center(child: Text('Please sign in')) // Handle not logged in
           : RefreshIndicator(
-              onRefresh: () => ref
-                  .read(notificationNotifierProvider.notifier)
-                  .fetchNotifications(userId),
-              child: Builder(
-                builder: (context) {
-                  if (notificationState.isLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+              onRefresh: () async => _fetchNotifications(),
+              child: notificationState.when(
+                initial: () => const Center(child: Text('Pull to refresh')),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (message) => Center(child: Text('Error: $message')),
+                loaded: (notifications) {
+                  if (notifications.isEmpty) {
+                    return const Center(child: Text('No notifications'));
                   }
-
-                  if (notificationState.errorMessage != null) {
-                    return Center(
-                      child: Text(notificationState.errorMessage!),
-                    );
-                  }
-
-                  if (notificationState.notifications.isEmpty) {
-                    return const Center(
-                      child: Text('No notifications'),
-                    );
-                  }
-
                   return ListView.builder(
-                    itemCount: notificationState.notifications.length,
+                    itemCount: notifications.length,
                     itemBuilder: (context, index) {
-                      final notification = notificationState.notifications[index];
+                      final notification = notifications[index];
                       return NotificationCard(
                         notification: notification,
                         onTap: () {
                           ref
                               .read(notificationNotifierProvider.notifier)
                               .markAsRead(notification.id);
-                          // Navigate to the notification's action URL if available
-                          if (notification.actionUrl != null) {
-                            // Navigate to the action URL
-                          }
+                          // TODO: Handle navigation if actionUrl exists
                         },
                         onDismiss: () {
                           ref
@@ -844,189 +426,151 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 }
 ```
 
-### 7. Navigation
+## Navigation
 
-Update the router configuration:
+Navigation is handled using GoRouter. Update the router configuration in `lib/router/` (e.g., `app_router.dart`) to include routes for the new feature's screens.
+
+1.  Define route constants/names if needed (e.g., in `lib/constants/app_routes.dart`).
+2.  Add `GoRoute` definitions within the main `GoRouter` configuration.
+
+Example:
 
 ```dart
-// lib/router/app_routes.dart
+// lib/router/app_router.dart (Simplified)
+import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/features/notification/presentation/screens/notifications_screen.dart';
+// ... other imports
+
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/home', // Or your initial route
   routes: [
-    // Existing routes...
-    
+    // ... other routes
     GoRoute(
       path: '/notifications',
-      name: AppRoutes.notifications,
+      // name: AppRoutes.notifications, // Optional: Use named routes
       builder: (context, state) => const NotificationsScreen(),
     ),
   ],
+  // ... error handler, redirects, etc.
 );
 ```
 
-### 8. Testing
+## Testing
 
-Create unit tests for the notification service:
+Follow the testing strategy outlined in `docs/V2_TEST_STRATEGY.md`.
+
+1.  **Domain Layer**: Write unit tests for Use Cases in `test/features/[feature_name]/domain/usecases/`. Mock Repository interfaces.
+2.  **Data Layer**: Write unit tests for Repository implementations in `test/features/[feature_name]/data/repositories/`. Mock DataSources. Write unit tests for DataSources, mocking `ApiService` or other external dependencies.
+3.  **Presentation Layer**: Write unit tests for Notifiers in `test/features/[feature_name]/presentation/providers/`. Mock Use Cases or override repository providers. Write widget tests for Screens and Widgets in `test/features/[feature_name]/presentation/screens/` and `widgets/`. Override providers to supply mock state.
+4.  **Integration Tests**: Create integration tests for key feature flows in `test/integration/`.
+
+Example (Unit Test for Use Case):
 
 ```dart
-// test/unit/features/notification/services/notification_service_test.dart
+// test/features/notification/domain/usecases/get_notifications_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-import 'package:zinapp_v2/features/notification/services/notification_service.dart';
-import 'package:zinapp_v2/services/api_service.dart';
+import 'package:zinapp_v2/features/notification/domain/entities/notification.dart';
+import 'package:zinapp_v2/features/notification/domain/repositories/notification_repository.dart';
+import 'package:zinapp_v2/features/notification/domain/usecases/get_notifications.dart';
 
-class MockApiService extends Mock implements ApiService {}
+// Create a mock repository using mockito or similar
+class MockNotificationRepository extends Mock implements NotificationRepository {}
 
 void main() {
-  group('NotificationService', () {
-    late MockApiService mockApiService;
-    late NotificationService notificationService;
+  late GetNotifications usecase;
+  late MockNotificationRepository mockRepository;
 
-    setUp(() {
-      mockApiService = MockApiService();
-      notificationService = NotificationServiceImpl(mockApiService);
-    });
-
-    test('getNotifications returns a list of notifications', () async {
-      // Arrange
-      when(mockApiService.get('/notifications/user123')).thenAnswer(
-        (_) async => ApiResponse(
-          data: [
-            {
-              'id': 'notification1',
-              'title': 'Test Notification',
-              'message': 'This is a test notification',
-              'timestamp': '2023-01-01T00:00:00.000Z',
-              'isRead': false,
-            },
-          ],
-        ),
-      );
-
-      // Act
-      final notifications = await notificationService.getNotifications('user123');
-
-      // Assert
-      expect(notifications, isA<List<Notification>>());
-      expect(notifications.length, 1);
-      expect(notifications[0].id, 'notification1');
-      expect(notifications[0].title, 'Test Notification');
-      expect(notifications[0].message, 'This is a test notification');
-      expect(notifications[0].timestamp, DateTime.parse('2023-01-01T00:00:00.000Z'));
-      expect(notifications[0].isRead, false);
-    });
+  setUp(() {
+    mockRepository = MockNotificationRepository();
+    usecase = GetNotifications(mockRepository);
   });
-}
-```
 
-Create widget tests for the notification card:
+  final tUserId = 'user123';
+  final tNotifications = [
+    Notification(id: '1', title: 'Test', message: 'Msg', timestamp: DateTime.now(), isRead: false),
+  ];
 
-```dart
-// test/widget/features/notification/widgets/notification_card_test.dart
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:zinapp_v2/features/notification/models/notification.dart';
-import 'package:zinapp_v2/features/notification/widgets/notification_card.dart';
-
-void main() {
-  testWidgets('NotificationCard displays notification details', (tester) async {
+  test('should get notifications from the repository', () async {
     // Arrange
-    final notification = Notification(
-      id: 'notification1',
-      title: 'Test Notification',
-      message: 'This is a test notification',
-      timestamp: DateTime.parse('2023-01-01T00:00:00.000Z'),
-      isRead: false,
-    );
-    bool tapped = false;
-    bool dismissed = false;
-
+    when(mockRepository.getNotifications(any)).thenAnswer((_) async => tNotifications);
     // Act
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: NotificationCard(
-            notification: notification,
-            onTap: () => tapped = true,
-            onDismiss: () => dismissed = true,
-          ),
-        ),
-      ),
-    );
-
+    final result = await usecase(tUserId);
     // Assert
-    expect(find.text('Test Notification'), findsOneWidget);
-    expect(find.text('This is a test notification'), findsOneWidget);
-    expect(find.text('Jan 1, 2023 12:00 AM'), findsOneWidget);
-
-    // Test tap
-    await tester.tap(find.byType(InkWell));
-    expect(tapped, true);
-
-    // Test dismiss
-    await tester.drag(find.byType(Dismissible), const Offset(-500, 0));
-    await tester.pumpAndSettle();
-    expect(dismissed, true);
+    expect(result, tNotifications);
+    verify(mockRepository.getNotifications(tUserId));
+    verifyNoMoreInteractions(mockRepository);
   });
 }
 ```
+
+## Documentation
+
+Document the new feature thoroughly.
+
+1.  Consider adding a feature-specific README within the feature folder (`lib/features/[feature_name]/README.md`) explaining its purpose, structure, and key components.
+2.  Update relevant architecture documents (`docs/technical_architecture.md`, `docs/V2_ARCHITECTURE.md`) if the feature introduces significant architectural patterns or changes.
+3.  Add DartDoc comments to public classes, methods, and providers.
+
+## Example: Adding a Notification Feature (Updated Structure)
+
+Let's walk through adding the notification feature following the updated structure.
+
+### 1. Planning (Remains the same)
+   *(Define requirements, UI, data model, API, state, navigation)*
+
+### 2. Directory Structure
+   Create the structure as defined earlier: `lib/features/notification/` with `data`, `domain`, `presentation` subfolders.
+
+### 3. Domain Layer
+   - Create `lib/features/notification/domain/entities/notification.dart` (using `freezed`).
+   - Create `lib/features/notification/domain/repositories/notification_repository.dart` (abstract interface).
+   - Create `lib/features/notification/domain/usecases/get_notifications.dart`, `mark_notification_read.dart`, `delete_notification.dart`.
+
+### 4. Data Layer
+   - Create `lib/features/notification/data/models/notification_dto.dart` (if needed, extending entity, with `fromJson`).
+   - Create `lib/features/notification/data/datasources/notification_remote_datasource.dart` (interface and implementation using `ApiService`).
+   - Create `lib/features/notification/data/repositories/notification_repository_impl.dart` (implementing the domain interface, using the datasource).
+
+### 5. Presentation Layer (Providers)
+   - Create `lib/features/notification/presentation/providers/notification_provider.dart`:
+     - Define `NotificationState` using `freezed` (`initial`, `loading`, `loaded`, `error`).
+     - Define `NotificationNotifier` using `@riverpod`, depending on the use cases. Implement methods (`fetchNotifications`, `markAsRead`, `deleteNotification`) that call the use cases and update the state.
+   - Create providers to inject the repository implementation and datasource (these might live alongside `notification_provider.dart` or in separate files within the providers folder):
+     ```dart
+     // Example provider setup (adjust based on actual dependencies)
+     @riverpod
+     NotificationRemoteDataSource notificationRemoteDataSource(NotificationRemoteDataSourceRef ref) {
+       return NotificationRemoteDataSourceImpl(ref.watch(apiServiceProvider)); // Assumes global apiServiceProvider
+     }
+
+     @riverpod
+     NotificationRepository notificationRepository(NotificationRepositoryRef ref) {
+       return NotificationRepositoryImpl(ref.watch(notificationRemoteDataSourceProvider));
+     }
+     ```
+
+### 6. Presentation Layer (UI)
+   - Create `lib/features/notification/presentation/widgets/notification_card.dart`.
+   - Create `lib/features/notification/presentation/screens/notifications_screen.dart` (using `ConsumerStatefulWidget`, `ref.watch` for state, `ref.read` for actions).
+
+### 7. Navigation
+   - Update `lib/router/app_router.dart` (or similar) to add the `/notifications` route pointing to `NotificationsScreen`.
+
+### 8. Testing
+   - Add unit tests for use cases, repository implementation, datasource, and notifier.
+   - Add widget tests for `NotificationCard` and `NotificationsScreen`.
 
 ### 9. Documentation
+   - Add DartDoc comments.
+   - Consider adding `lib/features/notification/README.md`.
 
-Create documentation for the notification feature:
-
-```markdown
-# Notification Feature
-
-The notification feature allows users to receive and manage notifications within the application.
-
-## Components
-
-- **NotificationService**: Handles fetching, marking as read, and deleting notifications.
-- **NotificationNotifier**: Manages the state of notifications and provides methods to update them.
-- **NotificationsScreen**: Displays a list of notifications to the user.
-- **NotificationCard**: Displays a single notification with options to mark as read and delete.
-
-## Usage
-
-To display the notifications screen, navigate to the `/notifications` route:
-
-```dart
-context.go('/notifications');
-```
-
-To fetch notifications for a user:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).fetchNotifications(userId);
-```
-
-To mark a notification as read:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).markAsRead(notificationId);
-```
-
-To delete a notification:
-
-```dart
-ref.read(notificationNotifierProvider.notifier).deleteNotification(notificationId);
-```
-```
-
-### 10. Run the build_runner
-
-Run the build_runner to generate the necessary code:
-
-```bash
-flutter pub run build_runner build --delete-conflicting-outputs
-```
+### 10. Code Generation
+   - Run `flutter pub run build_runner build --delete-conflicting-outputs` to generate code for `freezed` and `riverpod`.
 
 ### 11. Test the Feature
-
-Run the application and test the notification feature to ensure it works as expected.
+   - Run the app and manually test the feature flow.
 
 ## Conclusion
 
-By following this guide, you should be able to add a new feature to the ZinApp V2 application in a structured and maintainable way. Remember to follow the established patterns and practices to ensure consistency across the codebase.
+By following this layered, feature-first approach guided by Clean Architecture principles and leveraging Riverpod effectively, you can add new features to ZinApp V2 in a structured, maintainable, and testable way. Remember to adhere to the established patterns and practices for consistency.

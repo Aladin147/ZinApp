@@ -1,0 +1,8 @@
+refactor: remove duplicate component showcase screen
+
+# Conflict Resolution
+- Remove duplicate component showcase screen in UI layer
+- Remove separate main entry point for showcase
+- Retain the ZinButton component for the new UI layer
+
+This commit avoids potential conflicts with the existing component showcase in the features directory, while keeping the new ZinButton component as part of the three-layer architecture implementation.

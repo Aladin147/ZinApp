@@ -22,81 +22,89 @@ AuthService authService(AuthServiceRef ref) {
 }
 ```
 
-#### State Providers
-- Manage application state
-- Use immutable state classes
-- Implement state transitions as methods
-- Example: `authProvider`
+#### StateNotifier Providers (Generated via @riverpod)
+- Manage complex application state using a `StateNotifier`.
+- Use immutable state classes (typically generated with `freezed`).
+- Implement state transitions as methods within the Notifier class.
+- Example: `authNotifierProvider` (generated from `AuthNotifier` class)
 
 ```dart
+// State Class (using freezed)
+@freezed
+class AuthState with _$AuthState {
+  const factory AuthState.initial() = _Initial;
+  const factory AuthState.loading() = _Loading;
+  const factory AuthState.authenticated({required UserProfile user}) = _Authenticated;
+  const factory AuthState.error({required String message}) = _Error;
+}
+
+// Notifier Class
 @riverpod
-class Auth extends _$Auth {
+class AuthNotifier extends _$AuthNotifier {
   @override
   AuthState build() {
+    // Initialize dependencies, return initial state
     return AuthState.initial();
   }
-  
-  // Methods to manipulate state...
+
+  Future<void> login(String email, String password) async {
+    state = const AuthState.loading();
+    try {
+      // Call auth service
+      // final user = await ref.read(authServiceProvider).login(email, password);
+      // state = AuthState.authenticated(user: user);
+    } catch (e) {
+      state = AuthState.error(message: e.toString());
+    }
+  }
+  // Other methods...
 }
 ```
 
-#### Computed Providers
-- Derive state from other providers
-- Automatically update when dependencies change
+#### Computed Providers (Generated via @riverpod)
+- Derive state from other providers.
+- Automatically update when dependencies change.
 - Example: `userIsAuthenticatedProvider`
 
 ```dart
 @riverpod
 bool userIsAuthenticated(UserIsAuthenticatedRef ref) {
-  final authState = ref.watch(authProvider);
-  return authState.isAuthenticated;
+  // Watch the generated AuthNotifier provider
+  final authState = ref.watch(authNotifierProvider);
+  // Use pattern matching on the freezed state
+  return authState.maybeWhen(
+    authenticated: (_) => true,
+    orElse: () => false,
+  );
 }
 ```
+*Note: Other provider types like `FutureProvider`, `StreamProvider`, `StateProvider` are also used as needed, following the `@riverpod` generation pattern.*
 
 ### 2. State Classes
 
-All state is represented by immutable classes with:
-- Immutable properties (final)
-- copyWith method for state updates
-- Named constructors for different states (initial, loading, error, etc.)
+All state is represented by **immutable classes**, typically generated using the **`freezed` package**. This provides:
+- Immutable properties.
+- `copyWith` method for state updates.
+- Pattern matching capabilities (when/maybeWhen, map/maybeMap) for handling different states easily in the UI.
+- Named constructors for different states (e.g., `initial`, `loading`, `data`, `error`).
 
-Example:
+Example (using `freezed`):
 
 ```dart
-class AuthState {
-  final UserProfile? user;
-  final bool isLoading;
-  final String? error;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const AuthState({
-    this.user,
-    this.isLoading = false,
-    this.error,
-  });
+part 'auth_state.freezed.dart'; // Generated file
 
-  bool get isAuthenticated => user != null;
-
-  AuthState copyWith({
-    UserProfile? user,
-    bool? isLoading,
-    String? error,
-  }) {
-    return AuthState(
-      user: user ?? this.user,
-      isLoading: isLoading ?? this.isLoading,
-      error: error,
-    );
-  }
-
-  // Named constructors
-  factory AuthState.initial() => const AuthState();
-  factory AuthState.loading() => const AuthState(isLoading: true);
-  factory AuthState.authenticated(UserProfile user) => AuthState(user: user);
-  factory AuthState.error(String message) => AuthState(error: message);
-  
-  // Clear error
-  AuthState clearError() => copyWith(error: null);
+@freezed
+class AuthState with _$AuthState {
+  // Define different states as factory constructors
+  const factory AuthState.initial() = _Initial;
+  const factory AuthState.loading() = _Loading;
+  const factory AuthState.authenticated({required UserProfile user}) = _Authenticated;
+  const factory AuthState.error({required String message}) = _Error;
 }
+
+// Run build_runner to generate auth_state.freezed.dart
 ```
 
 ### 3. Widget Integration
@@ -108,8 +116,13 @@ Used for stateless widgets that need to access providers:
 class ProfileHeader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProfileProviderProvider).user;
-    // ...
+    // Watch the generated provider
+    final authState = ref.watch(authNotifierProvider);
+    // Use pattern matching to display UI based on state
+    return authState.maybeWhen(
+      authenticated: (user) => Text('Welcome, ${user.name}'),
+      orElse: () => const Text('Not logged in'),
+    );
   }
 }
 ```
@@ -127,12 +140,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(authProvider.notifier).clearError();
+    // Access notifier via ref.read inside initState or other lifecycle methods
+    // Example: ref.read(authNotifierProvider.notifier).someInitialization();
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
+    // Watch the generated provider
+    final authState = ref.watch(authNotifierProvider);
     // ...
   }
 }
@@ -149,8 +164,9 @@ Widget build(BuildContext context) {
         // Only this part rebuilds when authState changes
         Consumer(
           builder: (context, ref, child) {
-            final authState = ref.watch(authProvider);
-            return Text(authState.isAuthenticated ? 'Logged In' : 'Logged Out');
+            // Watch the generated provider
+            final isAuthenticated = ref.watch(userIsAuthenticatedProvider);
+            return Text(isAuthenticated ? 'Logged In' : 'Logged Out');
           },
         ),
         // Rest of the UI...
@@ -162,53 +178,33 @@ Widget build(BuildContext context) {
 
 ## Folder Structure
 
+The structure follows the layered, feature-first approach outlined in `V2_FILE_STRUCTURE.md`:
+
 ```
 lib/
 ├── features/
-│   ├── auth/
-│   │   ├── providers/
-│   │   │   └── riverpod/
-│   │   │       ├── auth_provider.dart
-│   │   │       └── auth_provider.g.dart
-│   │   ├── screens/
-│   │   │   └── riverpod/
-│   │   │       ├── auth_screen.dart
-│   │   │       ├── login_screen.dart
-│   │   │       └── register_screen.dart
-│   │   └── widgets/
-│   │       └── riverpod/
-│   │           └── auth_wrapper.dart
-│   ├── profile/
-│   │   ├── providers/
-│   │   │   └── riverpod/
-│   │   │       ├── user_profile_provider.dart
-│   │   │       └── user_profile_provider.g.dart
-│   │   └── screens/
-│   │       └── riverpod/
-│   │           ├── profile_screen.dart
-│   │           └── profile_edit_screen.dart
-│   └── ...
-├── models/
-│   ├── user_profile.dart
-│   ├── post.dart
-│   └── ...
-├── services/
-│   ├── auth_service.dart
-│   ├── user_service.dart
-│   └── ...
-└── router/
-    ├── app_routes.dart
-    ├── riverpod_router.dart
-    └── riverpod_router.g.dart
+│   └── [feature_name]/
+│       ├── data/
+│       ├── domain/
+│       └── presentation/
+│           ├── providers/  # Riverpod providers (.dart & .g.dart files)
+│           ├── screens/
+│           └── widgets/
+├── providers/            # Global Riverpod providers (.dart & .g.dart files)
+├── services/             # Shared services
+├── models/               # Shared models (if any)
+├── router/               # GoRouter configuration
+└── ...                   # Other core directories (config, constants, etc.)
 ```
+*Refer to `docs/V2_FILE_STRUCTURE.md` for the complete structure.*
 
 ## Naming Conventions
 
-- **Provider Files**: `feature_provider.dart`
-- **State Classes**: `FeatureState`
-- **Provider Classes**: `Feature` (will be generated as `FeatureProvider`)
-- **Provider Variables**: `featureProvider`
-- **Service Providers**: `featureServiceProvider`
+- **Provider Files**: `[feature_or_service]_provider.dart` (e.g., `auth_notifier.dart`, `api_service_provider.dart`) - Note: Generator often dictates the file name based on the provider name.
+- **State Classes**: `[Feature]State` (e.g., `AuthState`, `FeedState`) - Often generated by `freezed`.
+- **Notifier Classes**: `[Feature]Notifier` (e.g., `AuthNotifier`, `FeedNotifier`) - Used with `@riverpod`.
+- **Generated Provider Variables**: `[feature]NotifierProvider` (for StateNotifierProvider), `[name]Provider` (for others) (e.g., `authNotifierProvider`, `apiServiceProvider`, `userIsAuthenticatedProvider`). Follow Riverpod generator conventions.
+- **Service Providers**: `[serviceName]Provider` (e.g., `apiServiceProvider`, `authServiceProvider`).
 
 ## State Management Patterns
 
@@ -216,13 +212,14 @@ lib/
 
 ```dart
 Future<void> loadData() async {
-  state = state.copyWith(isLoading: true, error: null);
-  
+  // Use freezed states for loading/error
+  state = const State.loading();
+
   try {
-    final data = await ref.read(serviceProvider).fetchData();
-    state = state.copyWith(
-      data: data,
-      isLoading: false,
+    final data = await ref.read(someServiceProvider).fetchData();
+    state = State.data(data); // Assuming a 'data' factory constructor
+  } catch (e) {
+    state = State.error(e.toString()); // Assuming an 'error' factory constructor
     );
   } catch (e) {
     state = state.copyWith(
@@ -236,29 +233,58 @@ Future<void> loadData() async {
 ### Error Handling
 
 ```dart
-void clearError() {
-  if (state.error != null) {
-    state = state.copyWith(error: null);
-  }
-}
+// In Notifier:
+// No explicit clearError needed if using freezed states.
+// Transitioning to a non-error state implicitly clears the error.
 
-// In UI:
-if (state.error != null) {
-  // Show error message
-}
+// In UI (using pattern matching):
+state.when(
+  // ... other states
+  error: (message) => Text('Error: $message'),
+  // ...
+);
 ```
 
 ### Data Fetching
 
-```dart
-@override
-void initState() {
-  super.initState();
-  Future.microtask(() {
-    ref.read(dataProvider.notifier).loadData();
-  });
-}
-```
+- **Using `FutureProvider` / `StreamProvider`**: Often preferred for simple data fetching. Riverpod handles loading/error states automatically via `AsyncValue`.
+
+  ```dart
+  @riverpod
+  Future<UserProfile> userProfile(UserProfileRef ref, String userId) async {
+    final repository = ref.watch(userRepositoryProvider);
+    return repository.fetchUserProfile(userId);
+  }
+
+  // In UI:
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProfileAsync = ref.watch(userProfileProvider('someUserId'));
+    return userProfileAsync.when(
+      data: (user) => Text(user.name),
+      loading: () => const CircularProgressIndicator(),
+      error: (err, stack) => Text('Error: $err'),
+    );
+  }
+  ```
+
+- **Manual Fetching in `StateNotifier`**: Use when more complex logic or state manipulation is needed around the fetch.
+
+  ```dart
+  // Inside a StateNotifier method:
+  Future<void> loadData() async {
+    state = const State.loading(); // Use freezed state
+    try {
+      final data = await ref.read(someServiceProvider).fetchData();
+      state = State.data(data); // Use freezed state
+    } catch (e, stack) {
+      state = State.error(e.toString()); // Use freezed state
+      // Log error with stack trace
+    }
+  }
+
+  // Triggering fetch (e.g., in initState or button press):
+  // ref.read(myNotifierProvider.notifier).loadData();
+  ```
 
 ## Testing
 
@@ -266,19 +292,27 @@ void initState() {
 
 ```dart
 void main() {
-  test('AuthProvider login success', () async {
+  test('AuthNotifier login success', () async {
+    // 1. Create mock dependencies
+    final mockAuthService = MockAuthService();
+    when(mockAuthService.login(any, any)).thenAnswer((_) async => /* mock UserProfile */);
+
+    // 2. Create ProviderContainer with overrides
     final container = ProviderContainer(
       overrides: [
-        authServiceProvider.overrideWithValue(MockAuthService()),
+        // Override the service provider used by AuthNotifier
+        authServiceProvider.overrideWithValue(mockAuthService),
       ],
     );
-    
-    final notifier = container.read(authProvider.notifier);
+
+    // 3. Read the notifier and call method
+    final notifier = container.read(authNotifierProvider.notifier);
     await notifier.login(email: 'test@example.com', password: 'password');
-    
-    final state = container.read(authProvider);
-    expect(state.isAuthenticated, true);
-    expect(state.user, isNotNull);
+
+    // 4. Read the state and assert
+    final state = container.read(authNotifierProvider);
+    expect(state, isA<Authenticated>()); // Check freezed state type
+    // expect((state as Authenticated).user, isNotNull);
   });
 }
 ```
@@ -287,43 +321,41 @@ void main() {
 
 ```dart
 void main() {
-  testWidgets('LoginScreen shows error message', (tester) async {
+  testWidgets('LoginScreen shows error message on failed login', (tester) async {
+    // 1. Create mock notifier or override service provider
+    final mockAuthNotifier = MockAuthNotifier(); // Assuming a mock class exists
+    when(() => mockAuthNotifier.state).thenReturn(const AuthState.error(message: 'Invalid'));
+
+    // 2. Pump widget with ProviderScope overrides
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          authProvider.overrideWith((ref) => MockAuthNotifier()),
+          // Override the specific notifier provider for this test
+          authNotifierProvider.overrideWithValue(mockAuthNotifier),
         ],
-        child: MaterialApp(
-          home: LoginScreen(),
-        ),
+        child: MaterialApp(home: LoginScreen()), // Your screen widget
       ),
     );
-    
-    // Test interactions...
+
+    // 3. Find widgets and assert
+    expect(find.text('Error: Invalid'), findsOneWidget);
   });
 }
 ```
 
 ## Best Practices
 
-1. **Keep Providers Focused**: Each provider should have a single responsibility.
-2. **Use Immutable State**: Always use immutable state classes with copyWith.
-3. **Separate UI and Logic**: Keep business logic in providers, UI logic in widgets.
-4. **Use ref.watch Sparingly**: Only watch what you need to minimize rebuilds.
-5. **Prefer Consumer for Granular Updates**: Use Consumer to rebuild only what's needed.
-6. **Document State Transitions**: Comment state transitions for clarity.
-7. **Handle Loading and Error States**: Always handle loading and error states in the UI.
-8. **Use Extension Methods**: Use extension methods for backward compatibility.
-9. **Generate Code**: Use code generation to reduce boilerplate.
-10. **Test Providers**: Write tests for all providers.
-
-## Migration Notes
-
-When migrating existing features:
-1. Create Riverpod versions in separate files
-2. Update imports to use Riverpod versions
-3. Remove Provider-based files once migration is complete
+1. **Keep Providers Focused**: Each provider should manage a distinct piece of state or provide a specific service.
+2. **Use Immutable State**: Leverage `freezed` for robust immutable state classes.
+3. **Separate Concerns**: Follow the layered architecture (Presentation, Domain, Data). Keep business logic out of widgets.
+4. **Use `ref.watch` for UI Rebuilds**: Watch providers in the `build` method to react to state changes.
+5. **Use `ref.read` for Actions**: Read providers in callbacks (`onPressed`, `initState`, etc.) to trigger actions without rebuilding.
+6. **Prefer `Consumer` for Granular Updates**: Wrap only the necessary parts of the widget tree with `Consumer` or `ref.watch` to optimize rebuilds.
+7. **Handle Loading and Error States**: Use `AsyncValue` from `Future/StreamProvider` or explicit states (`loading`, `error` factories in `freezed`) and handle them gracefully in the UI.
+8. **Use Code Generation**: Rely on `@riverpod` and `freezed` generators to reduce boilerplate and ensure type safety.
+9. **Test Providers and Logic**: Write unit tests for notifiers and domain logic.
+10. **Provider Placement**: Place global providers in `lib/providers/`, feature-specific ones in `lib/features/[feature]/presentation/providers/`.
 
 ## Conclusion
 
-This architecture provides a solid foundation for state management in the ZinApp V2 project. By following these patterns and conventions, we ensure a maintainable and scalable codebase that can grow with the application's needs.
+This architecture, centered around Riverpod and a layered feature structure, provides a solid foundation for state management in the ZinApp V2 project. By adhering to these patterns, using code generation (`@riverpod`, `freezed`), and following best practices, we ensure a maintainable, testable, and scalable codebase.

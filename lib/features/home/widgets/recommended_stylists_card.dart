@@ -29,7 +29,7 @@ class RecommendedStylistsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context); // Removed unused variable
     
     return ExpandableDashboardCard(
       title: 'Recommended Stylists',

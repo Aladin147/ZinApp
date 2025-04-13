@@ -4,6 +4,7 @@ import 'package:zinapp_v2/features/stylist/extensions/stylist_extensions.dart';
 import 'package:zinapp_v2/models/stylist.dart';
 import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/utils/image_utils.dart';
 
 /// A card displaying stylist information in the discovery section
 class StylistCard extends StatelessWidget {
@@ -56,33 +57,20 @@ class StylistCard extends StatelessWidget {
               child: SizedBox(
                 height: compact ? 80 : 110,
                 width: double.infinity,
-                child: stylist.profileImageUrl != null
-                    ? Image.network(
-                        stylist.profileImageUrl!,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
-                            child: const Center(
-                              child: Icon(
-                                Icons.person,
-                                size: 40,
-                                color: AppColors.primaryHighlight,
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    : Container(
-                        color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
-                        child: const Center(
-                          child: Icon(
-                            Icons.person,
-                            size: 40,
-                            color: AppColors.primaryHighlight,
-                          ),
-                        ),
+                child: ImageUtils.loadNetworkImage(
+                  imageUrl: stylist.profileImageUrl,
+                  fit: BoxFit.cover,
+                  errorWidget: Container(
+                    color: AppColors.primaryHighlight.withAlpha(51), // 0.2 opacity
+                    child: const Center(
+                      child: Icon(
+                        Icons.person,
+                        size: 40,
+                        color: AppColors.primaryHighlight,
                       ),
+                    ),
+                  ),
+                ),
               ),
             ),
 

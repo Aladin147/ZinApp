@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
@@ -154,33 +155,20 @@ class ZinAvatar extends StatelessWidget {
 
   /// Builds the content of the avatar (image, initials, or placeholder)
   Widget _buildAvatarContent(double size) {
-    // If image URL is provided, try to load the image
+    // Use the ImageUtils to load the image with caching
     if (imageUrl != null && imageUrl!.isNotEmpty) {
-      return Image.network(
-        imageUrl!,
+      return CachedNetworkImage(
+        imageUrl: imageUrl!,
         width: size,
         height: size,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          // Fall back to initials or placeholder on error
-          return _buildFallbackContent(size);
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          // Show a loading indicator while the image is loading
-          return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-              strokeWidth: 2.0,
-              color: AppColors.primaryHighlight,
-            ),
-          );
-        },
+        placeholder: (context, url) => const Center(
+          child: CircularProgressIndicator(
+            strokeWidth: 2.0,
+            color: AppColors.primaryHighlight,
+          ),
+        ),
+        errorWidget: (context, url, error) => _buildFallbackContent(size),
       );
     }
 

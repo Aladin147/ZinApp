@@ -33,7 +33,7 @@ class UpcomingBookingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context); // Removed unused variable
     
     // Sort bookings by date
     final sortedBookings = List<Booking>.from(bookings)

@@ -1,23 +1,57 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/models/user_profile.dart'; // Import StylistProfile
 
 void main() {
   group('Stylist', () {
+    // Create a sample StylistProfile for testing
+    const testStylistProfile = StylistProfile(
+      specialization: 'Hair Cutting',
+      services: ['Cut', 'Wash', 'Style'],
+      rating: 4.5,
+      reviewCount: 120,
+      businessName: 'Test Salon',
+      businessAddress: '123 Test St',
+      isAvailable: true,
+      completedBookings: 200,
+      clientCount: 150,
+    );
+
+    // Create a sample Stylist instance
+    const testStylist = Stylist(
+      id: 'stylist123',
+      username: 'test_stylist',
+      profilePictureUrl: 'https://example.com/stylist.jpg',
+      bio: 'Expert stylist.',
+      location: 'New York, NY',
+      stylistProfile: testStylistProfile,
+      level: 10,
+      rank: 'Gold',
+      badges: ['Top Rated', 'Fast Booker'],
+    );
+
     test('fromJson creates a Stylist instance correctly', () {
       // Arrange
       final json = {
         'id': 'stylist123',
-        'name': 'Test Stylist',
+        'username': 'test_stylist',
         'profilePictureUrl': 'https://example.com/stylist.jpg',
-        'bio': 'This is a test stylist bio',
-        'rating': 4.5,
-        'reviewCount': 120,
-        'specialties': ['Haircut', 'Coloring', 'Styling'],
+        'bio': 'Expert stylist.',
         'location': 'New York, NY',
-        'priceRange': '\$\$',
-        'isAvailable': true,
-        'isFeatured': true,
-        'bookingUrl': 'https://example.com/booking/stylist123',
+        'stylistProfile': { // Nested profile
+          'specialization': 'Hair Cutting',
+          'services': ['Cut', 'Wash', 'Style'],
+          'rating': 4.5,
+          'reviewCount': 120,
+          'businessName': 'Test Salon',
+          'businessAddress': '123 Test St',
+          'isAvailable': true,
+          'completedBookings': 200,
+          'clientCount': 150,
+        },
+        'level': 10,
+        'rank': 'Gold',
+        'badges': ['Top Rated', 'Fast Booker'],
       };
 
       // Act
@@ -25,139 +59,104 @@ void main() {
 
       // Assert
       expect(stylist.id, 'stylist123');
-      expect(stylist.name, 'Test Stylist');
+      expect(stylist.username, 'test_stylist');
       expect(stylist.profilePictureUrl, 'https://example.com/stylist.jpg');
-      expect(stylist.bio, 'This is a test stylist bio');
-      expect(stylist.rating, 4.5);
-      expect(stylist.reviewCount, 120);
-      expect(stylist.specialties, ['Haircut', 'Coloring', 'Styling']);
+      expect(stylist.bio, 'Expert stylist.');
       expect(stylist.location, 'New York, NY');
-      expect(stylist.priceRange, '\$\$');
-      expect(stylist.isAvailable, true);
-      expect(stylist.isFeatured, true);
-      expect(stylist.bookingUrl, 'https://example.com/booking/stylist123');
+      expect(stylist.stylistProfile, testStylistProfile); // Compare nested object
+      expect(stylist.level, 10);
+      expect(stylist.rank, 'Gold');
+      expect(stylist.badges, ['Top Rated', 'Fast Booker']);
     });
 
     test('toJson converts a Stylist instance to JSON correctly', () {
-      // Arrange
-      final stylist = Stylist(
-        id: 'stylist123',
-        name: 'Test Stylist',
-        profilePictureUrl: 'https://example.com/stylist.jpg',
-        bio: 'This is a test stylist bio',
-        rating: 4.5,
-        reviewCount: 120,
-        specialties: ['Haircut', 'Coloring', 'Styling'],
-        location: 'New York, NY',
-        priceRange: '\$\$',
-        isAvailable: true,
-        isFeatured: true,
-        bookingUrl: 'https://example.com/booking/stylist123',
-      );
+      // Arrange: Use the pre-defined testStylist
 
       // Act
-      final json = stylist.toJson();
+      final json = testStylist.toJson();
 
       // Assert
       expect(json['id'], 'stylist123');
-      expect(json['name'], 'Test Stylist');
+      expect(json['username'], 'test_stylist');
       expect(json['profilePictureUrl'], 'https://example.com/stylist.jpg');
-      expect(json['bio'], 'This is a test stylist bio');
-      expect(json['rating'], 4.5);
-      expect(json['reviewCount'], 120);
-      expect(json['specialties'], ['Haircut', 'Coloring', 'Styling']);
+      expect(json['bio'], 'Expert stylist.');
       expect(json['location'], 'New York, NY');
-      expect(json['priceRange'], '\$\$');
-      expect(json['isAvailable'], true);
-      expect(json['isFeatured'], true);
-      expect(json['bookingUrl'], 'https://example.com/booking/stylist123');
+      expect(json['stylistProfile'], testStylistProfile.toJson()); // Compare nested JSON
+      expect(json['level'], 10);
+      expect(json['rank'], 'Gold');
+      expect(json['badges'], ['Top Rated', 'Fast Booker']);
     });
 
-    test('copyWith creates a new instance with updated values', () {
-      // Arrange
-      final stylist = Stylist(
-        id: 'stylist123',
-        name: 'Test Stylist',
-        profilePictureUrl: 'https://example.com/stylist.jpg',
-        bio: 'This is a test stylist bio',
-        rating: 4.5,
-        reviewCount: 120,
-        specialties: ['Haircut', 'Coloring', 'Styling'],
-        location: 'New York, NY',
-        priceRange: '\$\$',
-        isAvailable: true,
-        isFeatured: true,
-        bookingUrl: 'https://example.com/booking/stylist123',
-      );
+    // Note: Stylist model itself doesn't have copyWith.
+    // We test the copyWith of the nested StylistProfile.
+    test('StylistProfile copyWith creates a new instance with updated values', () {
+      // Arrange: Use the pre-defined testStylistProfile
 
       // Act
-      final updatedStylist = stylist.copyWith(
-        name: 'Updated Stylist',
+      final updatedProfile = testStylistProfile.copyWith(
         rating: 4.8,
         reviewCount: 150,
         isAvailable: false,
+        services: ['Cut', 'Wash'], // Update a list
       );
 
       // Assert
-      expect(updatedStylist.id, 'stylist123'); // Unchanged
-      expect(updatedStylist.name, 'Updated Stylist'); // Changed
-      expect(updatedStylist.profilePictureUrl, 'https://example.com/stylist.jpg'); // Unchanged
-      expect(updatedStylist.bio, 'This is a test stylist bio'); // Unchanged
-      expect(updatedStylist.rating, 4.8); // Changed
-      expect(updatedStylist.reviewCount, 150); // Changed
-      expect(updatedStylist.specialties, ['Haircut', 'Coloring', 'Styling']); // Unchanged
-      expect(updatedStylist.location, 'New York, NY'); // Unchanged
-      expect(updatedStylist.priceRange, '\$\$'); // Unchanged
-      expect(updatedStylist.isAvailable, false); // Changed
-      expect(updatedStylist.isFeatured, true); // Unchanged
-      expect(updatedStylist.bookingUrl, 'https://example.com/booking/stylist123'); // Unchanged
+      expect(updatedProfile.specialization, 'Hair Cutting'); // Unchanged
+      expect(updatedProfile.services, ['Cut', 'Wash']); // Changed
+      expect(updatedProfile.rating, 4.8); // Changed
+      expect(updatedProfile.reviewCount, 150); // Changed
+      expect(updatedProfile.businessName, 'Test Salon'); // Unchanged
+      expect(updatedProfile.businessAddress, '123 Test St'); // Unchanged
+      expect(updatedProfile.isAvailable, false); // Changed
+      expect(updatedProfile.completedBookings, 200); // Unchanged
+      expect(updatedProfile.clientCount, 150); // Unchanged
     });
+
 
     test('equality works correctly', () {
       // Arrange
-      final stylist1 = Stylist(
+      const stylist1 = Stylist( // Use testStylist defined above
         id: 'stylist123',
-        name: 'Test Stylist',
+        username: 'test_stylist',
         profilePictureUrl: 'https://example.com/stylist.jpg',
-        bio: 'This is a test stylist bio',
-        rating: 4.5,
-        reviewCount: 120,
-        specialties: ['Haircut', 'Coloring', 'Styling'],
+        bio: 'Expert stylist.',
         location: 'New York, NY',
-        priceRange: '\$\$',
-        isAvailable: true,
-        isFeatured: true,
-        bookingUrl: 'https://example.com/booking/stylist123',
+        stylistProfile: testStylistProfile,
+        level: 10,
+        rank: 'Gold',
+        badges: ['Top Rated', 'Fast Booker'],
       );
 
-      final stylist2 = Stylist(
+       const stylist2 = Stylist( // Identical to stylist1
         id: 'stylist123',
-        name: 'Test Stylist',
+        username: 'test_stylist',
         profilePictureUrl: 'https://example.com/stylist.jpg',
-        bio: 'This is a test stylist bio',
-        rating: 4.5,
-        reviewCount: 120,
-        specialties: ['Haircut', 'Coloring', 'Styling'],
+        bio: 'Expert stylist.',
         location: 'New York, NY',
-        priceRange: '\$\$',
-        isAvailable: true,
-        isFeatured: true,
-        bookingUrl: 'https://example.com/booking/stylist123',
+        stylistProfile: testStylistProfile,
+        level: 10,
+        rank: 'Gold',
+        badges: ['Top Rated', 'Fast Booker'],
       );
 
-      final stylist3 = Stylist(
+      const stylist3 = Stylist( // Different stylist
         id: 'stylist456',
-        name: 'Another Stylist',
+        username: 'another_stylist',
         profilePictureUrl: 'https://example.com/another.jpg',
-        bio: 'This is another stylist bio',
-        rating: 4.2,
-        reviewCount: 80,
-        specialties: ['Haircut', 'Beard Trim'],
+        bio: 'Another expert stylist.',
         location: 'Los Angeles, CA',
-        priceRange: '\$\$\$',
-        isAvailable: false,
-        isFeatured: false,
-        bookingUrl: 'https://example.com/booking/stylist456',
+        stylistProfile: StylistProfile( // Different profile details
+          specialization: 'Coloring',
+          services: ['Color', 'Highlights'],
+          rating: 4.2,
+          reviewCount: 80,
+          isAvailable: false,
+          completedBookings: 100,
+          clientCount: 90,
+        ),
+        level: 8,
+        rank: 'Silver',
+        badges: ['Creative Color'],
       );
 
       // Assert

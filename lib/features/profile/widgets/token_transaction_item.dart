@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:zinapp_v2/models/token_transaction.dart';
-import 'package:zinapp_v2/theme/color_scheme.dart';
+// import 'package:zinapp_v2/theme/color_scheme.dart'; // Unused import removed
 
 /// A list item that displays a token transaction with its type, amount, and timestamp.
 class TokenTransactionItem extends StatelessWidget {
