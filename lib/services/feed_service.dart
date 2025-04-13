@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+// import 'dart:convert'; // Removed duplicate import
+// import 'package:http/http.dart' as http; // Removed duplicate import
+import 'package:zinapp_v2/models/comment.dart';
 import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
-import 'package:zinapp_v2/services/api_config.dart';
+import 'package:zinapp_v2/config/env.dart'; // Use AppConfig from lib/config
 import 'package:zinapp_v2/services/mock_data.dart';
 
 /// Exception thrown when feed operations fail
@@ -16,17 +19,39 @@ class FeedException implements Exception {
 
 /// Service responsible for feed operations
 class FeedService {
-  final String baseUrl = ApiConfig.baseUrl;
+  // Use AppConfig for base URL and mock data flag
+  final String baseUrl = AppConfig.apiBaseUrl; // Use production URL when not mocking
+  final bool useMockData = AppConfig.useMockData;
 
-  /// Get all posts
-  Future<List<Post>> getAllPosts() async {
+  /// Get all posts with pagination support
+  ///
+  /// Parameters:
+  /// - [page]: The page number to fetch (1-based)
+  /// - [limit]: The number of posts per page
+  Future<List<Post>> getAllPosts({int page = 1, int limit = 10}) async {
     try {
-      if (ApiConfig.useMockData) {
-        // Use mock data
-        return MockData.posts.map((data) => Post.fromJson(data)).toList();
+      if (useMockData) { // Use the class member variable
+        // Use mock data with pagination
+        final allPosts = MockData.posts.map((data) => Post.fromJson(data)).toList();
+
+        // Sort by timestamp (newest first) to simulate real API behavior
+        allPosts.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        // Apply pagination
+        final startIndex = (page - 1) * limit;
+        final endIndex = startIndex + limit;
+
+        if (startIndex >= allPosts.length) {
+          return []; // No more posts
+        }
+
+        return allPosts.sublist(
+          startIndex,
+          endIndex > allPosts.length ? allPosts.length : endIndex
+        );
       } else {
         final response = await http.get(
-          Uri.parse('$baseUrl/posts'),
+          Uri.parse('$baseUrl/posts?page=$page&limit=$limit'),
         );
 
         if (response.statusCode == 200) {
@@ -54,7 +79,7 @@ class FeedService {
         return postsData.map((data) => Post.fromJson(data)).toList();
       } else {
         throw FeedException(
-            'Failed to get posts by user: ${response.statusCode}');
+            'Failed to get posts by user: ${response.statusCode}',);
       }
     } catch (e) {
       if (e is FeedException) rethrow;
@@ -65,15 +90,24 @@ class FeedService {
   /// Get post by ID
   Future<Post> getPostById(String id) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/posts/$id'),
-      );
-
-      if (response.statusCode == 200) {
-        final postData = jsonDecode(response.body);
-        return Post.fromJson(postData);
+      if (useMockData) { // Use the class member variable
+        // Find post in mock data
+        final postMatch = MockData.posts.where((p) => p['id'] == id).toList();
+        if (postMatch.isEmpty) {
+          throw FeedException('Post not found in mock data: $id');
+        }
+        return Post.fromJson(postMatch.first);
       } else {
-        throw FeedException('Failed to get post: ${response.statusCode}');
+        final response = await http.get(
+          Uri.parse('$baseUrl/posts/$id'),
+        );
+
+        if (response.statusCode == 200) {
+          final postData = jsonDecode(response.body);
+          return Post.fromJson(postData);
+        } else {
+          throw FeedException('Failed to get post: ${response.statusCode}');
+        }
       }
     } catch (e) {
       if (e is FeedException) rethrow;
@@ -93,14 +127,18 @@ class FeedService {
       final postData = {
         'id': 'post${DateTime.now().millisecondsSinceEpoch}',
         'userId': userId,
-        'content': content,
-        'imageUrls': imageUrls,
+        'authorName': 'User', // Default author name
+        'authorProfilePictureUrl': 'assets/images/avatars/default.png',
+        'text': content,
+        'imageUrl': imageUrls.isNotEmpty ? imageUrls.first : null,
         'tags': tags,
         'location': location,
-        'likesCount': 0,
-        'commentsCount': 0,
-        'sharesCount': 0,
-        'createdAt': DateTime.now().toIso8601String(),
+        'likes': 0,
+        'comments': 0,
+        'shares': 0,
+        'timestamp': DateTime.now().toIso8601String(),
+        'isLiked': false,
+        'type': 'general',
       };
 
       final response = await http.post(
@@ -121,39 +159,73 @@ class FeedService {
     }
   }
 
-  /// Like a post
-  Future<Post> likePost(String postId) async {
+  /// Toggle like status for a post
+  Future<Post> toggleLike(String postId, bool isLiked) async {
     try {
-      // Get current post
-      final post = await getPostById(postId);
+      if (useMockData) { // Use the class member variable
+        try {
+          // Get current post
+          final post = await getPostById(postId);
 
-      // Update likes count
-      final updatedPost = {
-        'likesCount': post.likesCount + 1,
-      };
+          // Update likes count based on the action
+          final updatedLikesCount = isLiked ? post.likes + 1 : post.likes - 1;
 
-      final response = await http.patch(
-        Uri.parse('$baseUrl/posts/$postId'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode(updatedPost),
-      );
+          // Create updated post
+          final updatedPost = post.copyWith(
+            likes: updatedLikesCount >= 0 ? updatedLikesCount : 0,
+            isLiked: isLiked,
+          );
 
-      if (response.statusCode == 200) {
-        final updatedPostData = jsonDecode(response.body);
-        return Post.fromJson(updatedPostData);
+          // Simulate API delay
+          await Future.delayed(const Duration(milliseconds: 300));
+
+          // Update the mock data
+          final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+          if (postIndex != -1) {
+            MockData.posts[postIndex]['likes'] = updatedPost.likes;
+            MockData.posts[postIndex]['isLiked'] = updatedPost.isLiked;
+          }
+
+          return updatedPost;
+        } catch (e) {
+          throw FeedException('Error toggling like in mock data: $e');
+        }
       } else {
-        throw FeedException('Failed to like post: ${response.statusCode}');
+        // Get current post
+        final post = await getPostById(postId);
+
+        // Update likes count based on the action
+        final updatedLikesCount = isLiked ? post.likes + 1 : post.likes - 1;
+
+        // Prepare data for API
+        final updatedPostData = {
+          'likesCount': updatedLikesCount >= 0 ? updatedLikesCount : 0,
+          'isLiked': isLiked,
+        };
+
+        final response = await http.patch(
+          Uri.parse('$baseUrl/posts/$postId'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(updatedPostData),
+        );
+
+        if (response.statusCode == 200) {
+          final responseData = jsonDecode(response.body);
+          return Post.fromJson(responseData);
+        } else {
+          throw FeedException('Failed to update like status: ${response.statusCode}');
+        }
       }
     } catch (e) {
       if (e is FeedException) rethrow;
-      throw FeedException('Error liking post: $e');
+      throw FeedException('Error toggling like: $e');
     }
   }
 
   /// Get user profile for a post
   Future<UserProfile> getUserForPost(String userId) async {
     try {
-      if (ApiConfig.useMockData) {
+      if (useMockData) { // Use the class member variable
         // Check users collection
         final userMatch = MockData.users.where((u) => u['id'] == userId).toList();
         if (userMatch.isNotEmpty) {
@@ -186,13 +258,200 @@ class FeedService {
             return UserProfile.fromJson(stylistData);
           } else {
             throw FeedException(
-                'Failed to get user for post: ${response.statusCode}');
+                'Failed to get user for post: ${response.statusCode}',);
           }
         }
       }
     } catch (e) {
       if (e is FeedException) rethrow;
       throw FeedException('Error getting user for post: $e');
+    }
+  }
+
+  /// Get comments for a post
+  Future<List<Comment>> getCommentsForPost(String postId) async {
+    try {
+      if (useMockData) { // Use the class member variable
+        // Use mock data
+        final comments = MockData.comments
+            .where((comment) => comment['postId'] == postId)
+            .map((data) => Comment(
+                  commentId: data['id'],
+                  userId: data['userId'],
+                  text: data['content'],
+                  timestamp: DateTime.parse(data['createdAt']),
+                ),)
+            .toList();
+
+        // Sort by timestamp (newest first)
+        comments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+        return comments;
+      } else {
+        final response = await http.get(
+          Uri.parse('$baseUrl/comments?postId=$postId'),
+        );
+
+        if (response.statusCode == 200) {
+          final List<dynamic> commentsData = jsonDecode(response.body);
+          final comments = commentsData
+              .map((data) => Comment(
+                    commentId: data['id'],
+                    userId: data['userId'],
+                    text: data['content'],
+                    timestamp: DateTime.parse(data['createdAt']),
+                  ),)
+              .toList();
+
+          // Sort by timestamp (newest first)
+          comments.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+
+          return comments;
+        } else {
+          throw FeedException(
+              'Failed to get comments: ${response.statusCode}',);
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error getting comments: $e');
+    }
+  }
+
+  /// Add a comment to a post
+  Future<Comment> addComment({
+    required String postId,
+    required String userId,
+    required String text,
+  }) async {
+    try {
+      final commentData = {
+        'id': 'comment${DateTime.now().millisecondsSinceEpoch}',
+        'postId': postId,
+        'userId': userId,
+        'content': text,
+        'likesCount': 0,
+        'createdAt': DateTime.now().toIso8601String(),
+      };
+
+      if (useMockData) { // Use the class member variable
+        // Add to mock data
+        MockData.comments.add(commentData);
+
+        // Update post comment count
+        final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+        if (postIndex != -1) {
+          MockData.posts[postIndex]['comments'] =
+              (MockData.posts[postIndex]['comments'] as int) + 1;
+        }
+
+        // Simulate API delay
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        return Comment(
+          commentId: commentData['id'] as String,
+          userId: commentData['userId'] as String,
+          text: commentData['content'] as String,
+          timestamp: DateTime.parse(commentData['createdAt'] as String),
+        );
+      } else {
+        final response = await http.post(
+          Uri.parse('$baseUrl/comments'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode(commentData),
+        );
+
+        if (response.statusCode == 201) {
+          final createdCommentData = jsonDecode(response.body);
+
+          // Update post comment count
+          await http.patch(
+            Uri.parse('$baseUrl/posts/$postId'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'comments': await _getUpdatedCommentCount(postId),
+            }),
+          );
+
+          return Comment(
+            commentId: createdCommentData['id'],
+            userId: createdCommentData['userId'],
+            text: createdCommentData['content'],
+            timestamp: DateTime.parse(createdCommentData['createdAt']),
+          );
+        } else {
+          throw FeedException('Failed to add comment: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error adding comment: $e');
+    }
+  }
+
+  /// Delete a comment
+  Future<bool> deleteComment(String commentId, String postId) async {
+    try {
+      if (useMockData) { // Use the class member variable
+        // Remove from mock data
+        final commentIndex = MockData.comments.indexWhere((c) => c['id'] == commentId);
+        if (commentIndex != -1) {
+          MockData.comments.removeAt(commentIndex);
+
+          // Update post comment count
+          final postIndex = MockData.posts.indexWhere((p) => p['id'] == postId);
+          if (postIndex != -1) {
+            final currentCount = MockData.posts[postIndex]['commentsCount'] as int;
+            MockData.posts[postIndex]['commentsCount'] = currentCount > 0 ? currentCount - 1 : 0;
+          }
+
+          // Simulate API delay
+          await Future.delayed(const Duration(milliseconds: 300));
+
+          return true;
+        }
+        return false;
+      } else {
+        final response = await http.delete(
+          Uri.parse('$baseUrl/comments/$commentId'),
+        );
+
+        if (response.statusCode == 200) {
+          // Update post comment count
+          await http.patch(
+            Uri.parse('$baseUrl/posts/$postId'),
+            headers: {'Content-Type': 'application/json'},
+            body: jsonEncode({
+              'commentsCount': await _getUpdatedCommentCount(postId),
+            }),
+          );
+
+          return true;
+        } else {
+          throw FeedException('Failed to delete comment: ${response.statusCode}');
+        }
+      }
+    } catch (e) {
+      if (e is FeedException) rethrow;
+      throw FeedException('Error deleting comment: $e');
+    }
+  }
+
+  /// Get updated comment count for a post
+  Future<int> _getUpdatedCommentCount(String postId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/comments?postId=$postId'),
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> comments = jsonDecode(response.body);
+        return comments.length;
+      } else {
+        return 0;
+      }
+    } catch (e) {
+      return 0;
     }
   }
 }

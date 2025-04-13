@@ -1,0 +1,14 @@
+feat(ui): Add Rewards Hub to bottom navigation
+
+This commit adds the Rewards Hub to the bottom navigation bar and fixes
+overflow issues in the UserStatusCard.
+
+Key changes:
+- Added Rewards Hub navigation item to the bottom navigation bar
+- Fixed overflow issues in the UserStatusCard by setting mainAxisSize to min
+- Replaced the Alerts tab with Rewards tab for better user experience
+
+This change makes the Rewards Hub more accessible and aligns with our goal
+of creating a more immersive, game-like experience throughout the app.
+
+Related: #dashboard-ui #navigation

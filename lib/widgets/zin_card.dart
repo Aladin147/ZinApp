@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// Card variants following the ZinApp V2 design system
 enum ZinCardVariant {

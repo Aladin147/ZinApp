@@ -1,0 +1,24 @@
+feat(ui): Implement animations and custom page transitions
+
+This commit implements a comprehensive animation system and custom page 
+transitions to enhance the immersive, game-like experience of the app.
+
+Key changes:
+- Created a modular animation system:
+  - AppAnimations: Standardized durations and curves
+  - AnimationBuilders: Reusable animation patterns
+  - Specialized animation widgets (PressableAnimationWidget, PulseAnimationWidget, etc.)
+- Implemented custom page transitions:
+  - Basic transitions (fade, slide, scale)
+  - Combined transitions (fade+slide, fade+scale)
+  - Game-like transitions (portal, deal card)
+- Integrated with the router system:
+  - Created CustomPageRoute for direct navigation
+  - Added CustomGoRouter for GoRouter integration
+  - Applied different transition types to different routes
+
+This implementation addresses the "Missing Page Transitions" known issue
+and enhances the overall user experience with subtle micro-animations and
+dramatic page transitions that make the app feel more responsive and engaging.
+
+Related: #animations #gamification

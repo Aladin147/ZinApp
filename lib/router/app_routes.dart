@@ -11,8 +11,18 @@ abstract class AppRoutes {
   static const String stylistDetail = '/stylists/:id';
   static const String booking = '/booking';
   static const String bookingConfirmation = '/booking/confirmation';
+  static const String bookingHistory = '/booking/history';
   static const String messages = '/messages';
   static const String messageDetail = '/messages/:id';
+
+  // Rewards routes
+  static const String rewardsHub = '/rewards';
+  static const String dailyRewards = '/rewards/daily';
+  static const String challenges = '/rewards/challenges';
+  static const String tokenShop = '/rewards/shop';
+
+  // Auth routes
+  static const String forgotPassword = '/forgot-password';
 
   // Development routes
   static const String showcase = '/showcase'; // Component showcase

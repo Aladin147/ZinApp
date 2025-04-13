@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/ui/components/zin_button.dart' as consolidated;
 
 /// Button sizes for the ZinButton widget
 enum ZinButtonSize {
   /// Small button size
   small,
-  
+
   /// Medium button size (default)
   medium,
-  
+
   /// Large button size
   large,
 }
@@ -17,40 +18,43 @@ enum ZinButtonSize {
 enum ZinButtonVariant {
   /// Primary button variant (default)
   primary,
-  
+
   /// Secondary button variant
   secondary,
-  
+
   /// Outline button variant
   outline,
-  
+
   /// Text button variant
   text,
 }
 
 /// A custom button widget for the ZinApp application
+///
+/// @deprecated Use [consolidated.ZinButton] from 'package:zinapp_v2/ui/components/zin_button.dart' instead.
+/// This implementation will be removed in a future release.
 class ZinButton extends StatelessWidget {
   /// Function called when the button is pressed
   final VoidCallback? onPressed;
-  
+
   /// Text displayed on the button
   final String text;
-  
+
   /// Icon displayed before the text
   final IconData? icon;
-  
+
   /// Size of the button
   final ZinButtonSize size;
-  
+
   /// Variant of the button
   final ZinButtonVariant variant;
-  
+
   /// Whether the button is in a loading state
   final bool isLoading;
-  
+
   /// Whether the button takes the full width of its parent
   final bool fullWidth;
-  
+
   /// Border radius of the button
   final double borderRadius;
 
@@ -69,45 +73,46 @@ class ZinButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     // Determine button styling based on variant
     Color backgroundColor;
     Color foregroundColor;
-    Color? overlayColor;
+    // Overlay color is not used directly in ElevatedButton.styleFrom
+    // but we keep it for documentation purposes
     BorderSide? side;
-    
+
     switch (variant) {
       case ZinButtonVariant.primary:
         backgroundColor = AppColors.primaryHighlight;
         foregroundColor = Colors.black;
-        overlayColor = Colors.white.withOpacity(0.2);
+        // overlayColor would be Colors.white.withAlpha(0.2);
         side = null;
         break;
       case ZinButtonVariant.secondary:
         backgroundColor = theme.colorScheme.secondary;
         foregroundColor = theme.colorScheme.onSecondary;
-        overlayColor = null;
+        // No overlay color needed
         side = null;
         break;
       case ZinButtonVariant.outline:
         backgroundColor = Colors.transparent;
         foregroundColor = AppColors.primaryHighlight;
-        overlayColor = AppColors.primaryHighlight.withOpacity(0.1);
+        // overlayColor would be AppColors.primaryHighlight.withAlpha(0.1);
         side = const BorderSide(color: AppColors.primaryHighlight);
         break;
       case ZinButtonVariant.text:
         backgroundColor = Colors.transparent;
         foregroundColor = AppColors.primaryHighlight;
-        overlayColor = AppColors.primaryHighlight.withOpacity(0.1);
+        // overlayColor would be AppColors.primaryHighlight.withAlpha(0.1);
         side = null;
         break;
     }
-    
+
     // Determine padding based on size
     EdgeInsetsGeometry padding;
     double? height;
     TextStyle? textStyle;
-    
+
     switch (size) {
       case ZinButtonSize.small:
         padding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8);
@@ -134,10 +139,10 @@ class ZinButton extends StatelessWidget {
         );
         break;
     }
-    
+
     // Build the button content
     Widget buttonContent;
-    
+
     if (isLoading) {
       // Loading indicator
       buttonContent = SizedBox(
@@ -162,14 +167,14 @@ class ZinButton extends StatelessWidget {
       // Text only
       buttonContent = Text(text, style: textStyle);
     }
-    
+
     // Build the button
     final button = ElevatedButton(
       onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor,
         foregroundColor: foregroundColor,
-        disabledBackgroundColor: theme.colorScheme.surfaceVariant,
+        disabledBackgroundColor: theme.colorScheme.surfaceContainerHighest,
         disabledForegroundColor: theme.colorScheme.onSurfaceVariant,
         padding: padding,
         elevation: variant == ZinButtonVariant.text ? 0 : null,
@@ -182,7 +187,7 @@ class ZinButton extends StatelessWidget {
       ),
       child: buttonContent,
     );
-    
+
     // Apply full width if needed
     return fullWidth
         ? SizedBox(width: double.infinity, child: button)

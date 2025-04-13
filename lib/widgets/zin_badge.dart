@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 /// Badge variants following the ZinApp V2 design system
 enum ZinBadgeVariant {
   /// Primary badge with highlight color
   primary,
-  
+
   /// Secondary badge with cool blue color
   secondary,
-  
+
   /// Success badge with jade color
   success,
-  
+
   /// Warning badge with amber color
   warning,
-  
+
   /// Error badge with coral color
   error,
-  
+
   /// Neutral badge with gray color
   neutral
 }
@@ -26,10 +26,10 @@ enum ZinBadgeVariant {
 enum ZinBadgeSize {
   /// Small badge (16px height)
   small,
-  
+
   /// Medium badge (20px height)
   medium,
-  
+
   /// Large badge (24px height)
   large
 }
@@ -55,31 +55,31 @@ enum ZinBadgeSize {
 class ZinBadge extends StatelessWidget {
   /// Text to display in the badge
   final String? label;
-  
+
   /// Count to display in the badge (alternative to label)
   final int? count;
-  
+
   /// Maximum count to display before showing "+"
   final int maxCount;
-  
+
   /// Icon to display in the badge
   final IconData? icon;
-  
+
   /// Badge style variant
   final ZinBadgeVariant variant;
-  
+
   /// Badge size
   final ZinBadgeSize size;
-  
+
   /// Whether to use a filled style (solid background)
   final bool filled;
-  
+
   /// Optional custom background color (overrides variant)
   final Color? backgroundColor;
-  
+
   /// Optional custom text/icon color (overrides variant)
   final Color? foregroundColor;
-  
+
   /// Optional callback when the badge is tapped
   final VoidCallback? onTap;
 
@@ -95,7 +95,7 @@ class ZinBadge extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.onTap,
-  }) : assert(label != null || count != null || icon != null, 
+  }) : assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates a primary badge with highlight color
@@ -111,7 +111,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.primary,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates a secondary badge with cool blue color
@@ -127,7 +127,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.secondary,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates a success badge with jade color
@@ -143,7 +143,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.success,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates a warning badge with amber color
@@ -159,7 +159,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.warning,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates an error badge with coral color
@@ -175,7 +175,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.error,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   /// Creates a neutral badge with gray color
@@ -191,7 +191,7 @@ class ZinBadge extends StatelessWidget {
     this.foregroundColor,
     this.onTap,
   }) : variant = ZinBadgeVariant.neutral,
-       assert(label != null || count != null || icon != null, 
+       assert(label != null || count != null || icon != null,
             'At least one of label, count, or icon must be provided');
 
   @override
@@ -203,7 +203,7 @@ class ZinBadge extends StatelessWidget {
     final double fontSize = _getFontSize(size);
     final double iconSize = _getIconSize(size);
     final double horizontalPadding = _getHorizontalPadding(size);
-    
+
     // Determine badge content
     Widget content;
     if (count != null) {
@@ -256,7 +256,7 @@ class ZinBadge extends StatelessWidget {
         ),
       );
     }
-    
+
     // Build the badge
     Widget badge = Container(
       height: height,
@@ -276,7 +276,7 @@ class ZinBadge extends StatelessWidget {
       ),
       child: Center(child: content),
     );
-    
+
     // Add tap behavior if needed
     if (onTap != null) {
       badge = GestureDetector(
@@ -284,16 +284,16 @@ class ZinBadge extends StatelessWidget {
         child: badge,
       );
     }
-    
+
     return badge;
   }
-  
+
   /// Gets the appropriate background color based on variant and style
   Color _getBackgroundColor(ZinBadgeVariant variant, bool filled) {
     if (!filled) {
       return Colors.transparent;
     }
-    
+
     switch (variant) {
       case ZinBadgeVariant.primary:
         return AppColors.primaryHighlight;
@@ -309,7 +309,7 @@ class ZinBadge extends StatelessWidget {
         return AppColors.textDisabled;
     }
   }
-  
+
   /// Gets the appropriate foreground color based on variant and style
   Color _getForegroundColor(ZinBadgeVariant variant, bool filled) {
     if (!filled) {
@@ -328,7 +328,7 @@ class ZinBadge extends StatelessWidget {
           return AppColors.textDisabled;
       }
     }
-    
+
     // For filled badges, use appropriate text color
     switch (variant) {
       case ZinBadgeVariant.primary:
@@ -339,7 +339,7 @@ class ZinBadge extends StatelessWidget {
         return AppColors.textInverted;
     }
   }
-  
+
   /// Gets the appropriate border color for outlined badges
   Color _getBorderColor(ZinBadgeVariant variant) {
     switch (variant) {
@@ -357,7 +357,7 @@ class ZinBadge extends StatelessWidget {
         return AppColors.textDisabled;
     }
   }
-  
+
   /// Gets the appropriate height based on size
   double _getHeight(ZinBadgeSize size) {
     switch (size) {
@@ -369,7 +369,7 @@ class ZinBadge extends StatelessWidget {
         return 24.0;
     }
   }
-  
+
   /// Gets the appropriate font size based on size
   double _getFontSize(ZinBadgeSize size) {
     switch (size) {
@@ -381,7 +381,7 @@ class ZinBadge extends StatelessWidget {
         return 14.0;
     }
   }
-  
+
   /// Gets the appropriate icon size based on size
   double _getIconSize(ZinBadgeSize size) {
     switch (size) {
@@ -393,7 +393,7 @@ class ZinBadge extends StatelessWidget {
         return 14.0;
     }
   }
-  
+
   /// Gets the appropriate horizontal padding based on size
   double _getHorizontalPadding(ZinBadgeSize size) {
     switch (size) {

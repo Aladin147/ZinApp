@@ -1,0 +1,16 @@
+fix(ui): Fix parameter names in Rewards Hub dashboard cards
+
+This commit fixes parameter name issues in the Rewards Hub dashboard cards.
+The ExpandableDashboardCard widget uses 'accentColor' instead of 'iconColor'
+and 'onViewAllTap' instead of 'onTap'.
+
+Key changes:
+- Updated DailyRewardsCard to use correct parameter names
+- Updated ChallengesCard to use correct parameter names
+- Updated TokenShopCard to use correct parameter names
+- Updated AchievementsCard to use correct parameter names
+
+This fix ensures that the Rewards Hub dashboard cards render correctly
+and maintain the consistent design language across the app.
+
+Related: #dashboard-ui #bug-fix

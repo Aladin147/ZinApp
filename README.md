@@ -42,40 +42,74 @@ ZinApp V2 is a complete redesign of the original ZinApp, built with Flutter to p
    flutter run
    ```
 
-## Project Structure
+## Architecture
 
-The project follows a feature-based organization with clean architecture principles as documented in `docs/V2_FILE_STRUCTURE.md`:
+ZinApp V2 uses Riverpod for state management, following a feature-based organization with clean architecture principles.
+
+### State Management
+
+The application uses Riverpod for state management with the following patterns:
+
+- **Immutable State Classes**: All state is represented by immutable classes with copyWith methods
+- **Provider Organization**: Providers are organized by feature and type
+- **Code Generation**: Uses riverpod_annotation for code generation
+- **Separation of Concerns**: Services are separated from state management
+
+For more details, see `docs/specs/riverpod-architecture.md`.
+
+### Project Structure
+
+The project structure is documented in `docs/V2_FILE_STRUCTURE.md`:
 
 ```
 lib/
-├── features/             # Feature modules
-│   ├── auth/             # Authentication feature
-│   │   ├── providers/    # Auth-specific providers
-│   │   ├── screens/      # Auth screens (login, register)
-│   │   └── widgets/      # Auth-specific widgets
-│   ├── feed/             # Social feed feature
-│   ├── home/             # Home screen and dashboard
-│   ├── profile/          # User profile feature
-│   ├── stylist/          # Stylist-related features
-│   └── showcase/         # Component showcase (development only)
-├── models/               # Data models
-├── services/             # Application services
-├── theme/                # Theme configuration
-├── widgets/              # Reusable UI components
-├── constants/            # Application constants
-├── router.dart           # Navigation/routing configuration
-├── providers.dart        # Provider setup
-└── main.dart             # Application entry point
+├── features/                # Feature modules
+│   ├── auth/                # Authentication feature
+│   │   ├── providers/       # Auth-specific providers
+│   │   │   └── riverpod/    # Riverpod implementations
+│   │   ├── screens/         # Auth screens (login, register)
+│   │   │   └── riverpod/    # Riverpod-based screens
+│   │   └── widgets/         # Auth-specific widgets
+│   │       └── riverpod/    # Riverpod-based widgets
+│   ├── feed/                # Social feed feature
+│   ├── home/                # Home screen and dashboard
+│   ├── profile/             # User profile feature
+│   ├── stylist/             # Stylist-related features
+│   └── showcase/            # Component showcase (development only)
+├── models/                  # Data models
+├── services/                # Application services
+├── theme/                   # Theme configuration
+├── widgets/                 # Reusable UI components
+├── constants/               # Application constants
+├── router/                  # Navigation/routing configuration
+│   ├── app_routes.dart      # Route definitions
+│   └── riverpod_router.dart # Riverpod-based router
+└── main.dart                # Application entry point
 ```
+
+## Dependencies
+
+ZinApp V2 uses the following key dependencies:
+
+- **flutter_riverpod**: State management with Riverpod
+- **riverpod_annotation**: Code generation for Riverpod
+- **go_router**: Navigation and routing
+- **flutter_secure_storage**: Secure storage for sensitive data
+- **shared_preferences**: Local storage for app preferences
+- **sqflite**: Local database for offline data
+
+See `pubspec.yaml` for the complete list of dependencies.
 
 ### Recent Updates
 
-- Refactored project structure to align with the documented file structure guidelines
-- Reorganized providers into feature-specific directories
-- Moved models and services to root-level directories
-- Updated import paths throughout the codebase
+- Migrated from Provider to Riverpod for state management
+- Implemented immutable state classes for all providers
+- Created Riverpod-based versions of all screens and widgets
+- Removed Provider package and all legacy Provider code
+- Updated router to use Riverpod for navigation state
+- Fixed deprecation warnings and code quality issues
 
-See `docs/REFACTORING_PROGRESS.md` for detailed information on the refactoring progress.
+See `docs/RIVERPOD_MIGRATION_COMPLETE.md` for detailed information on the migration process.
 
 ## Design System
 
@@ -99,6 +133,10 @@ Comprehensive documentation is available in the `docs/` directory:
 
 - **Design System**: Color system, typography, component principles
 - **Architecture**: Structure mapping, clean architecture
+- **State Management**: Riverpod architecture and patterns
+- **Migration**: Provider to Riverpod migration process and decisions
+- **ADRs**: Architectural Decision Records, including Riverpod migration
+- **Journal**: Development journal entries documenting progress
 - **Development Standards**: Code style guide, PR template
 - **Components**: Detailed documentation for each component
 

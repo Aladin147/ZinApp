@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:zinapp_v2/features/auth/providers/auth_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
+import 'package:zinapp_v2/models/auth_state.dart'; // Import AuthState
+import 'package:zinapp_v2/ui/components/zin_button.dart'; // Using the new button
+import 'package:zinapp_v2/ui/components/zin_text_field.dart'; // Assuming a similar text field exists or will be created
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
-class LoginScreen extends StatefulWidget {
-  final VoidCallback onRegisterTap;
-
-  const LoginScreen({
-    Key? key,
-    required this.onRegisterTap,
-  }) : super(key: key);
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _obscurePassword = true;
+  bool _isLoading = false;
+  String? _errorMessage;
 
   @override
   void dispose() {
@@ -30,197 +31,145 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState?.validate() ?? false) {
-      final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final success = await authProvider.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
 
-      if (!success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(authProvider.error ?? 'Login failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
+      try {
+        // Call the login method from the AuthProvider
+        // We'll implement the actual repository/datasource call later
+        final success = await ref.read(authProvider.notifier).login(
+              email: _emailController.text.trim(), // Use named parameter
+              password: _passwordController.text.trim(), // Use named parameter
+            );
+
+        if (!success && mounted) {
+           // Read the error from the current state after the failed attempt
+           final currentError = ref.read(authProvider).error;
+           setState(() {
+             _errorMessage = currentError ?? 'Login failed. Please check credentials.';
+           });
+        }
+        // Navigation will be handled by the Auth state listener in the root widget
+      } catch (e) {
+         if (mounted) {
+           setState(() {
+             _errorMessage = 'An error occurred: ${e.toString()}';
+           });
+         }
+      } finally {
+         if (mounted) {
+           setState(() {
+             _isLoading = false;
+           });
+         }
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
     final theme = Theme.of(context);
+    // Listen for auth errors from the provider
+    ref.listen<AuthState>(authProvider, (previous, next) {
+      // Check if the new state has an error and it's different from the previous one
+      if (next.error != null && previous?.error != next.error) {
+        if (mounted) {
+          setState(() {
+            _errorMessage = next.error; // Use state.error
+            _isLoading = false; // Stop loading on error
+          });
+        }
+      }
+    });
+
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Logo
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 48.0),
-                    child: Image.asset(
-                      'assets/logos/png/zinapp_logo.png',
-                      height: 80,
-                    ),
+      backgroundColor: AppColors.baseDark,
+      appBar: AppBar(
+        title: const Text('Login'),
+        backgroundColor: AppColors.baseDarkAlt,
+        elevation: 0,
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // TODO: Add ZinApp Logo here later
+                Text(
+                  'Welcome Back!',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Login to continue your style journey.',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 40),
 
-                  // Title
+                // Using ZinTextField
+                 ZinTextField.dark( // Use ZinTextField.dark variant
+                   controller: _emailController,
+                   labelText: 'Email',
+                   prefixIcon: Icons.email_outlined, // Pass IconData directly
+                   keyboardType: TextInputType.emailAddress,
+                   // Validator removed - handle in Form or _login if needed
+                 ),
+                // ZinTextField(
+                //   controller: _emailController,
+                //   labelText: 'Email',
+                const SizedBox(height: 16),
+                 ZinTextField.dark( // Use ZinTextField.dark variant
+                   controller: _passwordController,
+                   labelText: 'Password',
+                   prefixIcon: Icons.lock_outline, // Pass IconData directly
+                   obscureText: true,
+                   // Validator removed - handle in Form or _login if needed
+                 ),
+                // ZinTextField(
+                //   controller: _passwordController,
+                //   labelText: 'Password',
+                const SizedBox(height: 24),
+
+                if (_errorMessage != null) ...[
                   Text(
-                    'Welcome Back',
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    _errorMessage!,
+                    style: const TextStyle(color: Colors.redAccent),
                     textAlign: TextAlign.center,
                   ),
-
-                  const SizedBox(height: 8),
-
-                  // Subtitle
-                  Text(
-                    'Sign in to continue',
-                    style: theme.textTheme.bodyLarge?.copyWith(
-                      color: theme.colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  const SizedBox(height: 32),
-
-                  // Email field
-                  TextFormField(
-                    controller: _emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      labelText: 'Email',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your email';
-                      }
-                      if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
-                          .hasMatch(value)) {
-                        return 'Please enter a valid email';
-                      }
-                      return null;
-                    },
-                  ),
-
                   const SizedBox(height: 16),
-
-                  // Password field
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: _obscurePassword,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_outlined
-                              : Icons.visibility_off_outlined,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _obscurePassword = !_obscurePassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      if (value.length < 6) {
-                        return 'Password must be at least 6 characters';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // Login button
-                  ElevatedButton(
-                    onPressed: authProvider.isLoading ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryHighlight,
-                      foregroundColor: AppColors.baseDark,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: authProvider.isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.baseDark,
-                            ),
-                          )
-                        : const Text(
-                            'LOGIN',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Register link
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Don\'t have an account?',
-                        style: theme.textTheme.bodyMedium,
-                      ),
-                      TextButton(
-                        onPressed: widget.onRegisterTap,
-                        child: Text(
-                          'Register',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: AppColors.primaryHighlight,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Error message
-                  if (authProvider.error != null && !authProvider.isLoading)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16),
-                      child: Text(
-                        authProvider.error!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                 ],
-              ),
+
+                ZinButton(
+                  label: 'Login',
+                  onPressed: _isLoading ? null : _login, // Disable button when loading
+                  // isLoading parameter removed as it doesn't exist on ZinButton
+                  fullWidth: true,
+                ),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    // TODO: Navigate to registration screen
+                  },
+                  child: Text(
+                    'Don\'t have an account? Register',
+                    style: TextStyle(color: AppColors.primaryHighlight),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

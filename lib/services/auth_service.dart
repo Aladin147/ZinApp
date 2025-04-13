@@ -191,16 +191,23 @@ class AuthService {
 
   /// Check if user is logged in
   Future<UserProfile?> getCurrentUser() async {
+    print('AuthService: Checking for current user');
     try {
       final userId = await storage.read(key: 'user_id');
+      print('AuthService: User ID from storage: ${userId ?? 'null'}');
       if (userId == null) return null;
 
       final userJson = await storage.read(key: 'user_data');
+      print('AuthService: User data from storage: ${userJson != null ? 'Found' : 'null'}');
       if (userJson == null) return null;
 
+      print('AuthService: Parsing user data');
       final userData = jsonDecode(userJson);
-      return UserProfile.fromJson(userData);
+      final user = UserProfile.fromJson(userData);
+      print('AuthService: User parsed successfully: ${user.username}');
+      return user;
     } catch (e) {
+      print('AuthService: Error getting current user: $e');
       return null;
     }
   }

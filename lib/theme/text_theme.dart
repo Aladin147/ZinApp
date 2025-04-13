@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 
 // Define font weights (Matching V2 Brand Identity)
 const FontWeight regularWeight = FontWeight.w400; // Regular

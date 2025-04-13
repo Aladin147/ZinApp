@@ -7,7 +7,7 @@ part of 'user_profile_provider.dart';
 // **************************************************************************
 
 String _$userProfileServiceHash() =>
-    r'a1eee342eb29dfcf297ca814f73956ad6d38e29b';
+    r'3296e7ec05eb86d15a7062b9dd5921bfe53267da';
 
 /// Provider for the UserProfileService
 ///
@@ -28,24 +28,25 @@ final userProfileServiceProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef UserProfileServiceRef = AutoDisposeProviderRef<UserProfileService>;
-String _$userProfileHash() => r'a98584ef0fc1b2039295cc0087067f0a2bdf7c96';
+String _$userProfileProviderHash() =>
+    r'19ac695def662438188bb6121d6205c8bd1d9964';
 
 /// Provider for user profile state
 ///
-/// Copied from [UserProfile].
-@ProviderFor(UserProfile)
-final userProfileProvider =
-    AutoDisposeNotifierProvider<UserProfile, UserProfileState>.internal(
-      UserProfile.new,
-      name: r'userProfileProvider',
+/// Copied from [UserProfileProvider].
+@ProviderFor(UserProfileProvider)
+final userProfileProviderProvider =
+    AutoDisposeNotifierProvider<UserProfileProvider, UserProfileState>.internal(
+      UserProfileProvider.new,
+      name: r'userProfileProviderProvider',
       debugGetCreateSourceHash:
           const bool.fromEnvironment('dart.vm.product')
               ? null
-              : _$userProfileHash,
+              : _$userProfileProviderHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$UserProfile = AutoDisposeNotifier<UserProfileState>;
+typedef _$UserProfileProvider = AutoDisposeNotifier<UserProfileState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

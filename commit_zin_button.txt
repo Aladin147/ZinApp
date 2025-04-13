@@ -1,0 +1,14 @@
+feat(ui): implement ZinButton component for new UI layer
+
+# Component Implementation
+- Create ZinButton as first component in the new UI layer
+- Implement multiple variants (primary, secondary, reward)
+- Add animation for interactive feedback
+- Support icons and full-width options
+
+# Component Showcase
+- Create dedicated showcase screen for testing UI components
+- Implement examples of all button variants and states
+- Add simplified app entry point for component testing
+
+This is the first UI component implementation following the Experience Transformation Roadmap, demonstrating the separation of UI components from business logic as part of our three-layer architecture.

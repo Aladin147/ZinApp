@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/app_button.dart';
 import 'package:zinapp_v2/widgets/zin_logo.dart';
 
@@ -165,11 +165,11 @@ class _ZinSplashScreenState extends State<ZinSplashScreen> with TickerProviderSt
                 padding: const EdgeInsets.only(bottom: 48.0),
                 child: FadeTransition(
                   opacity: _fadeInAnimation,
-                  child: ZinButton(
+                  child: AppButton( // Use AppButton
                     label: 'Get Started',
                     onPressed: widget.onGetStarted,
-                    variant: ZinButtonVariant.primary,
-                    size: ZinButtonSize.large,
+                    variant: AppButtonVariant.primary, // Use AppButtonVariant
+                    size: AppButtonSize.large, // Use AppButtonSize
                     isFullWidth: false,
                   ),
                 ),

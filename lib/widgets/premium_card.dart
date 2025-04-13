@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/constants/app_animations.dart';
 import 'package:zinapp_v2/widgets/zin_background.dart';
 

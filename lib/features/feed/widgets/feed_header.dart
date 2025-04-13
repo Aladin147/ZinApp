@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:zinapp_v2/app/router.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/models/user_profile.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 

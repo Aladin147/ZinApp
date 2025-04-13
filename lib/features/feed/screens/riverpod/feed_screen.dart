@@ -7,25 +7,46 @@ import 'package:zinapp_v2/models/post.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
 
 class RiverpodFeedScreen extends ConsumerStatefulWidget {
-  const RiverpodFeedScreen({Key? key}) : super(key: key);
+  const RiverpodFeedScreen({super.key});
 
   @override
   ConsumerState<RiverpodFeedScreen> createState() => _RiverpodFeedScreenState();
 }
 
 class _RiverpodFeedScreenState extends ConsumerState<RiverpodFeedScreen> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     // Load posts when screen initializes
     Future.microtask(() => ref.read(feedProvider.notifier).loadPosts());
+
+    // Add scroll listener for pagination
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      // Load more posts when we're near the bottom
+      final feedState = ref.read(feedProvider);
+      if (!feedState.isLoading && feedState.hasMorePages) {
+        ref.read(feedProvider.notifier).loadMorePosts();
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final feedState = ref.watch(feedProvider);
     final authState = ref.watch(authProvider);
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -73,20 +94,20 @@ class _RiverpodFeedScreenState extends ConsumerState<RiverpodFeedScreen> {
           Icon(
             Icons.feed_outlined,
             size: 64,
-            color: theme.colorScheme.onSurface.withOpacity(0.3),
+            color: theme.colorScheme.onSurface.withOpacity(0.3), // TODO: Replace with withValues() when available
           ),
           const SizedBox(height: 16),
           Text(
             'No posts yet',
             style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.7),
+              color: theme.colorScheme.onSurface.withOpacity(0.7), // TODO: Replace with withValues() when available
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Be the first to share something!',
             style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface.withOpacity(0.5),
+              color: theme.colorScheme.onSurface.withOpacity(0.5), // TODO: Replace with withValues() when available
             ),
             textAlign: TextAlign.center,
           ),
@@ -96,20 +117,35 @@ class _RiverpodFeedScreenState extends ConsumerState<RiverpodFeedScreen> {
   }
 
   Widget _buildPostsList(BuildContext context, List<Post> posts) {
+    final feedState = ref.watch(feedProvider);
+
     return ListView.builder(
+      controller: _scrollController,
       padding: const EdgeInsets.all(8),
       itemCount: posts.length + 1, // +1 for loading indicator
       itemBuilder: (context, index) {
         // Show loading indicator at the bottom when loading more posts
         if (index == posts.length) {
-          return ref.watch(feedProvider).isLoading
+          return feedState.isLoading
               ? const Center(
                   child: Padding(
                     padding: EdgeInsets.all(16.0),
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : const SizedBox.shrink();
+              : feedState.hasMorePages
+                  ? const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text('Scroll to load more'),
+                      ),
+                    )
+                  : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(
+                        child: Text('No more posts'),
+                      ),
+                    );
         }
 
         final post = posts[index];

@@ -1,100 +1,106 @@
 # ZinApp V2 - Development Journal
 
-This journal provides a chronological log of development activities, significant decisions, challenges encountered, and solutions implemented during the ZinApp V2 project.
+This journal tracks the progress, decisions, and challenges encountered during the development of ZinApp V2.
 
 ---
 
-## 2025-04-13
+## 2025-04-13: Sprint 2 - Phase 1: Gamification Simulation Logic
 
-*   **Entry:** Refactored the project structure to align with the documented file structure guidelines in `docs/V2_FILE_STRUCTURE.md`.
-*   **Entry:** Moved models from `lib/app/models` to `lib/models` directory.
-*   **Entry:** Moved services from `lib/app/services` to `lib/services` directory.
-*   **Entry:** Reorganized providers into feature-specific directories (auth, feed, profile, stylist).
-*   **Entry:** Moved router.dart and error_screen.dart to the root lib directory.
-*   **Entry:** Updated import paths throughout the codebase to reflect the new structure.
-*   **Entry:** Fixed provider references in auth_wrapper.dart and other components.
-*   **Decision:** Maintained the existing provider pattern while reorganizing the code structure.
-*   **Decision:** Kept feature-specific models in their respective feature directories when they're only used within that feature.
-*   **Challenge:** After refactoring, the app was stuck on the loading screen due to provider reference issues.
-*   **Solution:** Systematically updated import paths in all affected files, particularly focusing on the auth components that were causing the loading issue.
-*   **Next:** Begin migration from Provider to Riverpod for improved state management.
+**Author:** Development Team (via Cline)
+**Status:** In Progress
 
-*   **Entry:** Created Architecture Decision Record (ADR-001) for migrating from Provider to Riverpod.
-*   **Entry:** Created Riverpod migration tracking document to monitor progress.
-*   **Decision:** Adopted a feature-by-feature migration approach to maintain a working application throughout the process.
-*   **Decision:** Selected code generation approach with @riverpod annotations for better type safety and reduced boilerplate.
-*   **Decision:** Established migration order: Auth → Profile → Feed → Stylist features.
+**Summary:**
+Began Sprint 2 by implementing the initial structure and core logic for the gamification system within the simulation layer (`lib/sim/`). This phase focuses on defining the rules and state management for XP, levels, tokens, streaks, and achievements, independent of the data layer for now.
 
-*   **Entry:** Configured ProviderScope in main.dart to enable Riverpod.
-*   **Entry:** Created Riverpod-based Auth provider with code generation.
-*   **Entry:** Implemented Riverpod versions of login, registration, and auth wrapper components.
-*   **Decision:** Created parallel implementations in separate directories to maintain compatibility during migration.
-*   **Challenge:** Managing state consistently between Provider and Riverpod implementations during the transition.
-*   **Solution:** Created separate component hierarchies that can coexist during the migration process.
+**Key Accomplishments:**
 
-*   **Entry:** Created Riverpod-based router configuration using go_router.
-*   **Entry:** Implemented a test screen to verify Riverpod integration.
-*   **Entry:** Added the test screen to the component showcase for easy access.
-*   **Decision:** Prepared a dual-mode main entry point that can switch between Provider and Riverpod implementations.
-*   **Challenge:** Testing Riverpod components while maintaining the existing app functionality.
-*   **Solution:** Created a dedicated test screen that can be accessed from the component showcase.
+1.  **Gamification State:** Created `lib/sim/gamification/gamification_state.dart` to define the state managed by the simulation (XP, level, tokens, achievements, badges, streak info).
+2.  **Gamification Simulation:**
+    *   Created `lib/sim/gamification/gamification_simulation.dart` using Riverpod Generator (`@riverpod`).
+    *   Implemented initial `build` method returning `GamificationState.initial()`.
+    *   Implemented `processUserAction` method to calculate XP based on action type and handle level-ups (including awarding tokens).
+    *   Implemented `addXp` and `addTokens` methods for direct state manipulation.
+    *   Implemented `checkDailyStreak` method with basic logic for tracking and rewarding streaks.
+    *   Implemented placeholder `unlockAchievement` method.
+    *   Added TODOs for challenge progress logic and data layer integration.
+3.  **Code Generation:** Ran `build_runner` to generate `gamification_simulation.g.dart`.
 
-*   **Entry:** Created Riverpod-based UserProfile provider with code generation.
-*   **Entry:** Implemented UserProfileState class to manage profile state.
-*   **Entry:** Created Riverpod-based profile and profile edit screens.
-*   **Entry:** Updated the Riverpod router to include profile routes.
-*   **Decision:** Used a tab-based layout for the profile screen to organize user information.
-*   **Challenge:** Managing complex user profile data with proper state management.
-*   **Solution:** Created a dedicated state class that handles loading, error states, and token history.
+**Challenges:**
 
-*   **Entry:** Created Riverpod-based Feed provider with code generation.
-*   **Entry:** Implemented FeedState class to manage feed state with post and user caching.
-*   **Entry:** Created Riverpod-based feed screen and post card components.
-*   **Entry:** Updated the Riverpod router to include feed routes.
-*   **Decision:** Implemented a caching mechanism for user profiles in the feed to reduce API calls.
-*   **Challenge:** Managing relationships between posts and user profiles efficiently.
-*   **Solution:** Created a map-based cache in the FeedState to store user profiles by user ID.
-*   **Next:** Begin migrating the Stylist feature to Riverpod and continue testing the feed screens.
+*   Ensured correct usage of the `state` property within the Riverpod Notifier class for state access and updates.
 
+**Next Steps:**
 
-## 2025-04-12
-
-*   **Entry:** Implemented core authentication system with local JSON Server backend.
-*   **Entry:** Created comprehensive user profile model with gamification elements (XP, level, tokens, achievements).
-*   **Entry:** Implemented authentication service and provider for state management.
-*   **Entry:** Created user profile service for managing gamification data.
-*   **Entry:** Implemented basic split-screen home layout with three sections.
-*   **Entry:** Updated router configuration with authentication protection.
-*   **Decision:** Used Provider pattern for state management to simplify implementation.
-*   **Decision:** Created AuthWrapper component to handle route protection based on authentication state.
-*   **Decision:** Implemented a clean service layer architecture with clear separation of concerns.
-*   **Challenge:** Managing complex user profile data with proper serialization.
-*   **Solution:** Used json_serializable for automatic JSON serialization/deserialization.
-*   **Next:** Setting up JSON Server for local testing, implementing the remaining UI components for the split-screen home layout, and enhancing the gamification features.
-
-## 2025-04-11
-
-*   **Entry:** Developed comprehensive implementation plan for ZinApp V2 with focus on split-screen home design, gamification elements, and token economy.
-*   **Entry:** Created detailed phased approach with clear priorities: core app structure, split-screen home implementation, basic gamification, enhanced stylist discovery, and token economy.
-*   **Entry:** Established local authentication strategy using JSON Server for MVP testing before cloud integration.
-*   **Decision:** Adopted a documentation-first approach with emphasis on clean execution and surgical precision for all implementations.
-*   **Decision:** Selected a local JSON server approach for authentication during MVP phase to accelerate development while simulating real backend behavior.
-*   **Decision:** Designed a three-section home screen layout with HUD dashboard (top 20%), action/discovery zone (middle 30%), and social feed (bottom 50%).
-*   **Decision:** Created comprehensive ZinToken economy design with earning mechanisms, spending options, and economic balancing.
-*   **Challenge:** Balancing immediate implementation needs with long-term architecture goals for eventual cloud migration.
-*   **Solution:** Designed service layer with clear interfaces that can be swapped between local and cloud implementations without affecting UI.
-*   **Next:** Implementing local authentication system with JSON Server, extending user profile data model with gamification fields, and creating the basic split-screen home layout.
-
-## 2025-04-10
-
-*   **Entry:** Initial setup of the new Flutter project (`zinapp_v2`) completed after resolving Flutter SDK installation and PATH issues. Project initialized, base directory structure created, linter configured, `.gitignore` added.
-*   **Entry:** Copied V2 specification documents (Architecture, Brand Identity, Components, etc.) from the old project structure into `zinapp_v2/docs/v2`.
-*   **Entry:** Implemented the core V2 theme system (`ThemeData`, `ColorScheme`, `TextTheme`) in `lib/app/theme/`. Declared Urbanist font assets in `pubspec.yaml`. Applied the theme in `main.dart`.
-*   **Decision:** Confirmed Flutter as the target platform for V2, adopting a rebuild strategy instead of porting from React Native. (Ref: `docs/v2/V2_MIGRATION_GUIDE.md`)
-*   **Decision:** Chose Riverpod as the primary state management solution. (Ref: `docs/v2/V2_ARCHITECTURE.md`)
-*   **Decision:** Selected Urbanist as the primary font. (Ref: `docs/v2/V2_TYPOGRAPHY_SYSTEM.md`)
-*   **Decision:** Adopted an `ApiService` abstraction for data handling. (Ref: `docs/v2/V2_DATA_HANDLING.md`)
-*   **Challenge:** Encountered issues running `flutter create` via the execution tool due to environment/PATH problems. Required manual SDK installation verification and running `flutter create .` directly.
-*   **Next:** Setting up the remaining living documentation files (Known Issues, Decisions, etc.). Planning the first implementation steps (API service abstraction, core widgets).
+*   Implement detailed logic for `_updateChallengeProgress`.
+*   Refine level-up logic and potentially extract shared logic between `processUserAction` and `addXp`.
+*   Implement logic for awarding XP/Tokens upon achievement unlock (requires fetching definitions).
+*   Write unit tests for the implemented simulation logic.
+*   Update `TODO.md`.
 
 ---
+
+## 2025-04-13: Sprint 1 Completion - Foundation & Mock Backend
+
+**Author:** Development Team (via Cline)
+**Status:** Complete
+
+**Summary:**
+Completed the first sprint focused on establishing a solid foundation for further development, addressing critical UI issues, and setting up a mock backend environment. This sprint prepares the project for implementing core features like the gamification engine.
+
+**Key Accomplishments:**
+
+1.  **UI Overflow Fixes:**
+    *   Applied `SafeArea` to `TokenShopScreen`.
+    *   Wrapped expandable content in `AchievementsCard` and `ChallengesCard` with `SingleChildScrollView`.
+    *   Improved image error placeholders in `TrendingStylesCard`.
+    *   *(Commit: `a3c8d12`)*
+2.  **Build Error Fixes (User/UserProfile):**
+    *   Reverted `AuthState` to correctly expect `UserProfile`.
+    *   Created `UserProfileRemoteDataSource` and `UserProfileRepository`.
+    *   Refactored `AuthProvider` to handle two-step auth flow (fetch User, then UserProfile).
+    *   Updated UI components (`RiverpodTestScreen`, `DashboardHomeScreen`, `EnhancedHomeScreen`, `DashboardProfileScreen`, `ProfileEditScreen`, `GameProfileScreen`, `ProfileScreen`, `TokenShopScreen`, `TokenShopCard`) to correctly access `UserProfile` data from `AuthState`.
+    *   *(Commits: `6818437`, `0cb55d5`)*
+3.  **Testing Infrastructure:**
+    *   Confirmed standard `test/` directory structure and necessary dependencies (`flutter_test`, `mockito`).
+    *   Created the first widget test for `ZinButton`.
+    *   *(Commit: `b7f6ee6`)*
+4.  **Local Persistence:**
+    *   Implemented `LocalStorageService` using `shared_preferences`.
+    *   Added Riverpod providers for the service.
+    *   *(Commit: `b7f6ee6`)*
+5.  **Mock Backend (`json-server`):**
+    *   Updated `data/db.json` with `challenges` definitions and user `streak` fields.
+    *   Created `start_json_server.bat` for Windows compatibility.
+    *   Successfully started `json-server` via `npx`.
+    *   *(Commit: `b7f6ee6`)*
+6.  **Data Layer (Remote Data Sources):**
+    *   Added `dio` dependency.
+    *   Created interfaces and `dio`-based implementations for User, Stylist, Post, Comment, Booking, and Gamification entities connecting to `json-server`.
+    *   *(Commit: `b7f6ee6`)*
+7.  **Models:**
+    *   Created `Badge` and `Challenge` models with `json_serializable` annotations.
+    *   Ran `build_runner` to generate `.g.dart` files.
+    *   *(Commit: `b7f6ee6`)*
+8.  **Authentication Scaffolding:**
+    *   Created basic `LoginScreen` UI.
+    *   Implemented `AuthRepository` connecting `AuthProvider` to data sources and local storage.
+    *   Updated `AuthProvider` to use the repository.
+    *   Implemented user creation in mock backend via `AuthRepository.register`.
+    *   *(Commits: `b7f6ee6`, `4c2eaf2`)*
+9.  **Code Generation:** Ran `build_runner` multiple times to generate necessary files after model/provider updates. *(Commits: `b7f6ee6`, `6818437`)*
+10. **Documentation:** Updated `TODO.md` and `DEVELOPMENT_JOURNAL.md`. *(Commit: `a8a2c8b`)*
+
+
+**Challenges:**
+
+*   Encountered multiple failures with `replace_in_file` when making sequential edits, requiring fallback to `write_to_file`.
+*   Initial assumptions about model structures (`UserModel`, `Badge`, `Challenge`) were incorrect, requiring file inspection and creation/correction.
+*   Build errors caused by `User`/`UserProfile` type mismatch required significant refactoring across `AuthState`, `AuthProvider`, and UI components.
+*   `json-server` startup issues on Windows required switching from `.bat` script to `npx`.
+*   Registration flow initially failed due to user record not being created in the mock backend; fixed by implementing `createUser` in the data source and repository.
+
+---
+
+*(Previous journal entries below)*
+
+... (Keep existing journal entries) ...

@@ -1,7 +1,8 @@
+import 'package:riverpod/riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/models/token_transaction.dart';
-import 'package:zinapp_v2/models/user_profile.dart';
+import 'package:zinapp_v2/models/user_profile.dart' as models;
 import 'package:zinapp_v2/services/user_profile_service.dart';
 
 // Generate the provider code
@@ -9,20 +10,20 @@ part 'user_profile_provider.g.dart';
 
 /// Provider for the UserProfileService
 @riverpod
-UserProfileService userProfileService(UserProfileServiceRef ref) {
+UserProfileService userProfileService(Ref ref) {
   return UserProfileService();
 }
 
 /// Provider for user profile state
 @riverpod
-class UserProfile extends _$UserProfile {
+class UserProfileProvider extends _$UserProfileProvider {
   @override
   UserProfileState build() {
     return UserProfileState.initial();
   }
 
   /// Get the current user profile from the auth provider
-  UserProfile? get userProfile => ref.read(authProvider).user;
+  models.UserProfile? get userProfile => ref.read(authProvider).user;
 
   /// Load user profile
   Future<void> loadUserProfile() async {

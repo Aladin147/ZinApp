@@ -88,11 +88,11 @@ This document outlines the necessary setup for developing the ZinApp V2 Flutter 
    - **Note:** This is a basic approach. For more complex scenarios, packages like `flutter_dotenv` or Flutter's build flavors can be used. This strategy will be further detailed in `V2_DATA_HANDLING.md`.
 
 ## 6. Git Workflow
-   - **Main Branch:** `V2-Dev` is the primary development branch (will become `main`).
-   - **Feature Branches:** Create feature branches off `V2-Dev` for all new work (e.g., `feature/booking-screen`, `docs/add-component-system`).
-   - **Commits:** Write clear, concise commit messages following conventional commit standards if possible (e.g., `feat: Add stylist profile screen`, `fix: Correct login validation`, `docs: Update animation system`).
-   - **Pull Requests:** Use Pull Requests (PRs) to merge feature branches back into `V2-Dev`. Require code review if collaborating.
-   - **Pushing:** Ensure code is formatted (`dart format .`) and analyzed (`flutter analyze`) before pushing. Pull latest changes from `V2-Dev` before pushing feature branches to avoid conflicts.
+   - **Main Branch:** The primary development branch is likely `main` or `develop` now. (*Please verify the current primary branch name.*) All feature branches should be based on and merged back into this primary branch.
+   - **Feature Branches:** Create feature branches off the primary development branch for all new work (e.g., `feature/booking-screen`, `fix/login-bug`, `docs/update-readme`). Use descriptive names.
+   - **Commits:** Write clear, concise commit messages. Following Conventional Commits ([https://www.conventionalcommits.org/](https://www.conventionalcommits.org/)) is recommended (e.g., `feat: Add stylist profile screen`, `fix: Correct login validation`, `docs: Update animation system`).
+   - **Pull Requests:** Use Pull Requests (PRs) to merge feature branches back into the primary development branch. Code reviews are encouraged/required for collaboration.
+   - **Pushing:** Ensure code is formatted (`dart format .`) and analyzed (`flutter analyze` - ensure 0 issues) before pushing. Pull the latest changes from the primary development branch (`git pull origin [primary-branch-name]`) into your feature branch before pushing and creating a PR to minimize conflicts.
 
 ## 7. Dependencies
    - Manage dependencies using `pubspec.yaml`.

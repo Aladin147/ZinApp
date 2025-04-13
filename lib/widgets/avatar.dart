@@ -21,7 +21,7 @@ class Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveBgColor = backgroundColor ?? theme.colorScheme.surfaceVariant;
+    final effectiveBgColor = backgroundColor ?? theme.colorScheme.surfaceContainerHighest;
     final effectiveFgColor = foregroundColor ?? theme.colorScheme.onSurfaceVariant;
 
     // Determine initials if not provided and name is available (future enhancement)

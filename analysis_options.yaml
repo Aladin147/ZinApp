@@ -5,7 +5,7 @@ analyzer:
   # exclude:
   #   - "**/*.g.dart"
   #   - "**/*.freezed.dart"
-  errors:
+  # errors: # Removed empty section causing format warning
     # Treat specific info-level issues as warnings or errors if desired
     # missing_required_param: warning
     # avoid_print: warning # Enable this to warn about print statements

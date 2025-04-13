@@ -34,12 +34,17 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 - [x] Post components
 
 ### Stylist Feature
-- [ ] Stylist service provider
-- [ ] Stylist state provider
-- [ ] Stylist discovery screen
-- [ ] Stylist profile screen
+- [x] Stylist service provider
+- [x] Stylist state provider
+- [x] Stylist discovery screen
+- [x] Stylist profile screen
+- [x] Stylist card widget
+- [x] Stylist carousel widget
 
 ## Cleanup
+- [x] Update main.dart to use Riverpod exclusively
+- [x] Fix naming conflicts in providers
+- [x] Create comprehensive Riverpod test screen
 - [ ] Remove Provider package
 - [ ] Remove legacy providers
 - [ ] Update tests
@@ -54,6 +59,9 @@ This document tracks the progress of migrating from Provider to Riverpod for sta
 | Testing Riverpod components | Created a test screen in the component showcase | 2025-04-13 |
 | Profile state management | Created UserProfileState class to manage profile state | 2025-04-13 |
 | Feed state management | Created FeedState class with post and user caching | 2025-04-13 |
+| Naming conflicts | Used import aliases (namespaces) to disambiguate between provider and model classes | 2025-04-14 |
+| Dual implementation complexity | Abandoned dual approach in favor of clean Riverpod implementation | 2025-04-14 |
+| Stylist feature migration | Created complete Riverpod implementation with proper state management | 2025-04-15 |
 
 ## References
 - [ADR-001: Migrating from Provider to Riverpod](docs/architecture/decisions/ADR-001-migrating-to-riverpod.md)

@@ -6,7 +6,7 @@ part of 'feed_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$feedServiceHash() => r'9dcee6cdacbed3f936f6412789b9aea3ccf7204e';
+String _$feedServiceHash() => r'0a76a446955205bca2ec3c5cb4567e79ed595e42';
 
 /// Provider for the FeedService
 ///
@@ -24,7 +24,7 @@ final feedServiceProvider = AutoDisposeProvider<FeedService>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef FeedServiceRef = AutoDisposeProviderRef<FeedService>;
-String _$feedHash() => r'dfa5a7e7366641bff4edb91da4d360b83285de49';
+String _$feedHash() => r'067c839ab165cd6690209b33f152d04d6804b2b9';
 
 /// Provider for feed state
 ///

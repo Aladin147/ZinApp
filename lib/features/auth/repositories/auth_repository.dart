@@ -1,18 +1,18 @@
-import 'package:zinapp_v2/features/auth/models/auth_user.dart';
+import 'package:zinapp_v2/models/auth_user.dart';
 import 'package:zinapp_v2/features/auth/services/auth_service.dart';
 
 /// Repository for authentication operations in the ZinApp application
 class AuthRepository {
   final AuthService _authService;
-  
+
   AuthRepository(this._authService);
-  
+
   /// Stream of authentication state changes
   Stream<AuthUser> get authStateChanges => _authService.authStateChanges;
-  
+
   /// The currently authenticated user
   AuthUser get currentUser => _authService.currentUser;
-  
+
   /// Signs in a user with email and password
   Future<AuthUser> signInWithEmailAndPassword({
     required String email,
@@ -28,7 +28,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Creates a new user with email and password
   Future<AuthUser> createUserWithEmailAndPassword({
     required String email,
@@ -43,7 +43,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Signs in a user with Google
   Future<AuthUser> signInWithGoogle() async {
     try {
@@ -52,7 +52,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Signs in a user with Apple (iOS only)
   Future<AuthUser> signInWithApple() async {
     try {
@@ -61,7 +61,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Sends a password reset email
   Future<void> sendPasswordResetEmail({required String email}) async {
     try {
@@ -70,7 +70,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Updates a user's profile information
   Future<void> updateProfile({
     String? displayName,
@@ -85,7 +85,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Updates a user's email
   Future<void> updateEmail({required String email}) async {
     try {
@@ -94,7 +94,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Updates a user's password
   Future<void> updatePassword({required String password}) async {
     try {
@@ -103,7 +103,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Sends an email verification
   Future<void> sendEmailVerification() async {
     try {
@@ -112,7 +112,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Signs out the current user
   Future<void> signOut() async {
     try {
@@ -121,7 +121,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Deletes the current user
   Future<void> deleteUser() async {
     try {
@@ -130,7 +130,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Sets whether the current user is a stylist
   Future<void> setIsStylist({required bool isStylist}) async {
     try {
@@ -139,7 +139,7 @@ class AuthRepository {
       throw _mapAuthException(e);
     }
   }
-  
+
   /// Maps service-specific exceptions to app-specific exceptions
   Exception _mapAuthException(dynamic e) {
     // In a real app, this would map Firebase Auth exceptions to app-specific exceptions

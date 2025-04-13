@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/features/stylist/widgets/stylist_card.dart';
+import 'package:go_router/go_router.dart';
+import 'package:zinapp_v2/features/stylist/widgets/riverpod/stylist_card.dart';
 import 'package:zinapp_v2/models/stylist.dart';
+import 'package:zinapp_v2/router/app_routes.dart';
 import 'package:zinapp_v2/theme/color_scheme.dart';
+import 'package:zinapp_v2/widgets/containers/organic_container.dart';
+import 'package:zinapp_v2/widgets/buttons/organic_action_button.dart';
+
 
 class ActionHubSection extends StatelessWidget {
   final List<Stylist> stylists;
@@ -9,68 +14,87 @@ class ActionHubSection extends StatelessWidget {
   final String? errorMessage;
 
   const ActionHubSection({
-    Key? key,
+    super.key,
     required this.stylists,
     required this.isLoading,
     this.errorMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
 
-    return Container(
+    return OrganicContainer(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            AppColors.baseDark.withOpacity(0.9),
-            AppColors.baseDark.withOpacity(0.8),
-          ],
-        ),
+      color: AppColors.baseDark,
+      gradient: const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          AppColors.baseDarkAlt,
+          AppColors.baseDark,
+        ],
       ),
-      child: Column(
+      shape: OrganicShape.curvedBottom,
+      curveHeight: 20,
+      elevation: 2,
+      borderRadius: 0,
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withAlpha(30),
+          blurRadius: 10,
+          offset: const Offset(0, 2),
+        ),
+        BoxShadow(
+          color: AppColors.primaryHighlight.withAlpha(10),
+          blurRadius: 8,
+          spreadRadius: 0,
+          offset: const Offset(0, 2),
+        ),
+      ],
+      child: SingleChildScrollView(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Quick action buttons
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                _buildActionButton(
-                  context,
+            child: OrganicActionButtonRow(
+              buttons: [
+                OrganicActionButtonData(
                   icon: Icons.search,
                   label: 'Find',
-                  onTap: () {},
+                  onTap: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                   color: Colors.blue,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.calendar_today,
                   label: 'Book',
-                  onTap: () {},
+                  onTap: () {
+                    context.go(AppRoutes.booking);
+                  },
                   color: Colors.green,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.camera_alt,
                   label: 'Share',
                   onTap: () {},
                   color: Colors.purple,
                 ),
-                _buildActionButton(
-                  context,
+                OrganicActionButtonData(
                   icon: Icons.star,
                   label: 'Quests',
                   onTap: () {},
                   color: Colors.orange,
                 ),
               ],
+              usePillShape: true,
+              enhancedEffects: true,
+              buttonSize: 60,
+              iconSize: 26,
             ),
           ),
 
@@ -89,7 +113,9 @@ class ActionHubSection extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                     child: Text(
                       'See All',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -114,7 +140,7 @@ class ActionHubSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withAlpha(26), // 0.1 opacity
                             blurRadius: 4,
                             offset: const Offset(0, 2),
                           ),
@@ -131,11 +157,11 @@ class ActionHubSection extends StatelessWidget {
                             ),
                             child: Container(
                               height: 80,
-                              color: Colors.grey.withOpacity(0.2),
+                              color: Colors.grey.withAlpha(51), // 0.2 opacity
                               child: Center(
                                 child: Icon(
                                   Icons.style,
-                                  color: Colors.grey.withOpacity(0.5),
+                                  color: Colors.grey.withAlpha(128), // 0.5 opacity
                                 ),
                               ),
                             ),
@@ -178,7 +204,9 @@ class ActionHubSection extends StatelessWidget {
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    context.go(AppRoutes.stylistList);
+                  },
                     child: Text(
                       'See All',
                       style: theme.textTheme.bodySmall?.copyWith(
@@ -196,6 +224,7 @@ class ActionHubSection extends StatelessWidget {
             ],
           ),
         ],
+      ),
       ),
     );
   }
@@ -220,7 +249,7 @@ class ActionHubSection extends StatelessWidget {
       return Center(
         child: Text(
           'No stylists found',
-          style: TextStyle(color: Colors.white.withOpacity(0.7)),
+          style: TextStyle(color: Colors.white.withAlpha(179)), // 0.7 opacity
         ),
       );
     }
@@ -231,61 +260,14 @@ class ActionHubSection extends StatelessWidget {
       itemBuilder: (context, index) {
         return StylistCard(
           stylist: stylists[index],
-          onTap: () {},
+          onTap: (stylist) {
+            context.go(AppRoutes.stylistDetail.replaceFirst(':id', stylist.id));
+          },
           showBookButton: false,
         );
       },
     );
   }
 
-  Widget _buildActionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    required Color color,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        width: 70,
-        padding: const EdgeInsets.symmetric(
-          vertical: 12,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: color.withOpacity(0.2),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: color.withOpacity(0.3),
-                    blurRadius: 8,
-                    spreadRadius: 1,
-                  ),
-                ],
-              ),
-              child: Icon(
-                icon,
-                color: color,
-                size: 24,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+
 }

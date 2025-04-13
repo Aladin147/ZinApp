@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zinapp_v2/app/theme/color_scheme.dart';
+import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/models/stylist.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
@@ -53,13 +53,13 @@ class StylistCard extends StatelessWidget {
                   child: Center(
                     child: ZinAvatar(
                       size: ZinAvatarSize.large,
-                      initials: stylist.name.isNotEmpty ? stylist.name[0] : '?',
+                      initials: stylist.username.isNotEmpty ? stylist.username[0] : '?',
                     ),
                   ),
                 ),
 
                 // Availability indicator
-                if (stylist.isAvailableNow)
+                if (stylist.stylistProfile.isAvailable)
                   Positioned(
                     top: 12,
                     right: 12,
@@ -109,7 +109,7 @@ class StylistCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          stylist.name,
+                          stylist.username,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -125,7 +125,7 @@ class StylistCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 2),
                       Text(
-                        stylist.rating.toStringAsFixed(1),
+                        stylist.stylistProfile.rating.toStringAsFixed(1),
                         style: theme.textTheme.bodySmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -135,9 +135,9 @@ class StylistCard extends StatelessWidget {
                   const SizedBox(height: 4),
 
                   // Specialties
-                  if (stylist.specialties.isNotEmpty)
+                  if (stylist.stylistProfile.services.isNotEmpty)
                     Text(
-                      stylist.specialties.join(' • '),
+                      stylist.stylistProfile.services.join(' • '),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurface.withAlpha(179), // 70% opacity
                       ),

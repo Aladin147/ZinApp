@@ -14,16 +14,7 @@ zinapp_v2_flutter/
 │   ├── lottie/          # Lottie animation files (if used)
 │   └── rive/            # Rive animation files (if used)
 ├── ios/                 # iOS specific files
-├── lib/                 # Main Dart application code
-│   ├── main.dart        # App entry point
-│   ├── app/             # Core app setup, routing, theme
-│   ├── config/          # Environment configuration
-│   ├── constants/       # App-wide constants (design tokens, strings)
-│   ├── features/        # Feature-specific modules (screens, widgets, logic)
-│   ├── models/          # Data models (plain Dart objects)
-│   ├── services/        # Business logic services (API, gamification, etc.)
-│   ├── utils/           # Utility functions and helpers
-│   └── widgets/         # Common reusable widgets (shared across features)
+├── lib/                 # Main Dart application code (See details below)
 ├── linux/               # Linux specific files (if supporting desktop)
 ├── macos/               # macOS specific files (if supporting desktop)
 ├── test/                # Automated tests
@@ -41,50 +32,73 @@ zinapp_v2_flutter/
 
 ## 2. `lib/` Directory Deep Dive
 
--   **`main.dart`**: Initializes the app, sets up providers/service locators, and runs the main `App` widget.
--   **`app/`**:
-    -   `app.dart`: Root `MaterialApp` or `CupertinoApp` widget.
-    -   `theme.dart`: Defines the application theme (colors, typography, component themes) based on design tokens.
-    -   `router.dart`: Defines navigation routes and logic (e.g., using `go_router` or `Navigator 2.0`).
--   **`config/`**:
-    -   `env.dart`: Environment configuration (e.g., API base URL, mock data toggle flag). See `V2_DEV_SETUP.md`.
--   **`constants/`**:
-    -   `app_colors.dart`: Color constants/tokens.
-    -   `app_typography.dart`: TextStyle constants/tokens.
-    -   `app_spacing.dart`: Spacing constants (padding, margins).
-    -   `app_animations.dart`: Animation duration/curve constants.
-    -   `app_strings.dart`: String constants for localization (or use dedicated localization package).
-    -   `design_tokens.dart`: (Optional) Central file importing/exporting all token types.
+```
+lib/
+├── common/               # Common utilities, widgets, or constants used across features
+│
+├── config/               # Application configuration (e.g., themes, environment settings)
+│   └── themes/           # Theme definitions (extracted from lib/theme)
+│
+├── constants/            # Application-wide constants (e.g., API keys, route names, design tokens)
+│
+├── features/             # Core feature modules (e.g., auth, feed, profile) - See structure below
+│
+├── models/               # Shared data models/entities (if any not specific to a feature)
+│
+├── navigation/           # Navigation logic (potentially GoRouter setup) - Replaced router/
+│
+├── providers/            # Global Riverpod providers (app-wide state, services)
+│
+├── router/               # Routing configuration (likely using GoRouter)
+│
+├── services/             # Shared application services (e.g., API, Auth, Storage)
+│
+├── theme/                # App theming (Consider moving fully into config/themes)
+│
+├── utils/                # General utility functions
+│
+├── widgets/              # Common shared widgets used across multiple features
+│
+├── error_screen.dart     # Generic error screen
+├── main.dart             # Application entry point
+└── riverpod_app.dart     # Root application widget integrating Riverpod
+```
+
+-   **`main.dart`**: Initializes the app, sets up global Riverpod providers (`ProviderScope`), and runs the main `RiverpodApp` widget.
+-   **`riverpod_app.dart`**: Root `MaterialApp` (or similar) widget, configured with the theme and router.
+-   **`error_screen.dart`**: A generic screen displayed for routing errors or other unhandled states.
+-   **`common/`**: Contains utilities, base classes, or widgets that are shared across multiple features but don't fit into `utils/` or `widgets/`.
+-   **`config/`**: Application-level configuration.
+    -   `themes/`: Contains theme definitions (`color_scheme.dart`, `text_theme.dart`, `app_theme.dart`).
+    -   May contain environment-specific configuration files if needed.
+-   **`constants/`**: Holds application-wide constants like API endpoints, keys, route names, duration values, potentially design tokens (colors, spacing, typography constants if not solely in `theme/`).
 -   **`features/`**: **(Primary Location for Feature Development)**
-    -   Organized by feature domain (e.g., `booking`, `authentication`, `profile`, `stylist_discovery`, `feed`).
-    -   Each feature directory typically contains:
-        -   `screens/`: Widgets representing full screens/pages.
-        -   `widgets/`: Widgets specific to this feature.
-        -   `cubit/` or `bloc/` or `provider/`: State management logic for the feature.
-        -   `logic/` or `usecases/`: Feature-specific business logic (if not in a global service).
-    -   Example:
+    -   Organized by feature domain (e.g., `auth`, `feed`, `profile`, `booking`).
+    -   Each feature follows a layered structure:
         ```
-        lib/features/booking/
-        ├── screens/
-        │   ├── booking_screen.dart
-        │   └── service_select_screen.dart
-        ├── widgets/
-        │   ├── booking_card.dart
-        │   └── service_button.dart
-        └── cubit/
-            └── booking_cubit.dart
+        lib/features/[feature_name]/
+        ├── data/         # Data layer implementation
+        │   ├── datasources/ # API client calls, local storage access
+        │   ├── models/      # Data Transfer Objects (DTOs), request/response models
+        │   └── repositories/ # Implementation of domain repositories
+        ├── domain/       # Business logic and rules
+        │   ├── entities/    # Core business objects/models
+        │   ├── repositories/ # Abstract repository interfaces
+        │   └── usecases/    # Feature-specific operations/interactions
+        ├── presentation/ # UI and State Management (Riverpod)
+        │   ├── providers/  # Riverpod providers (StateNotifiers, FutureProviders, etc.)
+        │   ├── screens/    # Widgets representing full screens/pages
+        │   └── widgets/    # Reusable widgets specific to this feature
+        └── feature_name_exports.dart # Optional: Exports public API of the feature
         ```
--   **`models/`**: Contains plain Dart objects representing data structures (e.g., `user.dart`, `stylist.dart`, `booking.dart`). Should include `fromJson`/`toJson` methods if applicable.
--   **`services/`**:
-    -   `api_service.dart`: Abstract interface for data fetching.
-    -   `mock_api_service.dart`: Mock implementation using local JSON.
-    -   `real_api_service.dart`: Real implementation using HTTP client.
-    -   `gamification_service.dart`: Logic for calculating XP, levels, tokens.
-    -   `auth_service.dart`: Authentication logic (login, logout, token management).
-    -   `notification_service.dart`: Handling push notifications (if applicable).
--   **`utils/`**: General utility functions, extensions, formatters, validators, etc. (e.g., `date_formatter.dart`, `validators.dart`).
--   **`widgets/`**: **(Common Reusable Widgets)**
-    -   Contains highly reusable UI components shared across multiple features (e.g., `CustomButton`, `Avatar`, `LoadingIndicator`, `ScreenWrapper`, `CardWrapper`).
+-   **`models/`**: Contains shared data models/entities used across multiple features, if any. Often, models are specific to a feature's domain layer.
+-   **`navigation/`**: May contain navigation-related utilities or helpers, potentially interacting with the router.
+-   **`providers/`**: Contains global Riverpod providers, such as those exposing shared services (`apiServiceProvider`, `authServiceProvider`) or managing application-wide state (e.g., `appSettingsProvider`).
+-   **`router/`**: Defines the application's navigation routes using `go_router` (e.g., `app_router.dart`). Includes route definitions, parameters, and potentially route guards.
+-   **`services/`**: Contains shared, application-level services providing access to external resources or capabilities (e.g., `ApiService`, `AuthService`, `StorageService`, `NotificationService`). These are typically injected via global Riverpod providers.
+-   **`theme/`**: Defines the application's visual theme (colors, typography, component styles). *Consider consolidating fully into `config/themes/`.*
+-   **`utils/`**: General utility functions, extensions, formatters, validators, etc., not specific to any feature (e.g., `date_formatter.dart`, `validators.dart`).
+-   **`widgets/`**: **(Common Reusable Widgets)** Contains highly reusable UI components shared across multiple features (e.g., `AppButton`, `Avatar`, `LoadingIndicator`, `CardWrapper`).
 
 ## 3. `assets/` Directory
 

@@ -1,0 +1,25 @@
+feat(ui): Implement dashboard UI approach and clean up legacy files
+
+This commit includes two major changes:
+
+1. Dashboard UI Implementation:
+- Created reusable dashboard components (DashboardContainer, ExpandableDashboardCard)
+- Implemented dashboard approach for Home Screen
+- Created specialized cards for the Home Screen
+- Fixed critical ScrollView issues in dashboard components
+
+2. Legacy File Cleanup:
+- Removed unused model files from lib/app/models
+- Removed unused transition files from lib/app/transitions
+- Updated import paths across the codebase
+- Fixed theme references to use the new file structure
+
+Documentation:
+- Updated REFACTORING_PROGRESS.md with completed tasks
+- Added journal entry for dashboard UI implementation
+- Updated known issues with new findings
+
+This change supports the organic, game-like UI approach specified in the project requirements and improves code organization by aligning with the documented file structure guidelines.
+
+Resolves: #123 (Dashboard UI Implementation)
+Resolves: #124 (Legacy File Cleanup)
