@@ -90,7 +90,7 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                 floating: false,
                 pinned: true,
                 backgroundColor: AppColors.baseDark,
-                title: _showAppBarTitle ? Text(user.username) : null,
+                title: _showAppBarTitle ? Text(user.username ?? 'Profile') : null, // Null check
                 flexibleSpace: FlexibleSpaceBar(
                   background: Container(
                     decoration: BoxDecoration(
@@ -137,8 +137,8 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                                 // Avatar
                                 ZinAvatar(
                                   size: ZinAvatarSize.large,
-                                  imageUrl: user.profilePictureUrl,
-                                  initials: user.username.isNotEmpty ? user.username[0] : '?',
+                                  imageUrl: user.profilePictureUrl, // Already nullable
+                                  initials: user.username.isNotEmpty ? user.username[0] : '?', // Already checks username
                                 ),
 
                                 // Level badge
@@ -159,7 +159,7 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                                       ],
                                     ),
                                     child: Text(
-                                      'LVL ${user.level}',
+                                      'LVL ${user.level ?? 1}', // Null check
                                       style: const TextStyle(
                                         color: AppColors.baseDark,
                                         fontWeight: FontWeight.bold,
@@ -174,14 +174,14 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
 
                             // Username and rank
                             Text(
-                              user.username,
+                              user.username ?? 'Unknown User', // Null check
                               style: theme.textTheme.titleLarge?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
-                              user.rank,
+                              user.rank ?? 'Rank N/A', // Null check
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: Colors.white.withAlpha(204), // 0.8 opacity
                               ),
@@ -193,14 +193,14 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  '${user.xp} XP',
+                                  '${user.xp ?? 0} XP', // Null check
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: Colors.white,
                                   ),
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '/ ${(user.level + 1) * 1000}', // Simple level calculation
+                                  '/ ${((user.level ?? 1) + 1) * 1000}', // Null check, assume level 1 if null
                                   style: theme.textTheme.bodySmall?.copyWith(
                                     color: Colors.white.withAlpha(153), // 0.6 opacity
                                   ),
@@ -211,7 +211,7 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                             ClipRRect(
                               borderRadius: BorderRadius.circular(4),
                               child: LinearProgressIndicator(
-                                value: (user.xp % 1000) / 1000, // Simple progress calculation
+                                value: ((user.xp ?? 0) % 1000) / 1000, // Null check
                                 backgroundColor: Colors.white.withAlpha(77), // 0.3 opacity
                                 valueColor: const AlwaysStoppedAnimation<Color>(
                                   AppColors.primaryHighlight,
@@ -261,28 +261,28 @@ class _GameProfileScreenState extends ConsumerState<GameProfileScreen> with Sing
                       _buildStatItem(
                         context,
                         icon: Icons.token,
-                        value: user.tokens.toString(),
+                        value: (user.tokens ?? 0).toString(), // Null check
                         label: 'Tokens',
                         color: Colors.amber,
                       ),
                       _buildStatItem(
                         context,
                         icon: Icons.emoji_events,
-                        value: user.achievements.length.toString(),
+                        value: (user.achievements?.length ?? 0).toString(), // Null check
                         label: 'Achievements',
                         color: Colors.purple,
                       ),
                       _buildStatItem(
                         context,
                         icon: Icons.calendar_today,
-                        value: user.bookingsCount.toString(),
+                        value: (user.bookingsCount ?? 0).toString(), // Null check
                         label: 'Bookings',
                         color: Colors.green,
                       ),
                       _buildStatItem(
                         context,
                         icon: Icons.people,
-                        value: user.followersCount.toString(),
+                        value: (user.followersCount ?? 0).toString(), // Null check
                         label: 'Followers',
                         color: Colors.blue,
                       ),

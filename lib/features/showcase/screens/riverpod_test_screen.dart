@@ -46,12 +46,13 @@ class RiverpodTestScreen extends ConsumerWidget {
                   Text('Error: ${authState.error ?? "None"}'),
                   if (authState.user != null) ...[
                     const SizedBox(height: 8),
-                    Text('User ID: ${authState.user!.id}'),
-                    Text('Username: ${authState.user!.username}'),
-                    Text('Email: ${authState.user!.email}'),
-                    Text('XP: ${authState.user!.xp}'),
-                    Text('Level: ${authState.user!.level}'),
-                    Text('Tokens: ${authState.user!.tokens}'),
+                    // Access UserProfile fields safely
+                    Text('User ID: ${authState.user?.id ?? "N/A"}'),
+                    Text('Username: ${authState.user?.username ?? "N/A"}'),
+                    Text('Email: ${authState.user?.email ?? "N/A"}'),
+                    Text('XP: ${authState.user?.xp ?? "N/A"}'),
+                    Text('Level: ${authState.user?.level ?? "N/A"}'),
+                    Text('Tokens: ${authState.user?.tokens ?? "N/A"}'),
                   ],
                   const SizedBox(height: 16),
                   Row(

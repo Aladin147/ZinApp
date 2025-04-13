@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/models/user.dart';
-import 'package:zinapp_v2/models/user_profile.dart' as models;
+// import 'package:zinapp_v2/models/user_profile.dart' as models; // Unused import removed
 import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/zin_avatar.dart';
 
@@ -30,14 +32,16 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
   @override
   void initState() {
     super.initState();
-    final user = ref.read(authProvider).user;
+    // Access UserProfile safely
+    final userProfile = ref.read(authProvider).user;
 
-    _usernameController = TextEditingController(text: user?.username ?? '');
-    _bioController = TextEditingController(text: user?.bio ?? '');
-    _locationController = TextEditingController(text: user?.location ?? '');
+    _usernameController = TextEditingController(text: userProfile?.username ?? '');
+    _bioController = TextEditingController(text: userProfile?.bio ?? ''); // Use null-safe access
+    _locationController = TextEditingController(text: userProfile?.location ?? ''); // Use null-safe access
 
-    if (user?.favoriteStyles != null) {
-      _selectedStyles = List.from(user!.favoriteStyles!);
+    // Use null-safe access for favoriteStyles
+    if (userProfile?.favoriteStyles != null) {
+      _selectedStyles = List.from(userProfile!.favoriteStyles!);
     }
   }
 
@@ -94,10 +98,10 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final profileState = ref.watch(userProfileProviderProvider);
-    final user = authState.user;
+    final userProfile = authState.user; // Use userProfile variable name
     final theme = Theme.of(context);
 
-    if (user == null) {
+    if (userProfile == null) { // Check userProfile
       return const Scaffold(
         body: Center(
           child: Text('User not found'),
@@ -136,8 +140,8 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
                       children: [
                         ZinAvatar(
                           size: ZinAvatarSize.extraLarge,
-                          imageUrl: user.profilePictureUrl,
-                          initials: user.username.isNotEmpty ? user.username[0] : '?',
+                          imageUrl: userProfile.profilePictureUrl, // Use userProfile
+                          initials: userProfile.username.isNotEmpty ? userProfile.username[0] : '?', // Use userProfile
                         ),
                         Positioned(
                           right: 0,
@@ -243,7 +247,7 @@ class _RiverpodProfileEditScreenState extends ConsumerState<RiverpodProfileEditS
                   ),
 
                   // Stylist-specific fields (if applicable)
-                  if (user.userType == UserType.stylist) ...[
+                  if (userProfile.userType == UserType.stylist) ...[ // Use userProfile
                     const SizedBox(height: 24),
                     const Divider(),
                     const SizedBox(height: 16),

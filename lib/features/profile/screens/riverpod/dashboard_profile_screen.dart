@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
 import 'package:zinapp_v2/features/profile/widgets/achievements_widget.dart';
-import 'package:zinapp_v2/features/profile/widgets/expandable_profile_widget.dart';
+// import 'package:zinapp_v2/features/profile/widgets/expandable_profile_widget.dart'; // Unused import removed
 import 'package:zinapp_v2/features/profile/widgets/level_progress_widget.dart';
-import 'package:zinapp_v2/features/profile/widgets/profile_dashboard.dart';
+// import 'package:zinapp_v2/features/profile/widgets/profile_dashboard.dart'; // Unused import removed
 import 'package:zinapp_v2/features/profile/widgets/profile_header_widget.dart';
 import 'package:zinapp_v2/features/profile/widgets/stats_widget.dart';
 import 'package:zinapp_v2/features/profile/widgets/token_balance_widget.dart';
@@ -48,7 +50,12 @@ class _DashboardProfileScreenState extends ConsumerState<DashboardProfileScreen>
         ),
       );
     }
-    
+    // Add a null check for the user before building the main content
+    if (user == null) {
+       // Or return a login screen redirect, or a specific loading/error state
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       body: RefreshIndicator(
         onRefresh: () async {
@@ -68,7 +75,7 @@ class _DashboardProfileScreenState extends ConsumerState<DashboardProfileScreen>
               SliverToBoxAdapter(
                 child: SafeArea(
                   child: ProfileHeaderWidget(
-                    user: user,
+                    user: user, // Now guaranteed non-null
                     showEditButton: true,
                     showSettingsButton: true,
                   ),
@@ -79,7 +86,7 @@ class _DashboardProfileScreenState extends ConsumerState<DashboardProfileScreen>
               SliverPadding(
                 padding: const EdgeInsets.only(top: 8),
                 sliver: SliverToBoxAdapter(
-                  child: _buildDashboardWidgets(user, profileState.tokenHistory ?? []),
+                  child: _buildDashboardWidgets(user, profileState.tokenHistory ?? []), // Now guaranteed non-null
                 ),
               ),
             ],

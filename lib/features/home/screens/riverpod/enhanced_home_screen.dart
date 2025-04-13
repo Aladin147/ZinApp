@@ -6,8 +6,9 @@ import 'package:zinapp_v2/features/home/widgets/action_hub_section.dart';
 import 'package:zinapp_v2/features/home/widgets/gamer_dashboard_section.dart';
 import 'package:zinapp_v2/features/auth/providers/riverpod/auth_provider.dart';
 import 'package:zinapp_v2/features/feed/providers/riverpod/feed_provider.dart';
-import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart';
+// import 'package:zinapp_v2/features/profile/providers/riverpod/user_profile_provider.dart'; // This provider might not be needed directly here
 import 'package:zinapp_v2/features/stylist/providers/riverpod/stylist_provider.dart';
+import 'package:zinapp_v2/models/user_profile.dart'; // Ensure correct UserProfile model is imported
 import 'package:zinapp_v2/theme/color_scheme.dart';
 import 'package:zinapp_v2/widgets/backgrounds/organic_background.dart';
 import 'package:zinapp_v2/widgets/containers/organic_container.dart';
@@ -28,7 +29,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
     super.initState();
     // Load user profile, feed data, and stylist data
     Future.microtask(() {
-      ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+      // TODO: Re-evaluate if loading profile here is necessary, AuthProvider might handle it
+      // ref.read(userProfileProviderProvider.notifier).loadUserProfile();
       ref.read(feedProvider.notifier).loadPosts();
       ref.read(stylistProviderProvider.notifier).loadInitialData();
     });
@@ -81,7 +83,8 @@ class _EnhancedHomeScreenState extends ConsumerState<EnhancedHomeScreen> {
           child: RefreshIndicator(
             onRefresh: () async {
               // Refresh all data
-              await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
+              // TODO: Re-evaluate if loading profile here is necessary
+              // await ref.read(userProfileProviderProvider.notifier).loadUserProfile();
               await ref.read(feedProvider.notifier).loadPosts();
               await ref.read(stylistProviderProvider.notifier).loadInitialData();
             },

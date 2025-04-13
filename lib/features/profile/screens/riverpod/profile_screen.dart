@@ -98,7 +98,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                             ),
                           ),
                           Text(
-                            user.rank,
+                            user.rank ?? 'Rank N/A', // Null check
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: Colors.white.withOpacity(0.8),
                             ),
@@ -110,14 +110,14 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                'Level ${user.level}',
+                                'Level ${user.level ?? 1}', // Null check
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white,
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Text(
-                                '${user.xp} XP',
+                                '${user.xp ?? 0} XP', // Null check
                                 style: theme.textTheme.bodyMedium?.copyWith(
                                   color: Colors.white,
                                 ),
@@ -130,7 +130,7 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                           ClipRRect(
                             borderRadius: BorderRadius.circular(4),
                             child: LinearProgressIndicator(
-                              value: 0.7, // TODO: Calculate actual progress
+                              value: ((user.xp ?? 0) % 1000) / 1000, // Null check, simple progress
                               backgroundColor: Colors.white.withOpacity(0.3),
                               valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                               minHeight: 6,
@@ -151,10 +151,10 @@ class _RiverpodProfileScreenState extends ConsumerState<RiverpodProfileScreen> w
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(context, user.tokens.toString(), 'Tokens'),
-                    _buildStatItem(context, user.postsCount.toString(), 'Posts'),
-                    _buildStatItem(context, user.followersCount.toString(), 'Followers'),
-                    _buildStatItem(context, user.followingCount.toString(), 'Following'),
+                    _buildStatItem(context, (user.tokens ?? 0).toString(), 'Tokens'), // Null check
+                    _buildStatItem(context, (user.postsCount ?? 0).toString(), 'Posts'), // Null check
+                    _buildStatItem(context, (user.followersCount ?? 0).toString(), 'Followers'), // Null check
+                    _buildStatItem(context, (user.followingCount ?? 0).toString(), 'Following'), // Null check
                   ],
                 ),
               ),

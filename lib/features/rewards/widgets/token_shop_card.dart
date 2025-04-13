@@ -30,12 +30,12 @@ class TokenShopCard extends ConsumerWidget {
           ),
         );
       },
-      collapsedChild: _buildCollapsedContent(context, user.tokens),
-      expandedChild: _buildExpandedContent(context, user.tokens),
+      collapsedChild: _buildCollapsedContent(context, user.tokens ?? 0), // Null check
+      expandedChild: _buildExpandedContent(context, user.tokens ?? 0), // Null check
     );
   }
 
-  Widget _buildCollapsedContent(BuildContext context, int userTokens) {
+  Widget _buildCollapsedContent(BuildContext context, int userTokens) { // Already handles int
     final theme = Theme.of(context);
 
     return Row(
@@ -64,7 +64,7 @@ class TokenShopCard extends ConsumerWidget {
     );
   }
 
-  Widget _buildExpandedContent(BuildContext context, int userTokens) {
+  Widget _buildExpandedContent(BuildContext context, int userTokens) { // Already handles int
     final theme = Theme.of(context);
 
     // Featured items

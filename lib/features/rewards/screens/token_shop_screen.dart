@@ -83,7 +83,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Your Balance: ${user.tokens} Tokens',
+                  'Your Balance: ${user.tokens ?? 0} Tokens', // Null check
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -122,7 +122,8 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
     );
   }
   
-  Widget _buildProfileItemsTab(BuildContext context, int userTokens) {
+  Widget _buildProfileItemsTab(BuildContext context, int? userTokens) { // Make nullable
+    final tokens = userTokens ?? 0; // Use default if null
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -132,7 +133,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Add a golden frame to your profile picture',
           tokenPrice: 100,
           imageAsset: 'assets/images/shop/premium_frame.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -142,7 +143,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Change the color of your username in posts and comments',
           tokenPrice: 150,
           imageAsset: 'assets/images/shop/username_color.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -152,7 +153,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Add subtle animations to your profile page',
           tokenPrice: 200,
           imageAsset: 'assets/images/shop/profile_animation.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -162,13 +163,14 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Choose from a selection of premium backgrounds',
           tokenPrice: 250,
           imageAsset: 'assets/images/shop/profile_background.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
       ],
     );
   }
   
-  Widget _buildFeaturesTab(BuildContext context, int userTokens) {
+  Widget _buildFeaturesTab(BuildContext context, int? userTokens) { // Make nullable
+    final tokens = userTokens ?? 0; // Use default if null
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -178,7 +180,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Get priority when booking with popular stylists',
           tokenPrice: 300,
           imageAsset: 'assets/images/shop/priority_booking.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -188,7 +190,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'See detailed stats about your style preferences',
           tokenPrice: 200,
           imageAsset: 'assets/images/shop/analytics.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -198,13 +200,14 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Get personalized style recommendations',
           tokenPrice: 150,
           imageAsset: 'assets/images/shop/recommendations.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
       ],
     );
   }
   
-  Widget _buildStylesTab(BuildContext context, int userTokens) {
+  Widget _buildStylesTab(BuildContext context, int? userTokens) { // Make nullable
+    final tokens = userTokens ?? 0; // Use default if null
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -214,7 +217,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Access to premium hairstyle ideas',
           tokenPrice: 100,
           imageAsset: 'assets/images/shop/exclusive_styles.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -224,7 +227,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Early access to upcoming seasonal style trends',
           tokenPrice: 150,
           imageAsset: 'assets/images/shop/seasonal_trends.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
         const SizedBox(height: 16),
         
@@ -234,7 +237,7 @@ class _TokenShopScreenState extends ConsumerState<TokenShopScreen> with SingleTi
           description: 'Collection of celebrity hairstyles with tutorials',
           tokenPrice: 200,
           imageAsset: 'assets/images/shop/celebrity_styles.png',
-          userTokens: userTokens,
+          userTokens: tokens, // Use local variable
         ),
       ],
     );

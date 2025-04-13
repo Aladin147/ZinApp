@@ -197,6 +197,11 @@ class _DashboardHomeScreenState extends ConsumerState<DashboardHomeScreen> {
         ),
       );
     }
+    // Add a null check for the user before building the main content
+    if (user == null) {
+       // Or return a login screen redirect, or a specific loading/error state
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       body: OrganicBackground(
@@ -207,7 +212,7 @@ class _DashboardHomeScreenState extends ConsumerState<DashboardHomeScreen> {
         animate: true,
         child: SafeArea(
           child: HomeDashboard(
-            user: user,
+            user: user, // Now guaranteed non-null
             upcomingBookings: _upcomingBookings,
             trendingStyles: _trendingStyles,
             recommendedStylists: _recommendedStylists,
